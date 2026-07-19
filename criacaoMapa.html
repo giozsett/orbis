@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ORBIS | Criação de Mapa Astral</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Space+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-tint": "#ffb1c3",
+                      "on-secondary": "#472636",
+                      "on-secondary-container": "#dbabc0",
+                      "on-error": "#690005",
+                      "secondary-fixed": "#ffd8e7",
+                      "on-secondary-fixed": "#2f1121",
+                      "secondary-fixed-dim": "#eab9ce",
+                      "on-surface": "#dbe2f8",
+                      "on-surface-variant": "#e5bcc4",
+                      "on-tertiary-fixed": "#2d0050",
+                      "surface-bright": "#31394a",
+                      "on-tertiary": "#4a007f",
+                      "secondary": "#eab9ce",
+                      "on-primary-fixed-variant": "#8f0041",
+                      "tertiary-fixed": "#f1dbff",
+                      "surface-container-highest": "#2d3546",
+                      "on-secondary-fixed-variant": "#603c4d",
+                      "outline": "#ac878f",
+                      "primary-fixed-dim": "#ffb1c3",
+                      "secondary-container": "#633e4f",
+                      "primary": "#ffb1c3",
+                      "on-background": "#dbe2f8",
+                      "tertiary-container": "#b86dfd",
+                      "outline-variant": "#5c3f45",
+                      "inverse-primary": "#bb0058",
+                      "inverse-on-surface": "#283041",
+                      "primary-container": "#ff4b89",
+                      "on-primary-container": "#590026",
+                      "inverse-surface": "#dbe2f8",
+                      "on-primary-fixed": "#3f0019",
+                      "on-primary": "#66002c",
+                      "error": "#ffb1c3",
+                      "surface-container": "#18202f",
+                      "surface-variant": "#2d3546",
+                      "on-tertiary-fixed-variant": "#680eac",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-lowest": "#060e1d",
+                      "surface-container-low": "#131c2b",
+                      "on-tertiary-container": "#410070",
+                      "error-container": "#93000a",
+                      "tertiary": "#deb7ff",
+                      "surface-container-high": "#222a3a",
+                      "primary-fixed": "#ffd9e0",
+                      "surface": "#0b1323",
+                      "tertiary-fixed-dim": "#deb7ff",
+                      "surface-dim": "#0b1323",
+                      "background": "#0b1323"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "md": "16px",
+                      "unit": "4px",
+                      "gutter": "24px",
+                      "sm": "8px",
+                      "margin-desktop": "64px",
+                      "xl": "48px",
+                      "margin-mobile": "16px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Inter"],
+                      "headline-lg": ["Space Grotesk"],
+                      "headline-xl": ["Space Grotesk"],
+                      "label-sm": ["JetBrains Mono"],
+                      "label-md": ["JetBrains Mono"],
+                      "headline-lg-mobile": ["Space Grotesk"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(244, 194, 215, 0.1);
+            box-shadow: inset 0 1px 0 rgba(244, 194, 215, 0.05);
+        }
+        .glow-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0 rgba(255, 0, 122, 0);
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 122, 0.4);
+            transform: translateY(-1px);
+        }
+        .step-transition {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .step-hidden {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        input:focus {
+            outline: none;
+            border-color: #ffb1c3 !important;
+            box-shadow: 0 0 0 1px #ffb1c3;
+        }
+        /* Custom scrollbar for autocomplete */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(244, 194, 215, 0.2); border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+
+<div class="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background"></div>
+</div>
+<!-- Navigation (Suppressed per task context, but product logo remains for identity) -->
+<header class="fixed top-0 w-full z-50 flex justify-center items-center h-20 px-margin-desktop">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">auto_awesome</span>
+<span class="font-headline-lg text-headline-lg font-bold tracking-tighter text-secondary">ORBIS</span>
+</div>
+</header>
+<main class="relative z-10 flex items-center justify-center min-h-screen pt-20 pb-12 px-4">
+<!-- Main Form Container -->
+<div class="w-full max-w-2xl">
+<!-- Step Indicator -->
+<div class="flex justify-between items-center mb-12 px-2">
+<div class="flex items-center gap-4 w-full">
+<div class="w-3 h-3 rounded-full bg-primary ring-4 ring-primary/20 transition-all duration-500" id="step-dot-1"></div>
+<div class="h-px flex-1 bg-white/10 transition-all duration-500" id="step-line-1"></div>
+<div class="w-3 h-3 rounded-full bg-surface-container-highest transition-all duration-500" id="step-dot-2"></div>
+<div class="h-px flex-1 bg-white/10 transition-all duration-500" id="step-line-2"></div>
+<div class="w-3 h-3 rounded-full bg-surface-container-highest transition-all duration-500" id="step-dot-3"></div>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-8 md:p-12 relative overflow-hidden">
+<!-- Background Observatory Illustration (Subtle) -->
+<div class="absolute -right-20 -bottom-20 opacity-[0.03] pointer-events-none select-none">
+<span class="material-symbols-outlined text-[400px]" style="font-variation-settings: 'wght' 100;">foundation</span>
+</div>
+<form id="natal-chart-form" onsubmit="event.preventDefault();">
+<!-- STEP 1: Temporal Identity -->
+<div class="step-transition" id="step-1">
+<div class="mb-8">
+<span class="text-primary font-label-md uppercase tracking-widest block mb-2">Fase 01</span>
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-4">Origem Temporal</h1>
+<p class="text-on-surface-variant font-body-lg">Para alinhar as constelações, precisamos saber exatamente quando sua jornada começou.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="font-label-md text-secondary block">Data de Nascimento</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 px-4 text-on-surface focus:ring-0 transition-all appearance-none" required="" type="date"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">calendar_month</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-secondary block">Horário Exato</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 px-4 text-on-surface focus:ring-0 transition-all appearance-none" required="" type="time"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">schedule</span>
+</div>
+<p class="text-xs text-outline italic">Use o horário da certidão de nascimento se possível.</p>
+</div>
+</div>
+<div class="mt-12 flex justify-end">
+<button class="glow-button bg-primary-container text-on-primary-container px-8 py-4 rounded-full font-label-md flex items-center gap-2" onclick="goToStep(2)" type="button">
+                                Continuar
+                                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- STEP 2: Spatial Coordinates -->
+<div class="step-transition step-hidden" id="step-2">
+<div class="mb-8">
+<span class="text-primary font-label-md uppercase tracking-widest block mb-2">Fase 02</span>
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-4">Ponto de Observação</h1>
+<p class="text-on-surface-variant font-body-lg">O céu muda dependendo de onde você está na Terra. Informe sua localização.</p>
+</div>
+<div class="space-y-6">
+<div class="space-y-2 relative">
+<label class="font-label-md text-secondary block">Cidade de Nascimento</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">location_on</span>
+<input class="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:ring-0 transition-all" id="location-input" placeholder="Digite o nome da cidade..." required="" type="text"/>
+</div>
+<!-- Mock Autocomplete -->
+<div class="hidden absolute z-20 top-full left-0 w-full mt-2 glass-panel rounded-lg border border-white/10 overflow-hidden shadow-2xl" id="autocomplete">
+<div class="p-2 custom-scrollbar max-h-48 overflow-y-auto">
+<div class="px-4 py-3 hover:bg-white/5 cursor-pointer rounded-md transition-colors flex items-center gap-3" onclick="selectLocation('São Paulo, SP - Brasil')">
+<span class="material-symbols-outlined text-outline text-sm">history</span>
+<span class="text-on-surface">São Paulo, SP - Brasil</span>
+</div>
+<div class="px-4 py-3 hover:bg-white/5 cursor-pointer rounded-md transition-colors flex items-center gap-3" onclick="selectLocation('Rio de Janeiro, RJ - Brasil')">
+<span class="material-symbols-outlined text-outline text-sm">history</span>
+<span class="text-on-surface">Rio de Janeiro, RJ - Brasil</span>
+</div>
+<div class="px-4 py-3 hover:bg-white/5 cursor-pointer rounded-md transition-colors flex items-center gap-3" onclick="selectLocation('Lisboa, Portugal')">
+<span class="material-symbols-outlined text-outline text-sm">public</span>
+<span class="text-on-surface">Lisboa, Portugal</span>
+</div>
+</div>
+</div>
+</div>
+<div class="rounded-xl overflow-hidden h-40 border border-white/5 relative group">
+<div class="absolute inset-0 bg-surface-container-low/50 flex items-center justify-center z-10 group-hover:bg-transparent transition-all">
+<span class="material-symbols-outlined text-primary/40 text-4xl">map</span>
+</div>
+<div class="w-full h-full object-cover grayscale opacity-50 contrast-125" data-alt="A dark, minimalist satellite view map focusing on urban terrain with deep blue and soft magenta glowing points indicating infrastructure and coordinates. The style is high-tech observatory aesthetic, clean and atmospheric with no text labels." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDS97ILu4ms1TBdxS6VIXGBXN8TG34jmbAxbzmZfyudWEvXASk5QXd39iqXZUn1KcPucyeI9m1_lokg4yIkOh3ysb7RudiEjSaThXnJBtyhHfk4q4qQ6kSA5e8Uvh3k7UHVfA8bbLA9lEUGCeDpoCAKXfVwQJ-3SUs4w0Yj1aKrTTIFZLb72aZAc6BZnAXClGf3rLT4G-6p-0UhUpaWSHkFYkhX71qdP8ypCuKbmyCFz9HaVa00vOTWZw')"></div>
+</div>
+</div>
+<div class="mt-12 flex justify-between">
+<button class="text-on-surface-variant hover:text-on-surface px-6 py-4 rounded-full font-label-md flex items-center gap-2 transition-colors" onclick="goToStep(1)" type="button">
+<span class="material-symbols-outlined">arrow_back</span>
+                                Voltar
+                            </button>
+<button class="glow-button bg-primary-container text-on-primary-container px-8 py-4 rounded-full font-label-md flex items-center gap-2" onclick="goToStep(3)" type="button">
+                                Revisar Dados
+                                <span class="material-symbols-outlined">check_circle</span>
+</button>
+</div>
+</div>
+<!-- STEP 3: Final Review & Calculation -->
+<div class="step-transition step-hidden" id="step-3">
+<div class="mb-8">
+<span class="text-primary font-label-md uppercase tracking-widest block mb-2">Finalização</span>
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-4">Sincronizar Astros</h1>
+<p class="text-on-surface-variant font-body-lg">Tudo pronto para processar seu mapa natal. Confirme as coordenadas celestiais abaixo.</p>
+</div>
+<div class="space-y-4 bg-white/5 p-6 rounded-xl border border-white/5">
+<div class="flex justify-between items-center py-2 border-b border-white/5">
+<span class="text-outline font-label-sm">HORÁRIO</span>
+<span class="text-secondary font-label-md" id="summary-time">-- : --</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-white/5">
+<span class="text-outline font-label-sm">DATA</span>
+<span class="text-secondary font-label-md" id="summary-date">-- / -- / ----</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="text-outline font-label-sm">LOCALIZAÇÃO</span>
+<span class="text-secondary font-label-md" id="summary-location">Não definida</span>
+</div>
+</div>
+<div class="mt-12 space-y-4">
+<button class="w-full glow-button bg-primary text-on-primary py-5 rounded-full font-headline-lg flex items-center justify-center gap-4 transition-all uppercase tracking-widest text-lg" type="submit">
+                                Calcular Meu Mapa
+                                <span class="material-symbols-outlined">explore</span>
+</button>
+<button class="w-full text-outline hover:text-on-surface py-2 text-center font-label-sm transition-colors" onclick="goToStep(2)" type="button">
+                                Corrigir informações
+                            </button>
+</div>
+<div class="mt-8 text-center">
+<p class="text-xs text-outline max-w-xs mx-auto">Ao clicar em calcular, nosso motor astronômico processará milhões de dados efemérides para gerar sua posição planetária exata.</p>
+</div>
+</div>
+</form>
+</div>
+<!-- Observatory Visual Anchor -->
+<div class="mt-16 text-center">
+<div class="inline-flex items-center gap-6 px-8 py-4 rounded-full bg-surface-container-low/40 border border-white/5">
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full border-2 border-background overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A focused portrait of a professional astronomer looking through high-tech equipment in a deep space observatory, softly lit by pink neon ambient light and deep blue monitors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5w4yaoXHl6WIMzqpbAvovl5QdiNlhEkZXiFGXZa57FlbPUeI4hqzf-RAUKdz5-OMIMMW6yweEIluFImx53-2CoC-JdKn7h4_ys9JfRw3T5a6pMsB6nKD--JfkxsJ6fQ7SEGB1wiqI52uidqN4TN2vkPPqiaOEW4GB_7uhpvTMnEPQjBbLAbCM82OkXmApmSiTnHgitFj6KzenSSnf1g7XowwWczLR3noS_l140kFuefuX9t8jNMYDfg"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-background bg-secondary flex items-center justify-center text-on-secondary font-bold text-xs">
+                            +4k
+                        </div>
+</div>
+<p class="text-label-sm text-outline text-left">
+                        Junte-se a <span class="text-secondary">4.219 observadores</span><br/>que descobriram sua rota hoje.
+                    </p>
+</div>
+</div>
+</div>
+</main>
+<footer class="w-full py-12 px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 border-t border-white/5 opacity-60">
+<span class="font-label-sm text-outline">© 2024 ORBIS ASTRONOMICAL OBSERVATORY</span>
+<div class="flex gap-8">
+<a class="font-body-sm text-outline hover:text-primary transition-colors" href="#">Data Sources</a>
+<a class="font-body-sm text-outline hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="font-body-sm text-outline hover:text-primary transition-colors" href="#">Methodology</a>
+</div>
+</footer>
+<script>
+        function goToStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.step-transition').forEach(el => {
+                el.classList.add('step-hidden');
+                el.classList.remove('flex', 'flex-col');
+            });
+
+            // Show active step
+            const currentStep = document.getElementById(`step-${step}`);
+            currentStep.classList.remove('step-hidden');
+            
+            // Update Indicators
+            updateIndicators(step);
+
+            // Special logic for summary page
+            if(step === 3) {
+                const dateInput = document.querySelector('input[type="date"]').value;
+                const timeInput = document.querySelector('input[type="time"]').value;
+                const locInput = document.getElementById('location-input').value;
+                
+                document.getElementById('summary-date').innerText = dateInput || 'Não definida';
+                document.getElementById('summary-time').innerText = timeInput || 'Não definido';
+                document.getElementById('summary-location').innerText = locInput || 'Não definida';
+            }
+        }
+
+        function updateIndicators(step) {
+            const dots = [1, 2, 3];
+            dots.forEach(d => {
+                const dot = document.getElementById(`step-dot-${d}`);
+                const line = document.getElementById(`step-line-${d}`);
+
+                if (d <= step) {
+                    dot.classList.add('bg-primary', 'ring-4', 'ring-primary/20');
+                    dot.classList.remove('bg-surface-container-highest');
+                } else {
+                    dot.classList.remove('bg-primary', 'ring-4', 'ring-primary/20');
+                    dot.classList.add('bg-surface-container-highest');
+                }
+
+                if (line && d < step) {
+                    line.classList.add('bg-primary/40');
+                    line.classList.remove('bg-white/10');
+                } else if (line) {
+                    line.classList.remove('bg-primary/40');
+                    line.classList.add('bg-white/10');
+                }
+            });
+        }
+
+        // Fake Autocomplete Logic
+        const locationInput = document.getElementById('location-input');
+        const autocomplete = document.getElementById('autocomplete');
+
+        locationInput.addEventListener('focus', () => {
+            autocomplete.classList.remove('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!locationInput.contains(e.target) && !autocomplete.contains(e.target)) {
+                autocomplete.classList.add('hidden');
+            }
+        });
+
+        function selectLocation(val) {
+            locationInput.value = val;
+            autocomplete.classList.add('hidden');
+        }
+
+        // Page load interaction
+        window.addEventListener('load', () => {
+            document.body.classList.add('opacity-100');
+        });
+    </script>
+</body></html>

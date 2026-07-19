@@ -1,0 +1,136 @@
+import React, { useState } from 'react';
+
+/**
+ * Orbis - Painel Lateral de Mapa Astral (Pink Edition)
+ * Componente React reutilizável (Vite, TypeScript, TailwindCSS)
+ */
+
+type Tab = 'Visão geral' | 'Planetas' | 'Aspectos';
+
+interface AstrologicalData {
+  sun: string;
+  moon: string;
+  ascendant: string;
+}
+
+const mockData: AstrologicalData = {
+  sun: 'Leão na 10ª Casa',
+  moon: 'Escorpião na 1ª Casa',
+  ascendant: 'Escorpião',
+};
+
+const SidePanel: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<Tab>('Visão geral');
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Simulação de carregamento ao trocar de aba
+  const handleTabChange = (tab: Tab) => {
+    setIsLoading(true);
+    setActiveTab(tab);
+    setTimeout(() => setIsLoading(false), 800);
+  };
+
+  const AstroCard = ({ title, value, icon }: { title: string; value: string; icon: string }) => (
+    <div className="bg-pink-950/20 border border-pink-500/20 p-4 rounded-lg mb-3 shadow-inner">
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-pink-400 text-sm font-bold uppercase tracking-wider">{title}</span>
+      </div>
+      <p className="text-white font-medium">{value}</p>
+    </div>
+  );
+
+  return (
+    <div className="w-full max-w-md h-screen bg-[#0b1323] text-white flex flex-col border-l border-white/10 shadow-2xl font-sans">
+      {/* Header do Painel */}
+      <div className="p-6 border-b border-white/10">
+        <h2 className="text-2xl font-bold text-pink-400 mb-4 tracking-tight">Detalhes Celestiais</h2>
+        
+        {/* Big Three Cards */}
+        <div className="grid grid-cols-1 gap-2">
+          <AstroCard title="Sol" value={mockData.sun} icon="☀️" />
+          <AstroCard title="Lua" value={mockData.moon} icon="🌙" />
+          <AstroCard title="Ascendente" value={mockData.ascendant} icon="⬆️" />
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex border-b border-white/10 bg-[#060e1d]">
+        {(['Visão geral', 'Planetas', 'Aspectos'] as Tab[]).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => handleTabChange(tab)}
+            className={`flex-1 py-3 text-sm font-semibold transition-all ${
+              activeTab === tab 
+              ? 'text-pink-400 border-b-2 border-pink-400 bg-white/5' 
+              : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* Content Area */}
+      <div className="flex-1 overflow-y-auto p-6 relative">
+        {isLoading ? (
+          <div className="absolute inset-0 bg-[#0b1323]/80 flex flex-col items-center justify-center space-y-4">
+            <div className="w-10 h-10 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-pink-300 animate-pulse text-sm font-medium">Consultando os astros...</p>
+          </div>
+        ) : (
+          <div className="space-y-6 animate-fadeIn">
+            {activeTab === 'Visão geral' && (
+              <div className="prose prose-invert">
+                <h3 className="text-lg text-pink-300 font-semibold mb-2">Sua Assinatura Cósmica</h3>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  Com o Sol em Leão na décima casa, sua vitalidade brilha intensamente em sua carreira e vida pública. 
+                  Sua Lua em Escorpião traz uma profundidade emocional intensa e transformadora.
+                </p>
+                <button className="mt-4 w-full py-2 border border-pink-500/50 text-pink-400 rounded hover:bg-pink-500/10 transition-colors text-xs font-bold uppercase">
+                  Baixar Relatório Completo
+                </button>
+              </div>
+            )}
+            {activeTab === 'Planetas' && (
+              <ul className="space-y-4">
+                {[
+                  { p: 'Mercúrio', s: 'Virgem', d: 'Comunicação precisa' },
+                  { p: 'Vênus', s: 'Libra', d: 'Harmonia nas relações' },
+                  { p: 'Marte', s: 'Áries', d: 'Impulso e coragem' }
+                ].map(item => (
+                  <li key={item.p} className="flex justify-between items-center p-3 bg-white/5 rounded">
+                    <div>
+                      <p className="text-white font-bold">{item.p}</p>
+                      <p className="text-xs text-gray-400">{item.d}</p>
+                    </div>
+                    <span className="text-pink-400 text-sm">{item.s}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {activeTab === 'Aspectos' && (
+              <div className="space-y-3">
+                <p className="text-xs text-pink-300 font-bold uppercase mb-4">Principais Aspectos</p>
+                <div className="p-3 bg-pink-900/20 border-l-4 border-pink-500 rounded">
+                  <p className="text-sm font-bold">Sol Trígono Marte</p>
+                  <p className="text-xs text-gray-400">Grande energia física e capacidade de liderança.</p>
+                </div>
+                <div className="p-3 bg-magenta-900/20 border-l-4 border-magenta-500 rounded">
+                  <p className="text-sm font-bold">Lua Sextil Vênus</p>
+                  <p className="text-xs text-gray-400">Equilíbrio entre emoções e desejos afetivos.</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+      
+      {/* Footer / Observatory Attribution */}
+      <div className="p-4 bg-[#060e1d] text-center border-t border-white/5">
+        <p className="text-[10px] text-gray-500 uppercase tracking-[0.2em]">Orbis Astronomical Observatory</p>
+      </div>
+    </div>
+  );
+};
+
+export default SidePanel;s

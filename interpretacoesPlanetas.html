@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ORBIS | Interpretative Ephemeris</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Space+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#ffb1c3",
+                        "on-secondary": "#472636",
+                        "on-secondary-container": "#dbabc0",
+                        "on-error": "#690005",
+                        "secondary-fixed": "#ffd8e7",
+                        "on-secondary-fixed": "#2f1121",
+                        "secondary-fixed-dim": "#eab9ce",
+                        "on-surface": "#dbe2f8",
+                        "on-surface-variant": "#e5bcc4",
+                        "on-tertiary-fixed": "#2d0050",
+                        "surface-bright": "#31394a",
+                        "on-tertiary": "#4a007f",
+                        "secondary": "#eab9ce",
+                        "on-primary-fixed-variant": "#8f0041",
+                        "tertiary-fixed": "#f1dbff",
+                        "surface-container-highest": "#2d3546",
+                        "on-secondary-fixed-variant": "#603c4d",
+                        "outline": "#ac878f",
+                        "primary-fixed-dim": "#ffb1c3",
+                        "secondary-container": "#633e4f",
+                        "primary": "#ffb1c3",
+                        "on-background": "#dbe2f8",
+                        "tertiary-container": "#b86dfd",
+                        "outline-variant": "#5c3f45",
+                        "inverse-primary": "#bb0058",
+                        "inverse-on-surface": "#283041",
+                        "primary-container": "#ff4b89",
+                        "on-primary-container": "#590026",
+                        "inverse-surface": "#dbe2f8",
+                        "on-primary-fixed": "#3f0019",
+                        "on-primary": "#66002c",
+                        "error": "#ffb4ab",
+                        "surface-container": "#18202f",
+                        "surface-variant": "#2d3546",
+                        "on-tertiary-fixed-variant": "#680eac",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-lowest": "#060e1d",
+                        "surface-container-low": "#131c2b",
+                        "on-tertiary-container": "#410070",
+                        "error-container": "#93000a",
+                        "tertiary": "#deb7ff",
+                        "surface-container-high": "#222a3a",
+                        "primary-fixed": "#ffd9e0",
+                        "surface": "#0b1323",
+                        "tertiary-fixed-dim": "#deb7ff",
+                        "surface-dim": "#0b1323",
+                        "background": "#0b1323"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "md": "16px",
+                        "unit": "4px",
+                        "gutter": "24px",
+                        "sm": "8px",
+                        "margin-desktop": "64px",
+                        "xl": "48px",
+                        "margin-mobile": "16px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Space Grotesk"],
+                        "headline-xl": ["Space Grotesk"],
+                        "label-sm": ["JetBrains Mono"],
+                        "label-md": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Space Grotesk"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0b1323;
+            color: #dbe2f8;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(244, 194, 215, 0.15);
+            border-left: 1px solid rgba(244, 194, 215, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .data-gradient {
+            background: linear-gradient(180deg, rgba(234, 185, 206, 0.05) 0%, rgba(11, 19, 35, 0) 100%);
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 122, 0.15);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #060e1d; }
+        ::-webkit-scrollbar-thumb { background: #5c3f45; border-radius: 10px; }
+    </style>
+</head>
+<body class="font-body-md text-on-background">
+<!-- TopNavBar Implementation -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface/40 backdrop-blur-xl border-b border-white/15">
+<div class="flex items-center gap-12">
+<span class="font-headline-md text-headline-md font-extrabold tracking-tighter text-secondary">ORBIS</span>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Dashboard</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Transits</a>
+<a class="font-label-md text-label-md text-primary font-bold border-b-2 border-secondary pb-1 cursor-pointer" href="#">Ephemeris</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Natal</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer active:opacity-80">search</span>
+<span class="material-symbols-outlined text-primary cursor-pointer active:opacity-80" data-icon="account_circle">account_circle</span>
+</div>
+</nav>
+<!-- SideNavBar Implementation -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] z-40 p-6 flex flex-col bg-surface-container-low/60 backdrop-blur-lg border-r border-white/10 w-80 hidden lg:flex">
+<div class="mb-8">
+<h3 class="font-label-md text-label-md text-secondary uppercase tracking-widest mb-1">Celestial Details</h3>
+<p class="text-on-surface-variant text-sm opacity-70">Current Planetary Positions</p>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<div class="flex items-center gap-4 p-3 text-secondary bg-secondary-container/20 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined" data-icon="blur_on">blur_on</span>
+<span class="font-label-md text-label-md uppercase">Planetary Data</span>
+</div>
+<div class="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-white/5 transition-all rounded-lg cursor-pointer">
+<span class="material-symbols-outlined" data-icon="grid_4x4">grid_4x4</span>
+<span class="font-label-md text-label-md uppercase">Aspect Grid</span>
+</div>
+<div class="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-white/5 transition-all rounded-lg cursor-pointer">
+<span class="material-symbols-outlined" data-icon="home_pin">home_pin</span>
+<span class="font-label-md text-label-md uppercase">Houses</span>
+</div>
+<div class="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-white/5 transition-all rounded-lg cursor-pointer">
+<span class="material-symbols-outlined" data-icon="settings_backup_restore">settings_backup_restore</span>
+<span class="font-label-md text-label-md uppercase">Retrogrades</span>
+</div>
+<div class="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-white/5 transition-all rounded-lg cursor-pointer">
+<span class="material-symbols-outlined" data-icon="star">star</span>
+<span class="font-label-md text-label-md uppercase">Asteroids</span>
+</div>
+</nav>
+<button class="mt-auto bg-primary text-on-primary font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm">download</span>
+<span class="font-label-md text-label-md">Export Ephemeris</span>
+</button>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-80 pt-24 pb-16 px-6 md:px-margin-desktop min-h-screen">
+<header class="mb-12 max-w-4xl">
+<div class="flex items-center gap-3 mb-4">
+<span class="h-[1px] w-12 bg-primary"></span>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-[0.2em]">Interpretação Estelar</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-4">Posições Planetárias</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant/80 max-w-2xl">
+                Análise técnica detalhada das coordenadas celestiais e suas influências vibracionais no momento atual. Explore o impacto de cada regente em sua respectiva casa.
+            </p>
+</header>
+<!-- Dynamic Content Grid (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- Planeta: SOL -->
+<div class="glass-panel p-lg flex flex-col gap-6 relative overflow-hidden group glow-hover transition-all duration-500 rounded-xl">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+</div>
+<div class="flex justify-between items-start">
+<div class="bg-primary/10 p-3 rounded-lg border border-primary/20">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-outline uppercase">Posição</div>
+<div class="font-label-md text-label-md text-secondary">Leão, Casa V</div>
+</div>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Sol</h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        A vitalidade central está focada na autoexpressão criativa. Há uma necessidade potente de ser reconhecido por seus talentos únicos, impulsionando a confiança e a liderança generosa em projetos pessoais.
+                    </p>
+</div>
+<div class="mt-auto pt-6 border-t border-white/5 flex gap-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Dignidade</span>
+<span class="font-label-md text-label-md text-primary">Domicílio</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Elemento</span>
+<span class="font-label-md text-label-md text-primary">Fogo</span>
+</div>
+</div>
+</div>
+<!-- Planeta: LUA -->
+<div class="glass-panel p-lg flex flex-col gap-6 relative overflow-hidden group glow-hover transition-all duration-500 rounded-xl">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl" style="font-variation-settings: 'FILL' 1;">dark_mode</span>
+</div>
+<div class="flex justify-between items-start">
+<div class="bg-tertiary/10 p-3 rounded-lg border border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary text-3xl" style="font-variation-settings: 'FILL' 1;">dark_mode</span>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-outline uppercase">Posição</div>
+<div class="font-label-md text-label-md text-secondary">Touro, Casa II</div>
+</div>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Lua</h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        Busca por segurança emocional através da estabilidade material e conforto sensorial. As reações são calmas, mas persistentes, focadas na preservação do que é valioso e nutritivo.
+                    </p>
+</div>
+<div class="mt-auto pt-6 border-t border-white/5 flex gap-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Dignidade</span>
+<span class="font-label-md text-label-md text-tertiary">Exaltação</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Elemento</span>
+<span class="font-label-md text-label-md text-tertiary">Terra</span>
+</div>
+</div>
+</div>
+<!-- Planeta: MERCÚRIO -->
+<div class="glass-panel p-lg flex flex-col gap-6 relative overflow-hidden group glow-hover transition-all duration-500 rounded-xl">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl" style="font-variation-settings: 'FILL' 1;">auto_awesome_motion</span>
+</div>
+<div class="flex justify-between items-start">
+<div class="bg-secondary/10 p-3 rounded-lg border border-secondary/20">
+<span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">auto_awesome_motion</span>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-outline uppercase">Posição</div>
+<div class="font-label-md text-label-md text-secondary">Gêmeos, Casa III</div>
+</div>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Mercúrio</h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        O intelecto opera em alta frequência. A comunicação é ágil, versátil e orientada para a troca rápida de informações. Excelente período para aprendizado, escrita e conexões locais.
+                    </p>
+</div>
+<div class="mt-auto pt-6 border-t border-white/5 flex gap-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Estado</span>
+<span class="font-label-md text-label-md text-secondary">Direto</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Dignidade</span>
+<span class="font-label-md text-label-md text-secondary">Domicílio</span>
+</div>
+</div>
+</div>
+<!-- Visual Data Divider (Animated) -->
+<div class="col-span-1 md:col-span-2 xl:col-span-3 h-64 glass-panel rounded-xl flex items-center justify-center relative overflow-hidden">
+
+<div class="relative z-10 text-center">
+<p class="font-label-sm text-label-sm text-primary uppercase tracking-[0.4em] mb-2">Fluxo de Energia Planetária</p>
+<p class="font-headline-lg text-headline-lg text-on-surface">Alinhamento Quântico Ativo</p>
+</div>
+</div>
+<!-- Planeta: VÊNUS -->
+<div class="glass-panel p-lg flex flex-col gap-6 relative overflow-hidden group glow-hover transition-all duration-500 rounded-xl">
+<div class="flex justify-between items-start">
+<div class="bg-primary-container/20 p-3 rounded-lg border border-primary-container/40">
+<span class="material-symbols-outlined text-primary text-3xl">favorite</span>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-outline uppercase">Posição</div>
+<div class="font-label-md text-label-md text-secondary">Libra, Casa VII</div>
+</div>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Vênus</h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        O foco recai sobre a harmonia nos relacionamentos. Busca-se o equilíbrio estético e a diplomacia em parcerias. O desejo por justiça e beleza nas interações sociais é o principal motivador.
+                    </p>
+</div>
+<div class="mt-auto pt-6 border-t border-white/5 flex gap-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Dignidade</span>
+<span class="font-label-md text-label-md text-primary">Domicílio</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Afinidade</span>
+<span class="font-label-md text-label-md text-primary">Ar</span>
+</div>
+</div>
+</div>
+<!-- Planeta: MARTE -->
+<div class="glass-panel p-lg flex flex-col gap-6 relative overflow-hidden group glow-hover transition-all duration-500 rounded-xl">
+<div class="flex justify-between items-start">
+<div class="bg-error/10 p-3 rounded-lg border border-error/20">
+<span class="material-symbols-outlined text-error text-3xl">local_fire_department</span>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-outline uppercase">Posição</div>
+<div class="font-label-md text-label-md text-secondary">Áries, Casa I</div>
+</div>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Marte</h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        Ação pura e impulsiva. A energia vital é direcionada para o início de novos ciclos e a conquista de autonomia. Coragem física e iniciativa estão em seu auge operativo.
+                    </p>
+</div>
+<div class="mt-auto pt-6 border-t border-white/5 flex gap-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Dignidade</span>
+<span class="font-label-md text-label-md text-error">Domicílio</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Impacto</span>
+<span class="font-label-md text-label-md text-error">Alto</span>
+</div>
+</div>
+</div>
+<!-- Planeta: JÚPITER -->
+<div class="glass-panel p-lg flex flex-col gap-6 relative overflow-hidden group glow-hover transition-all duration-500 rounded-xl">
+<div class="flex justify-between items-start">
+<div class="bg-secondary-container/20 p-3 rounded-lg border border-secondary-container/40">
+<span class="material-symbols-outlined text-secondary text-3xl">expand_circle_up</span>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-outline uppercase">Posição</div>
+<div class="font-label-md text-label-md text-secondary">Sagitário, Casa IX</div>
+</div>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Júpiter</h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        Expansão de consciência e otimismo filosófico. Há um forte desejo por exploração de novos horizontes, sejam eles geográficos ou intelectuais. Sorte através da fé e do conhecimento.
+                    </p>
+</div>
+<div class="mt-auto pt-6 border-t border-white/5 flex gap-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Dignidade</span>
+<span class="font-label-md text-label-md text-secondary">Domicílio</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Qualidade</span>
+<span class="font-label-md text-label-md text-secondary">Benéfico</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Implementation -->
+<footer class="w-full py-stack-md px-margin-desktop flex flex-col md:flex-row justify-between items-center bg-surface-container-lowest border-t border-white/5 gap-6">
+<div class="flex flex-col items-center md:items-start">
+<span class="font-label-caps text-label-caps text-on-surface tracking-widest font-bold mb-2 uppercase">ORBIS</span>
+<p class="font-body-sm text-body-sm text-outline">© 2024 Orbis Astronomical Observatory</p>
+</div>
+<div class="flex gap-8">
+<a class="font-body-sm text-body-sm text-outline hover:text-primary transition-colors" href="#">Data Sources</a>
+<a class="font-body-sm text-body-sm text-outline hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="font-body-sm text-body-sm text-outline hover:text-primary transition-colors" href="#">Methodology</a>
+</div>
+</footer>
+<!-- Interactive Layer Script -->
+<script>
+        document.querySelectorAll('.glass-panel').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+                
+                const brightness = 1.05;
+                card.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(234, 185, 206, 0.08), transparent 40%)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.background = 'rgba(15, 23, 42, 0.6)';
+            });
+        });
+    </script>
+</body></html>

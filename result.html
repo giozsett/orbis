@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ORBIS | Resultado do Mapa Astral</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config Verbatim -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#ffb1c3",
+                    "on-surface-variant": "#e5bcc4",
+                    "inverse-surface": "#dbe2f8",
+                    "on-primary": "#66002c",
+                    "secondary": "#eab9ce",
+                    "on-tertiary-fixed": "#2d0050",
+                    "on-error": "#690005",
+                    "background": "#0b1323",
+                    "inverse-primary": "#bb0058",
+                    "primary-fixed-dim": "#ffb1c3",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary-fixed": "#2f1121",
+                    "on-primary-fixed-variant": "#8f0041",
+                    "tertiary-fixed": "#f1dbff",
+                    "surface-variant": "#2d3546",
+                    "secondary-fixed-dim": "#eab9ce",
+                    "on-primary-fixed": "#3f0019",
+                    "on-primary-container": "#590026",
+                    "tertiary": "#deb7ff",
+                    "surface-container-highest": "#2d3546",
+                    "surface-container-lowest": "#060e1d",
+                    "on-tertiary": "#4a007f",
+                    "on-surface": "#dbe2f8",
+                    "outline-variant": "#5c3f45",
+                    "surface": "#0b1323",
+                    "surface-bright": "#31394a",
+                    "on-secondary": "#472636",
+                    "primary-container": "#ff4b89",
+                    "on-secondary-fixed-variant": "#603c4d",
+                    "tertiary-fixed-dim": "#deb7ff",
+                    "surface-dim": "#0b1323",
+                    "error": "#ffb4ab",
+                    "primary-fixed": "#ffd9e0",
+                    "surface-container": "#18202f",
+                    "outline": "#ac878f",
+                    "secondary-container": "#633e4f",
+                    "tertiary-container": "#b86dfd",
+                    "error-container": "#93000a",
+                    "inverse-on-surface": "#283041",
+                    "on-background": "#dbe2f8",
+                    "on-secondary-container": "#dbabc0",
+                    "primary": "#ffb1c3",
+                    "on-tertiary-fixed-variant": "#680eac",
+                    "surface-container-low": "#131c2b",
+                    "on-tertiary-container": "#410070",
+                    "secondary-fixed": "#ffd8e7",
+                    "surface-container-high": "#222a3a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "sm": "8px",
+                    "margin-desktop": "64px",
+                    "unit": "4px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "xl": "48px"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "label-md": ["JetBrains Mono"],
+                    "headline-lg": ["Space Grotesk"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Space Grotesk"],
+                    "headline-xl": ["Space Grotesk"],
+                    "label-sm": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0b1323;
+            color: #dbe2f8;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .glass-card {
+            background: rgba(24, 32, 47, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 177, 195, 0.1);
+            border-top: 1px solid rgba(255, 177, 195, 0.15);
+            border-left: 1px solid rgba(255, 177, 195, 0.15);
+        }
+
+        .mandala-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1/1;
+            max-width: 600px;
+        }
+
+        .glow-nebula {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 75, 137, 0.08) 0%, rgba(255, 75, 137, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .line-detail {
+            background: linear-gradient(90deg, transparent, rgba(255, 177, 195, 0.3), transparent);
+            height: 1px;
+            width: 100%;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 177, 195, 0.1);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10">
+<div class="font-headline-lg text-2xl font-bold tracking-tighter text-primary">ORBIS</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1 transition-colors duration-300" href="#">Dashboard</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Transits</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Ephemeris</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Natal</a>
+</nav>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined cursor-pointer active:opacity-80 text-primary">account_circle</span>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] z-40 p-6 flex flex-col bg-surface-container-low/60 backdrop-blur-lg border-r border-white/5 shadow-sm hidden lg:flex w-80">
+<div class="mb-8">
+<div class="font-headline-lg text-xl text-primary">Celestial Details</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Current Planetary Positions</div>
+</div>
+<div class="flex flex-col gap-2 flex-grow overflow-y-auto custom-scrollbar">
+<div class="flex items-center gap-3 p-3 text-primary bg-primary/10 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined">blur_on</span>
+<span class="font-label-md text-label-md">Planetary Data</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-white/5 transition-all cursor-pointer rounded-lg">
+<span class="material-symbols-outlined">grid_4x4</span>
+<span class="font-label-md text-label-md">Aspect Grid</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-white/5 transition-all cursor-pointer rounded-lg">
+<span class="material-symbols-outlined">home_pin</span>
+<span class="font-label-md text-label-md">Houses</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-white/5 transition-all cursor-pointer rounded-lg">
+<span class="material-symbols-outlined">settings_backup_restore</span>
+<span class="font-label-md text-label-md">Retrogrades</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-white/5 transition-all cursor-pointer rounded-lg">
+<span class="material-symbols-outlined">star</span>
+<span class="font-label-md text-label-md">Asteroids</span>
+</div>
+</div>
+<button class="mt-6 w-full bg-primary text-on-primary font-label-md py-3 rounded-lg hover:opacity-90 transition-opacity">
+            Export Ephemeris
+        </button>
+</aside>
+<!-- Main Content -->
+<main class="lg:ml-80 mt-16 p-margin-mobile md:p-margin-desktop min-h-screen">
+<div class="glow-nebula top-1/4 left-1/4"></div>
+<div class="glow-nebula bottom-1/4 right-1/4" style="background: radial-gradient(circle, rgba(255, 177, 195, 0.05) 0%, rgba(255, 177, 195, 0) 70%);"></div>
+<div class="max-w-7xl mx-auto space-y-12">
+<!-- Hero Highlights: Sol, Lua, Ascendente -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Sol -->
+<div class="glass-card p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute -top-4 -right-4 text-6xl opacity-5 text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 80px;">sunny</span>
+</div>
+<p class="font-label-sm text-label-sm text-primary mb-2">IDENTIDADE</p>
+<h2 class="font-headline-lg text-2xl mb-1">Sol em Leão</h2>
+<p class="font-label-sm text-label-sm text-primary-fixed-dim">Casa V • 15° 24'</p>
+<div class="mt-4 line-detail"></div>
+<p class="mt-4 font-body-md text-body-md text-on-surface-variant leading-relaxed">Sua essência brilha com criatividade e autoconfiança. A busca por expressão pessoal é o motor de sua jornada.</p>
+</div>
+<!-- Lua -->
+<div class="glass-card p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute -top-4 -right-4 text-6xl opacity-5 text-secondary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 80px;">nightlight</span>
+</div>
+<p class="font-label-sm text-label-sm text-secondary mb-2">EMOÇÕES</p>
+<h2 class="font-headline-lg text-2xl mb-1">Lua em Touro</h2>
+<p class="font-label-sm text-label-sm text-primary-fixed-dim">Casa II • 02° 11'</p>
+<div class="mt-4 line-detail"></div>
+<p class="mt-4 font-body-md text-body-md text-on-surface-variant leading-relaxed">Suas necessidades emocionais estão ancoradas na estabilidade e no prazer sensorial. Conforto é fundamental.</p>
+</div>
+<!-- Ascendente -->
+<div class="glass-card p-6 rounded-xl relative overflow-hidden group border-primary/20 bg-primary-container/10">
+<div class="absolute -top-4 -right-4 text-6xl opacity-10 text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 80px;">expand_less</span>
+</div>
+<p class="font-label-sm text-label-sm text-primary mb-2">PERSONA</p>
+<h2 class="font-headline-lg text-2xl mb-1">Asc. Escorpião</h2>
+<p class="font-label-sm text-label-sm text-primary-fixed-dim">Horizonte Leste • 28° 45'</p>
+<div class="mt-4 line-detail" style="background: linear-gradient(90deg, transparent, rgba(255, 177, 195, 0.3), transparent);"></div>
+<p class="mt-4 font-body-md text-body-md text-on-surface-variant leading-relaxed">Uma presença magnética e intensa. O mundo o vê como alguém profundo, reservado e altamente perceptivo.</p>
+</div>
+</section>
+<!-- Main Interactive Area: Mandala & Planetary List -->
+<section class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+<!-- Large Mandala Area -->
+<div class="xl:col-span-7 flex justify-center items-center py-6">
+<div class="mandala-container group">
+<div class="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
+<div class="w-full h-full border border-dashed border-outline-variant rounded-full animate-[spin_60s_linear_infinite]"></div>
+</div>
+<!-- Mandala SVG Placeholder Simulation -->
+<div class="w-full h-full relative p-4">
+<svg class="w-full h-full drop-shadow-[0_0_20px_rgba(255,177,195,0.1)]" viewbox="0 0 500 500">
+<!-- Background Circles -->
+<circle cx="250" cy="250" fill="none" opacity="0.3" r="240" stroke="#ffb1c3" stroke-width="0.5"></circle>
+<circle cx="250" cy="250" fill="none" r="200" stroke="#ffb1c3" stroke-width="0.2"></circle>
+<circle cx="250" cy="250" fill="none" r="140" stroke="#ffb1c3" stroke-dasharray="2,4" stroke-width="1"></circle>
+<!-- House Divisions -->
+<g stroke="#5c3f45" stroke-width="0.5">
+<line x1="10" x2="490" y1="250" y2="250"></line>
+<line x1="250" x2="250" y1="10" y2="490"></line>
+<line x1="70" x2="430" y1="70" y2="430"></line>
+<line x1="430" x2="70" y1="70" y2="430"></line>
+</g>
+<!-- Mock Aspect Lines -->
+<g opacity="0.6" stroke="#ff4b89" stroke-width="1">
+<path d="M 250 50 L 400 350" stroke-dasharray="4,2"></path>
+<path d="M 100 250 L 400 250"></path>
+<path d="M 250 50 L 100 250"></path>
+</g>
+<!-- Central Core -->
+<circle cx="250" cy="250" fill="#0b1323" r="20" stroke="#ffb1c3" stroke-width="2"></circle>
+<text fill="#ffb1c3" font-family="Inter" font-size="12" font-weight="bold" text-anchor="middle" x="250" y="255">EARTH</text>
+</svg>
+<!-- Floating Interactive Points (Simulated) -->
+<div class="absolute top-[10%] left-1/2 -translate-x-1/2 flex flex-col items-center">
+<div class="w-2 h-2 bg-primary rounded-full shadow-[0_0_10px_#ffb1c3]"></div>
+<span class="font-label-sm text-[10px] text-primary mt-1">SUN</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Planetary Positions List -->
+<div class="xl:col-span-5 space-y-6">
+<div class="glass-card rounded-xl overflow-hidden">
+<div class="p-6 bg-surface-variant/20 border-b border-white/5 flex justify-between items-center">
+<h3 class="font-headline-lg text-xl">Posições Planetárias</h3>
+<span class="material-symbols-outlined text-outline">info</span>
+</div>
+<div class="p-0">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="font-label-sm text-label-sm text-outline border-b border-white/5">
+<th class="p-4 font-normal">Planeta</th>
+<th class="p-4 font-normal">Signo</th>
+<th class="p-4 font-normal">Posição</th>
+<th class="p-4 font-normal">Casa</th>
+</tr>
+</thead>
+<tbody class="font-label-md text-label-md">
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
+<td class="p-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 18px;">sunny</span>
+                                            Sol
+                                        </td>
+<td class="p-4 text-on-surface">Leão</td>
+<td class="p-4">15° 24'</td>
+<td class="p-4">V</td>
+</tr>
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
+<td class="p-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">nightlight</span>
+                                            Lua
+                                        </td>
+<td class="p-4 text-on-surface">Touro</td>
+<td class="p-4">02° 11'</td>
+<td class="p-4">II</td>
+</tr>
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
+<td class="p-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 18px;">brightness_5</span>
+                                            Mercúrio
+                                        </td>
+<td class="p-4 text-on-surface">Virgem</td>
+<td class="p-4">12° 50' R</td>
+<td class="p-4">VI</td>
+</tr>
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
+<td class="p-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 18px;">female</span>
+                                            Vênus
+                                        </td>
+<td class="p-4 text-on-surface">Câncer</td>
+<td class="p-4">27° 05'</td>
+<td class="p-4">IV</td>
+</tr>
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
+<td class="p-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 18px;">male</span>
+                                            Marte
+                                        </td>
+<td class="p-4 text-on-surface">Áries</td>
+<td class="p-4">09° 33'</td>
+<td class="p-4">I</td>
+</tr>
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
+<td class="p-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 18px;">expand</span>
+                                            Júpiter
+                                        </td>
+<td class="p-4 text-on-surface">Gêmeos</td>
+<td class="p-4">19° 12'</td>
+<td class="p-4">III</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Subtle Insight Card -->
+<div class="glass-card p-6 rounded-xl border-primary/20 bg-primary/5">
+<div class="flex gap-4 items-start">
+<div class="p-3 rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<div>
+<h4 class="font-headline-lg text-lg mb-2">Insight do Dia</h4>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                                    O trígono entre seu Sol natal e Júpiter em trânsito hoje favorece expansão criativa. Momento ideal para lançar projetos que exigem visibilidade.
+                                </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Chat Widget: Converse com seu Mapa -->
+<div class="fixed bottom-6 right-6 w-80 md:w-96 z-50" id="chat-widget">
+<!-- Floating Button -->
+<button class="ml-auto flex items-center gap-3 bg-primary text-on-primary px-6 py-3 rounded-full shadow-lg hover:scale-105 transition-all duration-300" id="chat-trigger" onclick="toggleChat()">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-label-md text-label-md">Converse com seu Mapa</span>
+</button>
+<!-- Chat Window (Initially Hidden) -->
+<div class="hidden flex flex-col glass-card h-[500px] rounded-2xl overflow-hidden shadow-2xl border-primary/30" id="chat-window">
+<!-- Header -->
+<div class="p-4 bg-primary/10 border-b border-white/10 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-size: 18px;">auto_awesome</span>
+</div>
+<div>
+<p class="font-label-sm text-[10px] text-primary leading-none uppercase">Orbis Oracle</p>
+<p class="font-headline-lg text-sm">IA ASTROLÓGICA</p>
+</div>
+</div>
+<button class="text-outline hover:text-white transition-colors" onclick="toggleChat()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Messages Area -->
+<div class="flex-grow p-4 overflow-y-auto space-y-4 custom-scrollbar bg-surface-container-lowest/50">
+<div class="flex gap-3">
+<div class="max-w-[85%] bg-surface-container-highest p-3 rounded-2xl rounded-tl-none font-body-md text-body-md leading-relaxed">
+                        Olá! Sou o Orbis Oracle. Analisei seu Sol em Leão e Lua em Touro. Quer saber como essa combinação afeta sua vida profissional?
+                    </div>
+</div>
+<div class="flex gap-3 justify-end">
+<div class="max-w-[85%] bg-primary-container p-3 rounded-2xl rounded-tr-none font-body-md text-body-md text-on-primary-container leading-relaxed border border-primary/20">
+                        Sim, por favor. Especialmente sobre novos projetos.
+                    </div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-4 bg-surface-container border-t border-white/10">
+<div class="flex items-center gap-2 bg-surface-container-low rounded-lg border border-white/10 px-3 py-1 focus-within:border-primary transition-all">
+<input class="bg-transparent border-none focus:ring-0 w-full text-body-md py-2 text-on-surface" placeholder="Pergunte algo sobre seu mapa..." type="text"/>
+<button class="text-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="w-full py-8 px-margin-desktop flex flex-col md:flex-row justify-between items-center bg-surface-container-lowest border-t border-white/5 mt-12 gap-4">
+<div class="font-label-md text-label-md text-primary font-bold tracking-widest">ORBIS ASTRO</div>
+<div class="flex gap-6">
+<a class="font-body-md text-body-md text-outline hover:text-primary transition-colors" href="#">Data Sources</a>
+<a class="font-body-md text-body-md text-outline hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="font-body-md text-body-md text-outline hover:text-primary transition-colors" href="#">Methodology</a>
+</div>
+<div class="font-body-md text-body-md text-outline">© 2024 Orbis Astronomical Observatory</div>
+</footer>
+<script>
+        function toggleChat() {
+            const window = document.getElementById('chat-window');
+            const trigger = document.getElementById('chat-trigger');
+            if (window.classList.contains('hidden')) {
+                window.classList.remove('hidden');
+                trigger.classList.add('hidden');
+            } else {
+                window.classList.add('hidden');
+                trigger.classList.remove('hidden');
+            }
+        }
+        
+        // Micro-interaction for planetary list
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.transform = 'translateX(4px)';
+            });
+            row.addEventListener('mouseleave', () => {
+                row.style.transform = 'translateX(0)';
+            });
+        });
+    </script>
+</body></html>

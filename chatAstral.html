@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ORBIS | Celestial Assistant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(244, 194, 215, 0.1);
+        }
+        .chat-bubble-assistant {
+            background: rgba(45, 53, 70, 0.5);
+            border-top: 1px solid rgba(244, 194, 215, 0.15);
+        }
+        .chat-bubble-user {
+            background: linear-gradient(135deg, #ff4b89 0%, #66002c 100%);
+            box-shadow: 0 0 15px rgba(255, 0, 122, 0.2);
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 12px rgba(255, 0, 122, 0.4);
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(172, 135, 143, 0.3);
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-tint": "#ffb1c3",
+                      "on-secondary": "#472636",
+                      "on-secondary-container": "#dbabc0",
+                      "on-error": "#690005",
+                      "secondary-fixed": "#ffd8e7",
+                      "on-secondary-fixed": "#2f1121",
+                      "secondary-fixed-dim": "#eab9ce",
+                      "on-surface": "#dbe2f8",
+                      "on-surface-variant": "#e5bcc4",
+                      "on-tertiary-fixed": "#2d0050",
+                      "surface-bright": "#31394a",
+                      "on-tertiary": "#4a007f",
+                      "secondary": "#eab9ce",
+                      "on-primary-fixed-variant": "#8f0041",
+                      "tertiary-fixed": "#f1dbff",
+                      "surface-container-highest": "#2d3546",
+                      "on-secondary-fixed-variant": "#603c4d",
+                      "outline": "#ac878f",
+                      "primary-fixed-dim": "#ffb1c3",
+                      "secondary-container": "#633e4f",
+                      "primary": "#ffb1c3",
+                      "on-background": "#dbe2f8",
+                      "tertiary-container": "#b86dfd",
+                      "outline-variant": "#5c3f45",
+                      "inverse-primary": "#bb0058",
+                      "inverse-on-surface": "#283041",
+                      "primary-container": "#ff4b89",
+                      "on-primary-container": "#590026",
+                      "inverse-surface": "#dbe2f8",
+                      "on-primary-fixed": "#3f0019",
+                      "on-primary": "#66002c",
+                      "error": "#ffb4ab",
+                      "surface-container": "#18202f",
+                      "surface-variant": "#2d3546",
+                      "on-tertiary-fixed-variant": "#680eac",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-lowest": "#060e1d",
+                      "surface-container-low": "#131c2b",
+                      "on-tertiary-container": "#410070",
+                      "error-container": "#93000a",
+                      "tertiary": "#deb7ff",
+                      "surface-container-high": "#222a3a",
+                      "primary-fixed": "#ffd9e0",
+                      "surface": "#0b1323",
+                      "tertiary-fixed-dim": "#deb7ff",
+                      "surface-dim": "#0b1323",
+                      "background": "#0b1323"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "md": "16px",
+                      "unit": "4px",
+                      "gutter": "24px",
+                      "sm": "8px",
+                      "margin-desktop": "64px",
+                      "xl": "48px",
+                      "margin-mobile": "16px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Inter"],
+                      "headline-lg": ["Space Grotesk"],
+                      "headline-xl": ["Space Grotesk"],
+                      "label-sm": ["JetBrains Mono"],
+                      "label-md": ["JetBrains Mono"],
+                      "headline-lg-mobile": ["Space Grotesk"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary/30 min-h-screen flex flex-col overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface/40 backdrop-blur-xl border-b border-white/15">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-bold tracking-tighter text-secondary">ORBIS</span>
+</div>
+<nav class="hidden md:flex items-center gap-xl h-full">
+<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Dashboard</a>
+<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Transits</a>
+<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Ephemeris</a>
+<a class="font-body-md text-primary font-bold border-b-2 border-secondary pb-1" href="#">Natal</a>
+</nav>
+<div class="flex items-center gap-md">
+<div class="cursor-pointer active:opacity-80 transition-colors hover:text-secondary">
+<span class="material-symbols-outlined text-[28px]">account_circle</span>
+</div>
+</div>
+</header>
+<main class="flex flex-1 pt-16 h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] z-40 p-6 flex flex-col bg-surface-container-low/60 backdrop-blur-lg border-r border-white/10 w-80 hidden lg:flex">
+<div class="mb-lg">
+<h3 class="font-headline-md text-secondary font-bold text-lg">Celestial Details</h3>
+<p class="font-label-sm text-outline uppercase tracking-widest mt-1">Current Planetary Positions</p>
+</div>
+<div class="space-y-sm flex-1">
+<div class="flex items-center gap-md p-md rounded-lg text-secondary bg-secondary-container/20 cursor-pointer transition-all">
+<span class="material-symbols-outlined">blur_on</span>
+<span class="font-label-md uppercase">Planetary Data</span>
+</div>
+<div class="flex items-center gap-md p-md rounded-lg text-on-surface-variant hover:bg-white/5 cursor-pointer transition-all">
+<span class="material-symbols-outlined">grid_4x4</span>
+<span class="font-label-md uppercase">Aspect Grid</span>
+</div>
+<div class="flex items-center gap-md p-md rounded-lg text-on-surface-variant hover:bg-white/5 cursor-pointer transition-all">
+<span class="material-symbols-outlined">home_pin</span>
+<span class="font-label-md uppercase">Houses</span>
+</div>
+<div class="flex items-center gap-md p-md rounded-lg text-on-surface-variant hover:bg-white/5 cursor-pointer transition-all">
+<span class="material-symbols-outlined">settings_backup_restore</span>
+<span class="font-label-md uppercase">Retrogrades</span>
+</div>
+<div class="flex items-center gap-md p-md rounded-lg text-on-surface-variant hover:bg-white/5 cursor-pointer transition-all">
+<span class="material-symbols-outlined">star</span>
+<span class="font-label-md uppercase">Asteroids</span>
+</div>
+</div>
+<button class="mt-xl py-md px-lg bg-primary text-on-primary font-bold rounded shadow-lg glow-hover transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">download</span>
+                Export Ephemeris
+            </button>
+</aside>
+<!-- Chat Container -->
+<div class="flex-1 lg:ml-80 relative flex flex-col bg-surface-container-lowest">
+<!-- Animated Background -->
+
+<!-- Chat Header Info (Contextual) -->
+<div class="z-10 p-lg flex items-center justify-between border-b border-white/5 bg-surface/20 backdrop-blur-md">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center bg-surface-container">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+</div>
+<div>
+<h2 class="font-headline-lg text-xl">Assistente Orbis</h2>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span class="text-label-sm text-outline">Sincronizado com seu Mapa Natal</span>
+</div>
+</div>
+</div>
+<div class="hidden sm:flex gap-sm">
+<div class="px-3 py-1 rounded bg-tertiary-container/10 border border-tertiary-container/20 text-tertiary-container font-label-sm">
+                        Lua em Escorpião
+                    </div>
+<div class="px-3 py-1 rounded bg-secondary-container/10 border border-secondary-container/20 text-secondary-container font-label-sm">
+                        Sol em Touro
+                    </div>
+</div>
+</div>
+<!-- Messages Area -->
+<div class="flex-1 overflow-y-auto p-md lg:p-xl z-10 flex flex-col gap-lg" id="chat-messages">
+<!-- Assistant Message -->
+<div class="flex flex-col gap-sm max-w-[85%] lg:max-w-[70%]">
+<div class="chat-bubble-assistant p-lg rounded-xl rounded-tl-none">
+<p class="text-body-md text-on-surface">Olá! Estou analisando as configurações celestes de hoje em relação ao seu nascimento. Como posso ajudar na sua jornada astronômica agora?</p>
+</div>
+<span class="text-[10px] text-outline font-label-sm ml-1">10:24 AM</span>
+</div>
+<!-- User Message -->
+<div class="flex flex-col items-end gap-sm self-end max-w-[85%] lg:max-w-[70%]">
+<div class="chat-bubble-user p-lg rounded-xl rounded-tr-none">
+<p class="text-body-md text-white font-medium">Como o trânsito de Saturno hoje afeta minha vida profissional?</p>
+</div>
+<span class="text-[10px] text-outline font-label-sm mr-1">10:25 AM</span>
+</div>
+<!-- Assistant Detailed Response -->
+<div class="flex flex-col gap-sm max-w-[85%] lg:max-w-[70%]">
+<div class="chat-bubble-assistant p-lg rounded-xl rounded-tl-none border-l-4 border-primary">
+<div class="flex items-center gap-2 mb-md text-primary">
+<span class="material-symbols-outlined text-sm">stars</span>
+<span class="font-label-md uppercase tracking-wider">Insight Contextual</span>
+</div>
+<p class="text-body-md text-on-surface leading-relaxed">
+                            Baseado na sua <strong class="text-primary-fixed">Lua em Escorpião</strong> na 10ª casa, Saturno em quadratura hoje sugere um momento de refinamento. Você pode sentir uma pressão para consolidar sua autoridade. É um ciclo de "limpeza" — o que não for essencial será removido para dar espaço ao crescimento sólido.
+                        </p>
+<div class="mt-lg grid grid-cols-1 sm:grid-cols-2 gap-md">
+<div class="p-md rounded bg-surface-container-highest/40 border border-white/5">
+<span class="font-label-sm text-outline block mb-1">TRÂNSITO ATUAL</span>
+<span class="text-body-md">Saturno ♓ 19°</span>
+</div>
+<div class="p-md rounded bg-surface-container-highest/40 border border-white/5">
+<span class="font-label-sm text-outline block mb-1">ASPECTO</span>
+<span class="text-body-md">Quadratura Exata</span>
+</div>
+</div>
+</div>
+<span class="text-[10px] text-outline font-label-sm ml-1">10:26 AM</span>
+</div>
+</div>
+<!-- Bottom Interaction Area -->
+<div class="z-20 p-md lg:p-lg border-t border-white/5 bg-surface-container-low/80 backdrop-blur-xl">
+<!-- Quick Questions -->
+<div class="flex gap-md overflow-x-auto pb-md no-scrollbar">
+<button class="whitespace-nowrap px-lg py-2 rounded-full border border-outline/30 text-outline hover:border-primary hover:text-primary transition-all font-label-md">
+                        ✨ Previsão para amanhã
+                    </button>
+<button class="whitespace-nowrap px-lg py-2 rounded-full border border-outline/30 text-outline hover:border-primary hover:text-primary transition-all font-label-md">
+                        🪐 Próximo Mercúrio Retrógrado
+                    </button>
+<button class="whitespace-nowrap px-lg py-2 rounded-full border border-outline/30 text-outline hover:border-primary hover:text-primary transition-all font-label-md">
+                        💎 Cristal ideal hoje
+                    </button>
+<button class="whitespace-nowrap px-lg py-2 rounded-full border border-outline/30 text-outline hover:border-primary hover:text-primary transition-all font-label-md">
+                        🌙 Significado da Lua em Escorpião
+                    </button>
+</div>
+<!-- Input Box -->
+<div class="relative mt-sm">
+<input class="w-full bg-surface-container-highest border border-outline/20 rounded-xl py-lg px-xl text-body-md focus:outline-none focus:border-primary transition-all pr-16 shadow-inner" placeholder="Pergunte aos astros..." type="text"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center glow-hover transition-all">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer - Collapsed for Chat focused layout -->
+<footer class="w-full py-4 px-margin-desktop flex justify-between items-center bg-surface-container-lowest border-t border-white/5 text-[10px] z-50">
+<span class="font-label-sm text-outline uppercase">© 2024 Orbis Astronomical Observatory</span>
+<div class="flex gap-lg">
+<a class="text-outline hover:text-primary transition-colors uppercase font-label-sm" href="#">Data Sources</a>
+<a class="text-outline hover:text-primary transition-colors uppercase font-label-sm" href="#">Privacy</a>
+</div>
+</footer>
+<script>
+        // Simple interactive demo script
+        const input = document.querySelector('input');
+        const sendBtn = document.querySelector('button.bg-primary.text-on-primary');
+        const chatMessages = document.getElementById('chat-messages');
+
+        const appendMessage = (text, isUser = true) => {
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const messageHtml = isUser ? `
+                <div class="flex flex-col items-end gap-sm self-end max-w-[85%] lg:max-w-[70%]">
+                    <div class="chat-bubble-user p-lg rounded-xl rounded-tr-none">
+                        <p class="text-body-md text-white font-medium">${text}</p>
+                    </div>
+                    <span class="text-[10px] text-outline font-label-sm mr-1">${time}</span>
+                </div>
+            ` : `
+                <div class="flex flex-col gap-sm max-w-[85%] lg:max-w-[70%]">
+                    <div class="chat-bubble-assistant p-lg rounded-xl rounded-tl-none">
+                        <p class="text-body-md text-on-surface">${text}</p>
+                    </div>
+                    <span class="text-[10px] text-outline font-label-sm ml-1">${time}</span>
+                </div>
+            `;
+            chatMessages.insertAdjacentHTML('beforeend', messageHtml);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        };
+
+        sendBtn.addEventListener('click', () => {
+            if (input.value.trim()) {
+                const userText = input.value;
+                appendMessage(userText, true);
+                input.value = '';
+                
+                // Mock response
+                setTimeout(() => {
+                    appendMessage("As frequências de Urano estão enviando sinais de inovação para seu mapa. Mantenha a mente aberta para mudanças súbitas hoje.", false);
+                }, 1000);
+            }
+        });
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendBtn.click();
+        });
+
+        // Quick suggestions listener
+        document.querySelectorAll('button.whitespace-nowrap').forEach(btn => {
+            btn.addEventListener('click', () => {
+                input.value = btn.innerText.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, "").trim();
+                input.focus();
+            });
+        });
+    </script>
+</body></html>
