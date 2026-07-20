@@ -185,12 +185,12 @@
 <h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Bem-vindo de volta</h2>
 <p class="font-body-md text-on-surface-variant/80">Acesse seus dados orbitais e transições celestes.</p>
 </header>
-<form class="space-y-lg" onsubmit="event.preventDefault();">
+<form action="{{ url_for('auth.login') }}" class="space-y-lg" method="post">
 <div class="space-y-sm">
 <label class="font-label-sm text-label-sm text-outline px-unit" for="login-email">E-MAIL</label>
 <div class="input-glow flex items-center bg-surface-container-low border border-white/10 rounded-lg px-md h-14 focus-within:border-primary/60 transition-all">
 <span class="material-symbols-outlined text-outline mr-md">alternate_email</span>
-<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-body-md" id="login-email" placeholder="astronauta@orbis.com" type="email"/>
+<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-body-md" id="login-email" name="email" placeholder="astronauta@orbis.com" required type="email"/>
 </div>
 </div>
 <div class="space-y-sm">
@@ -200,14 +200,14 @@
 </div>
 <div class="input-glow flex items-center bg-surface-container-low border border-white/10 rounded-lg px-md h-14 focus-within:border-primary/60 transition-all">
 <span class="material-symbols-outlined text-outline mr-md">lock</span>
-<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-body-md" id="login-password" placeholder="••••••••" type="password"/>
+<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-body-md" id="login-password" name="senha" placeholder="••••••••" required type="password"/>
 <button class="text-outline hover:text-on-surface transition-colors" type="button">
 <span class="material-symbols-outlined">visibility</span>
 </button>
 </div>
 </div>
 <div class="flex items-center space-x-sm px-unit pt-sm">
-<input class="w-4 h-4 rounded bg-surface-container-highest border-white/10 text-primary focus:ring-primary focus:ring-offset-surface" id="remember" type="checkbox"/>
+<input class="w-4 h-4 rounded bg-surface-container-highest border-white/10 text-primary focus:ring-primary focus:ring-offset-surface" id="remember" name="lembrar" type="checkbox"/>
 <label class="font-label-sm text-label-sm text-on-surface-variant cursor-pointer" for="remember">Manter-me conectado</label>
 </div>
 <button class="btn-primary-glow w-full bg-primary-container text-on-primary-container h-14 rounded-full font-headline-lg flex items-center justify-center space-x-sm transition-all active:scale-95 group mt-xl" type="submit">
@@ -228,26 +228,26 @@
 <h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Nova Jornada</h2>
 <p class="font-body-md text-on-surface-variant/80">Junte-se à maior rede de observação astronômica.</p>
 </header>
-<form class="space-y-lg" onsubmit="event.preventDefault();">
+<form action="{{ url_for('auth.cadastro') }}" class="space-y-lg" method="post">
 <div class="space-y-sm">
 <label class="font-label-sm text-label-sm text-outline px-unit" for="signup-name">NOME COMPLETO</label>
 <div class="input-glow flex items-center bg-surface-container-low border border-white/10 rounded-lg px-md h-14 focus-within:border-primary/60 transition-all">
 <span class="material-symbols-outlined text-outline mr-md">person</span>
-<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-body-md" id="signup-name" placeholder="Seu nome" type="text"/>
+<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-body-md" id="signup-name" name="nome" placeholder="Seu nome" required type="text"/>
 </div>
 </div>
 <div class="space-y-sm">
 <label class="font-label-sm text-label-sm text-outline px-unit" for="signup-email">E-MAIL</label>
 <div class="input-glow flex items-center bg-surface-container-low border border-white/10 rounded-lg px-md h-14 focus-within:border-primary/60 transition-all">
 <span class="material-symbols-outlined text-outline mr-md">alternate_email</span>
-<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-body-md" id="signup-email" placeholder="astronauta@orbis.com" type="email"/>
+<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-body-md" id="signup-email" name="email" placeholder="astronauta@orbis.com" required type="email"/>
 </div>
 </div>
 <div class="space-y-sm">
 <label class="font-label-sm text-label-sm text-outline px-unit" for="signup-password">SENHA</label>
 <div class="input-glow flex items-center bg-surface-container-low border border-white/10 rounded-lg px-md h-14 focus-within:border-primary/60 transition-all">
 <span class="material-symbols-outlined text-outline mr-md">lock</span>
-<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-body-md" id="signup-password" placeholder="Crie uma senha forte" type="password"/>
+<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-body-md" id="signup-password" name="senha" placeholder="Crie uma senha forte" required type="password"/>
 </div>
 </div>
 <button class="btn-primary-glow w-full bg-primary-container text-on-primary-container h-14 rounded-full font-headline-lg flex items-center justify-center space-x-sm transition-all active:scale-95 group mt-xl" type="submit">

@@ -169,7 +169,7 @@
 <div class="absolute -right-20 -bottom-20 opacity-[0.03] pointer-events-none select-none">
 <span class="material-symbols-outlined text-[400px]" style="font-variation-settings: 'wght' 100;">foundation</span>
 </div>
-<form id="natal-chart-form" onsubmit="event.preventDefault();">
+<form action="{{ url_for('charts.criar') }}" id="natal-chart-form" method="post">
 <!-- STEP 1: Temporal Identity -->
 <div class="step-transition" id="step-1">
 <div class="mb-8">
@@ -181,14 +181,14 @@
 <div class="space-y-2">
 <label class="font-label-md text-secondary block">Data de Nascimento</label>
 <div class="relative">
-<input class="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 px-4 text-on-surface focus:ring-0 transition-all appearance-none" required="" type="date"/>
+<input class="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 px-4 text-on-surface focus:ring-0 transition-all appearance-none" name="data_nascimento" required="" type="date"/>
 <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">calendar_month</span>
 </div>
 </div>
 <div class="space-y-2">
 <label class="font-label-md text-secondary block">Horário Exato</label>
 <div class="relative">
-<input class="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 px-4 text-on-surface focus:ring-0 transition-all appearance-none" required="" type="time"/>
+<input class="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 px-4 text-on-surface focus:ring-0 transition-all appearance-none" name="horario_nascimento" required="" type="time"/>
 <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">schedule</span>
 </div>
 <p class="text-xs text-outline italic">Use o horário da certidão de nascimento se possível.</p>
@@ -213,7 +213,7 @@
 <label class="font-label-md text-secondary block">Cidade de Nascimento</label>
 <div class="relative">
 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">location_on</span>
-<input class="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:ring-0 transition-all" id="location-input" placeholder="Digite o nome da cidade..." required="" type="text"/>
+<input class="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:ring-0 transition-all" id="location-input" name="local_nascimento" placeholder="Digite o nome da cidade..." required="" type="text"/>
 </div>
 <!-- Mock Autocomplete -->
 <div class="hidden absolute z-20 top-full left-0 w-full mt-2 glass-panel rounded-lg border border-white/10 overflow-hidden shadow-2xl" id="autocomplete">

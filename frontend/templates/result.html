@@ -156,10 +156,10 @@
 <header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10">
 <div class="font-headline-lg text-2xl font-bold tracking-tighter text-primary">ORBIS</div>
 <nav class="hidden md:flex gap-8 items-center">
-<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1 transition-colors duration-300" href="#">Dashboard</a>
-<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Transits</a>
-<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Ephemeris</a>
-<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Natal</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="{{ url_for('pages.dashboard') }}">Dashboard</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="{{ url_for('horoscopo.pagina') }}">Horóscopo</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="{{ url_for('charts.interpretacoes') }}">Interpretações</a>
+<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1 transition-colors duration-300" href="{{ url_for('charts.principal') }}">Mapa natal</a>
 </nav>
 <div class="flex items-center gap-4">
 <span class="material-symbols-outlined cursor-pointer active:opacity-80 text-primary">account_circle</span>

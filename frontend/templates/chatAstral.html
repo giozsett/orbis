@@ -140,10 +140,10 @@
 <span class="font-headline-md text-headline-md font-bold tracking-tighter text-secondary">ORBIS</span>
 </div>
 <nav class="hidden md:flex items-center gap-xl h-full">
-<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Dashboard</a>
-<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Transits</a>
-<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Ephemeris</a>
-<a class="font-body-md text-primary font-bold border-b-2 border-secondary pb-1" href="#">Natal</a>
+<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="{{ url_for('pages.dashboard') }}">Dashboard</a>
+<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="{{ url_for('horoscopo.pagina') }}">Horóscopo</a>
+<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="{{ url_for('charts.interpretacoes') }}">Interpretações</a>
+<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="{{ url_for('charts.principal') }}">Mapa natal</a>
 </nav>
 <div class="flex items-center gap-md">
 <div class="cursor-pointer active:opacity-80 transition-colors hover:text-secondary">
@@ -271,8 +271,8 @@
 </div>
 <!-- Input Box -->
 <div class="relative mt-sm">
-<input class="w-full bg-surface-container-highest border border-outline/20 rounded-xl py-lg px-xl text-body-md focus:outline-none focus:border-primary transition-all pr-16 shadow-inner" placeholder="Pergunte aos astros..." type="text"/>
-<button class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center glow-hover transition-all">
+<input class="w-full bg-surface-container-highest border border-outline/20 rounded-xl py-lg px-xl text-body-md focus:outline-none focus:border-primary transition-all pr-16 shadow-inner" id="chat-input" placeholder="Pergunte aos astros..." type="text"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center glow-hover transition-all" id="chat-send" type="button">
 <span class="material-symbols-outlined">send</span>
 </button>
 </div>
@@ -289,23 +289,27 @@
 </footer>
 <script>
         // Simple interactive demo script
-        const input = document.querySelector('input');
-        const sendBtn = document.querySelector('button.bg-primary.text-on-primary');
+        const input = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('chat-send');
         const chatMessages = document.getElementById('chat-messages');
+        const messageUrl = {{ url_for('chat.enviar_mensagem')|tojson }};
 
         const appendMessage = (text, isUser = true) => {
+            const safeText = String(text).replace(/[&<>"']/g, character => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+            })[character]);
             const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             const messageHtml = isUser ? `
                 <div class="flex flex-col items-end gap-sm self-end max-w-[85%] lg:max-w-[70%]">
                     <div class="chat-bubble-user p-lg rounded-xl rounded-tr-none">
-                        <p class="text-body-md text-white font-medium">${text}</p>
+                        <p class="text-body-md text-white font-medium">${safeText}</p>
                     </div>
                     <span class="text-[10px] text-outline font-label-sm mr-1">${time}</span>
                 </div>
             ` : `
                 <div class="flex flex-col gap-sm max-w-[85%] lg:max-w-[70%]">
                     <div class="chat-bubble-assistant p-lg rounded-xl rounded-tl-none">
-                        <p class="text-body-md text-on-surface">${text}</p>
+                        <p class="text-body-md text-on-surface">${safeText}</p>
                     </div>
                     <span class="text-[10px] text-outline font-label-sm ml-1">${time}</span>
                 </div>
@@ -314,16 +318,23 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         };
 
-        sendBtn.addEventListener('click', () => {
+        sendBtn.addEventListener('click', async () => {
             if (input.value.trim()) {
                 const userText = input.value;
                 appendMessage(userText, true);
                 input.value = '';
-                
-                // Mock response
-                setTimeout(() => {
-                    appendMessage("As frequências de Urano estão enviando sinais de inovação para seu mapa. Mantenha a mente aberta para mudanças súbitas hoje.", false);
-                }, 1000);
+
+                try {
+                    const response = await fetch(messageUrl, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({mensagem: userText}),
+                    });
+                    const data = await response.json();
+                    appendMessage(data.resposta || data.erro || 'Não foi possível obter uma resposta.', false);
+                } catch (_error) {
+                    appendMessage('Não foi possível conectar ao assistente astral.', false);
+                }
             }
         });
 

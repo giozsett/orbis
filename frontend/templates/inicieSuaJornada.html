@@ -131,10 +131,10 @@
 <div class="flex items-center gap-lg">
 <span class="font-headline-md text-headline-md font-bold tracking-tighter text-secondary">ORBIS</span>
 <nav class="hidden md:flex items-center gap-lg ml-xl">
-<a class="text-primary font-bold border-b-2 border-secondary pb-1 font-label-md text-label-md cursor-pointer active:opacity-80 transition-colors duration-300" href="#">Dashboard</a>
-<a class="text-on-surface-variant hover:text-secondary font-label-md text-label-md cursor-pointer active:opacity-80 transition-colors duration-300" href="#">Transits</a>
-<a class="text-on-surface-variant hover:text-secondary font-label-md text-label-md cursor-pointer active:opacity-80 transition-colors duration-300" href="#">Ephemeris</a>
-<a class="text-on-surface-variant hover:text-secondary font-label-md text-label-md cursor-pointer active:opacity-80 transition-colors duration-300" href="#">Natal</a>
+<a class="text-primary font-bold border-b-2 border-secondary pb-1 font-label-md text-label-md cursor-pointer active:opacity-80 transition-colors duration-300" href="{{ url_for('pages.dashboard') }}">Dashboard</a>
+<a class="text-on-surface-variant hover:text-secondary font-label-md text-label-md cursor-pointer active:opacity-80 transition-colors duration-300" href="{{ url_for('horoscopo.pagina') }}">Horóscopo</a>
+<a class="text-on-surface-variant hover:text-secondary font-label-md text-label-md cursor-pointer active:opacity-80 transition-colors duration-300" href="{{ url_for('charts.interpretacoes') }}">Interpretações</a>
+<a class="text-on-surface-variant hover:text-secondary font-label-md text-label-md cursor-pointer active:opacity-80 transition-colors duration-300" href="{{ url_for('charts.principal') }}">Mapa natal</a>
 </nav>
 </div>
 <div class="flex items-center gap-md">
@@ -204,10 +204,10 @@
                 </p>
 </div>
 <!-- Large CTA Button -->
-<button class="cta-glow bg-primary text-on-primary font-label-md text-label-md px-xl py-lg rounded-full flex items-center gap-md group transition-all duration-500 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(255,0,122,0.2)]">
+<a class="cta-glow bg-primary text-on-primary font-label-md text-label-md px-xl py-lg rounded-full flex items-center gap-md group transition-all duration-500 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(255,0,122,0.2)]" href="{{ url_for('charts.novo') }}">
 <span class="font-bold tracking-widest uppercase">Gerar Primeiro Mapa</span>
 <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-</button>
+</a>
 <!-- Secondary Hints -->
 <div class="mt-lg flex gap-xl justify-center opacity-60">
 <div class="flex items-center gap-xs">

@@ -134,10 +134,10 @@
 <div class="flex items-center gap-12">
 <span class="font-headline-md text-headline-md font-extrabold tracking-tighter text-secondary">ORBIS</span>
 <div class="hidden md:flex gap-8 items-center">
-<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Dashboard</a>
-<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Transits</a>
-<a class="font-label-md text-label-md text-primary font-bold border-b-2 border-secondary pb-1 cursor-pointer" href="#">Ephemeris</a>
-<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Natal</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="{{ url_for('pages.dashboard') }}">Dashboard</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="{{ url_for('horoscopo.pagina') }}">Horóscopo</a>
+<a class="font-label-md text-label-md text-primary font-bold border-b-2 border-secondary pb-1 cursor-pointer" href="{{ url_for('charts.interpretacoes') }}">Interpretações</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="{{ url_for('charts.principal') }}">Mapa natal</a>
 </div>
 </div>
 <div class="flex items-center gap-4">
