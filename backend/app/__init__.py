@@ -3,6 +3,7 @@ from pathlib import Path
 from flask import Flask, render_template
 
 from backend.app.config import Config
+from backend.app.database import db
 
 
 def create_app(config_object=Config):
@@ -16,6 +17,13 @@ def create_app(config_object=Config):
         static_url_path="/static",
     )
     app.config.from_object(config_object)
+
+    db.init_app(app)
+
+    from backend.models import Usuario, MapaNatal, ChatMensagem, Interpretation
+
+    with app.app_context():
+        db.create_all()
 
     from backend.routes.auth import auth_bp
     from backend.routes.charts import charts_bp
