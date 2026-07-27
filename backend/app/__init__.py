@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from dotenv import load_dotenv
 from flask import Flask, render_template
 
 from backend.app.config import Config
@@ -10,6 +11,8 @@ def create_app(config_object=Config):
     """Cria e configura a aplicação Flask."""
 
     project_root = Path(__file__).resolve().parents[2]
+    load_dotenv(project_root / ".env")
+
     app = Flask(
         __name__,
         template_folder=str(project_root / "frontend" / "templates"),

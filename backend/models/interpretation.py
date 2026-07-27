@@ -11,6 +11,11 @@ class Interpretation(db.Model):
     planeta = db.Column(db.String(50), nullable=False)
     signo = db.Column(db.String(20), nullable=False)
     casa = db.Column(db.Integer, nullable=True)
+    grau = db.Column(db.Float, nullable=True)
+    dignidade = db.Column(db.String(30), nullable=True)
+    elemento = db.Column(db.String(15), nullable=True)
+    estado = db.Column(db.String(15), nullable=True)
+    cor = db.Column(db.String(10), nullable=True)
     interpretacao = db.Column(db.Text, nullable=False)
     criado_em = db.Column(
         db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False

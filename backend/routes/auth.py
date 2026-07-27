@@ -1,7 +1,16 @@
-from flask import Blueprint, jsonify, render_template, request
+from flask import Blueprint, jsonify, redirect, render_template, request, session, url_for
+from sqlalchemy.exc import IntegrityError
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from backend.app.database import db
+from backend.models.usuario import Usuario
 
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/acesso")
+
+
+def _is_ajax():
+    return request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
 
 @auth_bp.get("")
@@ -11,22 +20,69 @@ def acesso():
 
 @auth_bp.post("/login")
 def login():
-    if not request.form.get("email") or not request.form.get("senha"):
-        return jsonify(erro="E-mail e senha são obrigatórios."), 400
+    email = request.form.get("email", "").strip()
+    senha = request.form.get("senha", "")
 
-    return jsonify(
-        erro="A autenticação ainda não foi configurada.",
-        proxima_etapa="Criar o modelo Usuario e validar a senha com hash.",
-    ), 501
+    if not email or not senha:
+        if _is_ajax():
+            return jsonify(erro="E-mail e senha são obrigatórios."), 400
+        return render_template("loginCadastro.html", erro="E-mail e senha são obrigatórios.")
+
+    usuario = Usuario.query.filter_by(email=email).first()
+
+    if usuario is None or not check_password_hash(usuario.senha_hash, senha):
+        if _is_ajax():
+            return jsonify(erro="E-mail ou senha inválidos."), 401
+        return render_template("loginCadastro.html", erro="E-mail ou senha inválidos.")
+
+    session["usuario_id"] = usuario.id
+    session["usuario_nome"] = usuario.nome
+
+    if _is_ajax():
+        return jsonify(ok=True, redirect=url_for("pages.dashboard"))
+    return redirect(url_for("pages.dashboard"))
 
 
 @auth_bp.post("/cadastro")
 def cadastro():
-    campos = ("nome", "email", "senha")
-    if any(not request.form.get(campo) for campo in campos):
-        return jsonify(erro="Nome, e-mail e senha são obrigatórios."), 400
+    nome = request.form.get("nome", "").strip()
+    email = request.form.get("email", "").strip()
+    senha = request.form.get("senha", "")
 
-    return jsonify(
-        erro="O cadastro ainda não foi configurado.",
-        proxima_etapa="Persistir o usuário no SQLite com a senha protegida.",
-    ), 501
+    if not nome or not email or not senha:
+        if _is_ajax():
+            return jsonify(erro="Nome, e-mail e senha são obrigatórios."), 400
+        return render_template("loginCadastro.html", erro="Nome, e-mail e senha são obrigatórios.")
+
+    if len(senha) < 6:
+        if _is_ajax():
+            return jsonify(erro="A senha deve ter pelo menos 6 caracteres."), 400
+        return render_template("loginCadastro.html", erro="A senha deve ter pelo menos 6 caracteres.")
+
+    usuario = Usuario(
+        nome=nome,
+        email=email,
+        senha_hash=generate_password_hash(senha),
+    )
+
+    try:
+        db.session.add(usuario)
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        if _is_ajax():
+            return jsonify(erro="Este e-mail já está cadastrado."), 409
+        return render_template("loginCadastro.html", erro="Este e-mail já está cadastrado.")
+
+    session["usuario_id"] = usuario.id
+    session["usuario_nome"] = usuario.nome
+
+    if _is_ajax():
+        return jsonify(ok=True, redirect=url_for("pages.dashboard"))
+    return redirect(url_for("pages.dashboard"))
+
+
+@auth_bp.get("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("auth.acesso"))

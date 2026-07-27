@@ -9,8 +9,10 @@ class ChatMensagem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=True)
     mapa_id = db.Column(db.Integer, db.ForeignKey("mapas_natais.id"), nullable=True)
+    papel = db.Column(
+        db.String(10), nullable=False, default="user", index=True
+    )
     mensagem = db.Column(db.Text, nullable=False)
-    resposta = db.Column(db.Text, nullable=True)
     criado_em = db.Column(
         db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False
     )

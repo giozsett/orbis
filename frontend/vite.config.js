@@ -12,6 +12,26 @@ export default defineConfig({
         target: 'http://127.0.0.1:5000',
         changeOrigin: true,
       },
+      '/acesso': {
+        target: 'http://127.0.0.1:5000',
+        changeOrigin: true,
+      },
+      '/dashboard': {
+        target: 'http://127.0.0.1:5000',
+        changeOrigin: true,
+      },
+      '/mapas': {
+        target: 'http://127.0.0.1:5000',
+        changeOrigin: true,
+      },
+      '/horoscopo': {
+        target: 'http://127.0.0.1:5000',
+        changeOrigin: true,
+      },
+      '/chat': {
+        target: 'http://127.0.0.1:5000',
+        changeOrigin: true,
+      },
     },
   },
   build: {

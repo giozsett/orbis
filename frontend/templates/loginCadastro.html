@@ -179,6 +179,12 @@
 <!-- Auth Card -->
 <div class="glass-panel rounded-xl transition-all duration-500 ease-out overflow-hidden" id="auth-card">
 <div class="form-container p-lg md:p-xl">
+{% if erro %}
+<div class="mb-lg p-md rounded-lg bg-error-container/20 border border-error/30 flex items-center gap-sm">
+    <span class="material-symbols-outlined text-error">error</span>
+    <p class="font-label-md text-error">{{ erro }}</p>
+</div>
+{% endif %}
 <!-- LOGIN VIEW -->
 <div class="form-view" id="login-view">
 <header class="mb-xl">

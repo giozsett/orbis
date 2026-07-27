@@ -1,8 +1,70 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Login() {
+  const navigate = useNavigate()
   const [isLogin, setIsLogin] = useState(true)
+  const [erro, setErro] = useState('')
+  const [formData, setFormData] = useState({
+    nome: '',
+    email: '',
+    senha: '',
+  })
+
+  const updateForm = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+    setErro('')
+  }
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setErro('')
+
+    const body = new URLSearchParams({ email: formData.email, senha: formData.senha })
+
+    try {
+      const res = await fetch('/acesso/login', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body,
+      })
+      const data = await res.json()
+      if (res.ok) {
+        navigate('/dashboard')
+      } else {
+        setErro(data.erro || 'E-mail ou senha inválidos.')
+      }
+    } catch {
+      setErro('Erro de conexão com o servidor.')
+    }
+  }
+
+  const handleCadastro = async (e) => {
+    e.preventDefault()
+    setErro('')
+
+    const body = new URLSearchParams({
+      nome: formData.nome,
+      email: formData.email,
+      senha: formData.senha,
+    })
+
+    try {
+      const res = await fetch('/acesso/cadastro', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body,
+      })
+      const data = await res.json()
+      if (res.ok) {
+        navigate('/dashboard')
+      } else {
+        setErro(data.erro || 'Erro ao criar conta.')
+      }
+    } catch {
+      setErro('Erro de conexão com o servidor.')
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-[#020817]">
@@ -34,6 +96,14 @@ export default function Login() {
         {/* Card de autenticação */}
         <div className="glass-panel rounded-xl overflow-hidden">
           <div className="p-6 md:p-8">
+            {/* Mensagem de erro */}
+            {erro && (
+              <div className="mb-6 p-4 rounded-lg bg-error-container/20 border border-error/30 flex items-center gap-3">
+                <span className="material-symbols-outlined text-error">error</span>
+                <p className="font-label text-sm text-error">{erro}</p>
+              </div>
+            )}
+
             {/* Formulário de Login */}
             {isLogin ? (
               <div className="animate-fade-in">
@@ -42,13 +112,15 @@ export default function Login() {
                   <p className="text-on-surface-variant/80">Acesse seus dados orbitais e transições celestes.</p>
                 </header>
 
-                <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                <form className="space-y-6" onSubmit={handleLogin}>
                   <div className="space-y-2">
                     <label className="font-label text-xs text-outline px-1 block">E-MAIL</label>
                     <div className="input-glow flex items-center bg-surface-container-low border border-white/10 rounded-lg px-4 h-14 focus-within:border-primary/60 transition-all">
                       <span className="material-symbols-outlined text-outline mr-3">alternate_email</span>
                       <input
                         type="email"
+                        value={formData.email}
+                        onChange={(e) => updateForm('email', e.target.value)}
                         placeholder="astronauta@orbis.com"
                         className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant"
                         required
@@ -67,6 +139,8 @@ export default function Login() {
                       <span className="material-symbols-outlined text-outline mr-3">lock</span>
                       <input
                         type="password"
+                        value={formData.senha}
+                        onChange={(e) => updateForm('senha', e.target.value)}
                         placeholder="••••••••"
                         className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant"
                         required
@@ -84,7 +158,7 @@ export default function Login() {
                     </label>
                   </div>
 
-                  <button className="w-full bg-primary-container text-on-primary-container h-14 rounded-full font-headline flex items-center justify-center gap-2 transition-all active:scale-95 group mt-6 hover:shadow-[0_0_20px_rgba(255,0,122,0.4)]">
+                  <button type="submit" className="w-full bg-primary-container text-on-primary-container h-14 rounded-full font-headline flex items-center justify-center gap-2 transition-all active:scale-95 group mt-6 hover:shadow-[0_0_20px_rgba(255,0,122,0.4)]">
                     <span>Entrar</span>
                     <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
                   </button>
@@ -93,7 +167,7 @@ export default function Login() {
                 <div className="mt-8 pt-6 border-t border-white/5 flex flex-col items-center">
                   <p className="text-on-surface-variant mb-4">Novo no observatório?</p>
                   <button
-                    onClick={() => setIsLogin(false)}
+                    onClick={() => { setIsLogin(false); setErro('') }}
                     className="font-label text-sm text-secondary border border-secondary/20 hover:border-secondary/60 hover:bg-secondary/5 px-8 py-2 rounded-full transition-all"
                   >
                     Criar uma conta
@@ -108,13 +182,15 @@ export default function Login() {
                   <p className="text-on-surface-variant/80">Junte-se à maior rede de observação astronômica.</p>
                 </header>
 
-                <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                <form className="space-y-6" onSubmit={handleCadastro}>
                   <div className="space-y-2">
                     <label className="font-label text-xs text-outline px-1 block">NOME COMPLETO</label>
                     <div className="input-glow flex items-center bg-surface-container-low border border-white/10 rounded-lg px-4 h-14 focus-within:border-primary/60 transition-all">
                       <span className="material-symbols-outlined text-outline mr-3">person</span>
                       <input
                         type="text"
+                        value={formData.nome}
+                        onChange={(e) => updateForm('nome', e.target.value)}
                         placeholder="Seu nome"
                         className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant"
                         required
@@ -128,6 +204,8 @@ export default function Login() {
                       <span className="material-symbols-outlined text-outline mr-3">alternate_email</span>
                       <input
                         type="email"
+                        value={formData.email}
+                        onChange={(e) => updateForm('email', e.target.value)}
                         placeholder="astronauta@orbis.com"
                         className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant"
                         required
@@ -141,6 +219,8 @@ export default function Login() {
                       <span className="material-symbols-outlined text-outline mr-3">lock</span>
                       <input
                         type="password"
+                        value={formData.senha}
+                        onChange={(e) => updateForm('senha', e.target.value)}
                         placeholder="Crie uma senha forte"
                         className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant"
                         required
@@ -148,7 +228,7 @@ export default function Login() {
                     </div>
                   </div>
 
-                  <button className="w-full bg-primary-container text-on-primary-container h-14 rounded-full font-headline flex items-center justify-center gap-2 transition-all active:scale-95 group mt-6 hover:shadow-[0_0_20px_rgba(255,0,122,0.4)]">
+                  <button type="submit" className="w-full bg-primary-container text-on-primary-container h-14 rounded-full font-headline flex items-center justify-center gap-2 transition-all active:scale-95 group mt-6 hover:shadow-[0_0_20px_rgba(255,0,122,0.4)]">
                     <span>Criar Conta</span>
                     <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">rocket_launch</span>
                   </button>
@@ -157,7 +237,7 @@ export default function Login() {
                 <div className="mt-8 pt-6 border-t border-white/5 flex flex-col items-center">
                   <p className="text-on-surface-variant mb-4">Já possui acesso?</p>
                   <button
-                    onClick={() => setIsLogin(true)}
+                    onClick={() => { setIsLogin(true); setErro('') }}
                     className="font-label text-sm text-secondary border border-secondary/20 hover:border-secondary/60 hover:bg-secondary/5 px-8 py-2 rounded-full transition-all"
                   >
                     Fazer Login
