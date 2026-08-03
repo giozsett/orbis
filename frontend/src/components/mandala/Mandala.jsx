@@ -1,19 +1,32 @@
 import { useEffect, useRef, useState } from 'react'
 
 const SIGNOS = [
-  { nome: 'Áries', simbolo: '♈', grau: 0 },
-  { nome: 'Touro', simbolo: '♉', grau: 30 },
-  { nome: 'Gêmeos', simbolo: '♊', grau: 60 },
-  { nome: 'Câncer', simbolo: '♋', grau: 90 },
-  { nome: 'Leão', simbolo: '♌', grau: 120 },
-  { nome: 'Virgem', simbolo: '♍', grau: 150 },
-  { nome: 'Libra', simbolo: '♎', grau: 180 },
-  { nome: 'Escorpião', simbolo: '♏', grau: 210 },
-  { nome: 'Sagitário', simbolo: '♐', grau: 240 },
-  { nome: 'Capricórnio', simbolo: '♑', grau: 270 },
-  { nome: 'Aquário', simbolo: '♒', grau: 300 },
-  { nome: 'Peixes', simbolo: '♓', grau: 330 },
+  { nome: 'Áries', simbolo: '\u2648\uFE0E', grau: 0, cor: '#ffb1c3' },
+  { nome: 'Touro', simbolo: '\u2649\uFE0E', grau: 30, cor: '#eab9ce' },
+  { nome: 'Gêmeos', simbolo: '\u264A\uFE0E', grau: 60, cor: '#deb7ff' },
+  { nome: 'Câncer', simbolo: '\u264B\uFE0E', grau: 90, cor: '#ac878f' },
+  { nome: 'Leão', simbolo: '\u264C\uFE0E', grau: 120, cor: '#ffb1c3' },
+  { nome: 'Virgem', simbolo: '\u264D\uFE0E', grau: 150, cor: '#eab9ce' },
+  { nome: 'Libra', simbolo: '\u264E\uFE0E', grau: 180, cor: '#deb7ff' },
+  { nome: 'Escorpião', simbolo: '\u264F\uFE0E', grau: 210, cor: '#ac878f' },
+  { nome: 'Sagitário', simbolo: '\u2650\uFE0E', grau: 240, cor: '#ffb1c3' },
+  { nome: 'Capricórnio', simbolo: '\u2651\uFE0E', grau: 270, cor: '#eab9ce' },
+  { nome: 'Aquário', simbolo: '\u2652\uFE0E', grau: 300, cor: '#deb7ff' },
+  { nome: 'Peixes', simbolo: '\u2653\uFE0E', grau: 330, cor: '#ac878f' },
 ]
+
+const PLANET_COLORS = {
+  Sol: '#ffb1c3',
+  Lua: '#eab9ce',
+  Mercúrio: '#deb7ff',
+  Vênus: '#ff4b89',
+  Marte: '#ffb4ab',
+  Júpiter: '#b86dfd',
+  Saturno: '#ac878f',
+  Urano: '#5c3f45',
+  Netuno: '#633e4f',
+  Plutão: '#93000a',
+}
 
 export default function Mandala({ data, onPlanetHover, onPlanetClick, animated = true }) {
   const [visibleLayers, setVisibleLayers] = useState(0)
@@ -142,6 +155,8 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
           return (
             <g
               key={signo.nome}
+              role="img"
+              aria-label={signo.nome}
               style={{
                 opacity: isVisible ? 1 : 0,
                 transform: isVisible ? 'scale(1)' : 'scale(0.5)',
@@ -149,16 +164,22 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
                 transition: 'all 0.4s ease-out',
               }}
             >
+              <title>{signo.nome}</title>
               <circle
-                cx={pos.x} cy={pos.y} r="12"
-                fill="rgba(11, 19, 35, 0.8)"
-                stroke="#ffb1c3" strokeWidth="0.5"
+                cx={pos.x} cy={pos.y} r="16"
+                fill="#18202f"
+                fillOpacity="0.96"
+                stroke={signo.cor} strokeWidth="1.25"
               />
               <text
-                x={pos.x} y={pos.y + 4}
+                x={pos.x} y={pos.y}
                 textAnchor="middle"
-                fill="#e5bcc4"
-                fontSize="10"
+                dominantBaseline="central"
+                fill={signo.cor}
+                fontFamily="'Noto Sans Symbols 2', 'Segoe UI Symbol', 'DejaVu Sans', sans-serif"
+                fontSize="18"
+                fontWeight="600"
+                aria-hidden="true"
               >
                 {signo.simbolo}
               </text>
@@ -172,58 +193,7 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
           EARTH
         </text>
 
-        {/* Planetas */}
-        {data?.planetas?.slice(0, visiblePlanets).map((planeta, index) => {
-          const pos = getPlanetPosition(planeta.grau, 160)
-          const colors = {
-            'Sol': '#ffb1c3',
-            'Lua': '#eab9ce',
-            'Mercúrio': '#deb7ff',
-            'Vênus': '#ff4b89',
-            'Marte': '#ffb4ab',
-            'Júpiter': '#b86dfd',
-            'Saturno': '#ac878f',
-            'Urano': '#5c3f45',
-            'Netuno': '#633e4f',
-            'Plutão': '#93000a',
-          }
-          const color = colors[planeta.nome] || '#ffb1c3'
-
-          return (
-            <g
-              key={planeta.nome}
-              className="cursor-pointer"
-              onMouseEnter={() => onPlanetHover?.(planeta)}
-              onMouseLeave={() => onPlanetHover?.(null)}
-              onClick={() => onPlanetClick?.(planeta)}
-              style={{
-                opacity: visiblePlanets > index ? 1 : 0,
-                transform: visiblePlanets > index ? 'scale(1)' : 'scale(0)',
-                transformOrigin: `${pos.x}px ${pos.y}px`,
-                transition: 'all 0.5s ease-out',
-              }}
-            >
-              <circle
-                cx={pos.x} cy={pos.y} r="8"
-                fill={color}
-                filter="url(#glow)"
-                className="animate-planet-pulse"
-                style={{ '--planet-color': color }}
-              />
-              <text
-                x={pos.x} y={pos.y - 12}
-                textAnchor="middle"
-                fill={color}
-                fontSize="8"
-                fontFamily="JetBrains Mono"
-              >
-                {planeta.nome}
-              </text>
-            </g>
-          )
-        })}
-
-        {/* Linhas de aspecto */}
+        {/* Linhas de aspecto: ficam abaixo dos planetas e de seus rótulos */}
         {data?.aspectos && visiblePlanets > 3 && (
           <g style={{ opacity: visiblePlanets > 3 ? 0.6 : 0, transition: 'opacity 1s ease-out' }}>
             {data.aspectos.map((aspecto, index) => {
@@ -248,6 +218,69 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
             })}
           </g>
         )}
+
+        {/* Planetas */}
+        {data?.planetas?.slice(0, visiblePlanets).map((planeta, index) => {
+          const pos = getPlanetPosition(planeta.grau, 160)
+          const labelPos = getPlanetPosition(planeta.grau, 181)
+          const labelWidth = Math.max(38, planeta.nome.length * 6.4 + 14)
+          const color = PLANET_COLORS[planeta.nome] || '#ffb1c3'
+
+          return (
+            <g
+              key={planeta.nome}
+              className="cursor-pointer"
+              onMouseEnter={() => onPlanetHover?.(planeta)}
+              onMouseLeave={() => onPlanetHover?.(null)}
+              onClick={() => onPlanetClick?.(planeta)}
+              style={{
+                opacity: visiblePlanets > index ? 1 : 0,
+                transform: visiblePlanets > index ? 'scale(1)' : 'scale(0)',
+                transformOrigin: `${pos.x}px ${pos.y}px`,
+                transition: 'all 0.5s ease-out',
+              }}
+            >
+              <line
+                x1={pos.x} y1={pos.y}
+                x2={labelPos.x} y2={labelPos.y}
+                stroke={color}
+                strokeWidth="1"
+                strokeOpacity="0.7"
+              />
+              <circle
+                cx={pos.x} cy={pos.y} r="8.5"
+                fill={color}
+                filter="url(#glow)"
+                className="animate-planet-pulse"
+                style={{ '--planet-color': color }}
+              />
+              <rect
+                x={labelPos.x - labelWidth / 2}
+                y={labelPos.y - 9}
+                width={labelWidth}
+                height="18"
+                rx="9"
+                fill="#0b1323"
+                fillOpacity="0.94"
+                stroke={color}
+                strokeWidth="0.75"
+                strokeOpacity="0.75"
+              />
+              <text
+                x={labelPos.x} y={labelPos.y}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fill="#dbe2f8"
+                fontSize="10.5"
+                fontFamily="'Space Grotesk', 'Inter', sans-serif"
+                fontWeight="650"
+                letterSpacing="0.15"
+              >
+                {planeta.nome}
+              </text>
+            </g>
+          )
+        })}
       </svg>
 
       {/* Anel de rotação externo */}

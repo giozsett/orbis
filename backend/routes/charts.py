@@ -16,20 +16,38 @@ from backend.services.localizacao_service import (
 charts_bp = Blueprint("charts", __name__, url_prefix="/mapas")
 
 
+def _mapas_concluidos_do_usuario(usuario_id):
+    return (
+        MapaNatal.query.filter_by(usuario_id=usuario_id, status="concluido")
+        .order_by(MapaNatal.criado_em.asc(), MapaNatal.id.asc())
+    )
+
+
 @charts_bp.get("/novo")
 def novo():
     return render_template("criacaoMapa.html")
+
+
+@charts_bp.get("")
+def listar():
+    if "usuario_id" not in session:
+        if request.accept_mimetypes.best == "text/html":
+            return redirect(url_for("auth.acesso"))
+        return jsonify(erro="Faça login para acessar seus mapas."), 401
+
+    mapas = _mapas_concluidos_do_usuario(session["usuario_id"]).all()
+    principal_id = mapas[0].id if mapas else None
+    resumos = [_serializar_resumo_mapa(mapa, principal_id) for mapa in mapas]
+    if request.accept_mimetypes.best == "text/html":
+        return render_template("meusMapas.html", mapas=resumos)
+    return jsonify(mapas=resumos)
 
 
 @charts_bp.get("/principal")
 def principal():
     if "usuario_id" not in session:
         return redirect(url_for("auth.acesso"))
-    mapa = (
-        MapaNatal.query.filter_by(usuario_id=session["usuario_id"], status="concluido")
-        .order_by(MapaNatal.criado_em.desc())
-        .first()
-    )
+    mapa = _mapas_concluidos_do_usuario(session["usuario_id"]).first()
     if mapa is None:
         return redirect(url_for("charts.novo"))
     if request.accept_mimetypes.best == "application/json":
@@ -103,12 +121,37 @@ def detalhe(mapa_id):
     mapa = MapaNatal.query.filter_by(
         id=mapa_id,
         usuario_id=session["usuario_id"],
+        status="concluido",
     ).first()
     if mapa is None:
         return jsonify(erro="Mapa não encontrado."), 404
     if request.accept_mimetypes.best == "application/json":
         return jsonify(mapa=_serializar_mapa(mapa))
     return render_template("result.html", mapa=mapa, mapa_id=mapa.id, dados=mapa.dados)
+
+
+@charts_bp.delete("/<int:mapa_id>")
+def excluir(mapa_id):
+    if "usuario_id" not in session:
+        return jsonify(erro="Faça login para excluir um mapa."), 401
+
+    mapas = _mapas_concluidos_do_usuario(session["usuario_id"])
+    mapa_principal = mapas.first()
+    mapa = mapas.filter(MapaNatal.id == mapa_id).first()
+    if mapa is None:
+        return jsonify(erro="Mapa não encontrado."), 404
+    if mapa_principal is not None and mapa.id == mapa_principal.id:
+        return jsonify(erro="O mapa principal não pode ser excluído."), 409
+
+    try:
+        mapa.status = "excluido"
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        current_app.logger.exception("Falha ao excluir mapa natal")
+        return jsonify(erro="Não foi possível excluir o mapa."), 500
+
+    return jsonify(ok=True, id=mapa.id, status=mapa.status)
 
 
 @charts_bp.get("/principal/interpretacoes")
@@ -135,4 +178,28 @@ def _serializar_mapa(mapa):
         "utc_offset_minutos": mapa.utc_offset_minutos,
         "status": mapa.status,
         "dados": mapa.dados,
+    }
+
+
+def _serializar_resumo_mapa(mapa, principal_id):
+    dados = mapa.dados or {}
+    planetas = dados.get("planetas") or []
+    sol = next((planeta for planeta in planetas if planeta.get("nome") == "Sol"), {})
+    ascendente = dados.get("ascendente") or {}
+
+    return {
+        "id": mapa.id,
+        "nome": mapa.nome,
+        "data_nascimento": mapa.data_nascimento.isoformat(),
+        "horario_nascimento": mapa.horario_nascimento.strftime("%H:%M"),
+        "local_nascimento": mapa.local_nascimento,
+        "status": mapa.status,
+        "criado_em": mapa.criado_em.isoformat(),
+        "principal": mapa.id == principal_id,
+        "resumo": {
+            "sol_signo": sol.get("signo"),
+            "sol_posicao": sol.get("posicao"),
+            "ascendente_signo": ascendente.get("signo"),
+            "ascendente_posicao": ascendente.get("posicao"),
+        },
     }

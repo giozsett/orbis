@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ORBIS | Meus Mapas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: { extend: {
+    colors: {
+      primary: '#ffb1c3', secondary: '#eab9ce', tertiary: '#deb7ff',
+      surface: '#0b1323', 'surface-container': '#18202f',
+      'surface-container-low': '#131c2b', 'on-surface': '#dbe2f8',
+      'on-surface-variant': '#e5bcc4', outline: '#ac878f',
+      'on-primary': '#66002c'
+    },
+    fontFamily: {
+      headline: ['Space Grotesk', 'sans-serif'],
+      body: ['Inter', 'sans-serif'],
+      label: ['JetBrains Mono', 'monospace']
+    }
+  }}
+}
+</script>
+<style>
+body { background: radial-gradient(circle at 60% 20%, #131c2b 0%, #0b1323 48%, #060e1d 100%); }
+.glass-panel { background: rgba(24, 32, 47, .66); backdrop-filter: blur(18px); border: 1px solid rgba(255, 177, 195, .1); }
+</style>
+</head>
+<body class="min-h-screen bg-surface font-body text-on-surface">
+<header class="fixed top-0 z-50 flex h-16 w-full items-center justify-between border-b border-white/10 bg-surface/70 px-4 backdrop-blur-xl md:px-12">
+<a class="flex items-center gap-2" href="{{ url_for('pages.dashboard') }}">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<span class="font-headline text-2xl font-bold text-secondary">ORBIS</span>
+</a>
+<nav class="hidden items-center gap-7 md:flex">
+<a class="font-label text-sm text-on-surface-variant hover:text-primary" href="{{ url_for('pages.dashboard') }}">Dashboard</a>
+<a class="border-b-2 border-primary pb-1 font-label text-sm text-primary" href="{{ url_for('charts.listar') }}">Meus mapas</a>
+<a class="font-label text-sm text-on-surface-variant hover:text-primary" href="{{ url_for('horoscopo.pagina') }}">Horóscopo</a>
+<a class="font-label text-sm text-on-surface-variant hover:text-primary" href="{{ url_for('chat.pagina') }}">Chat Astral</a>
+<a class="font-label text-sm text-on-surface-variant hover:text-primary" href="{{ url_for('charts.principal') }}">Mapa natal</a>
+</nav>
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</header>
+
+<aside class="fixed left-0 top-16 hidden h-[calc(100vh-64px)] w-80 flex-col border-r border-white/10 bg-surface-container-low/70 p-6 backdrop-blur-lg lg:flex">
+<div class="mb-9">
+<h2 class="font-headline text-xl text-secondary">Seu Observatório</h2>
+<p class="mt-1 font-label text-xs uppercase tracking-widest text-outline">Mapas natais salvos</p>
+</div>
+<nav class="flex flex-1 flex-col gap-2">
+<a class="flex items-center gap-4 rounded-lg border border-primary/20 bg-primary/10 p-3 text-primary" href="{{ url_for('charts.listar') }}">
+<span class="material-symbols-outlined">folder_supervised</span>
+<span class="font-label text-sm uppercase">Meus Mapas</span>
+</a>
+<a class="flex items-center gap-4 rounded-lg p-3 text-on-surface-variant hover:bg-white/5 hover:text-secondary" href="{{ url_for('charts.principal') }}">
+<span class="material-symbols-outlined">blur_on</span>
+<span class="font-label text-sm uppercase">Mapa principal</span>
+</a>
+</nav>
+<a class="flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-label text-sm text-on-primary" href="{{ url_for('charts.novo') }}">
+<span class="material-symbols-outlined text-lg">add_circle</span> Criar outro mapa
+</a>
+</aside>
+
+<main class="min-h-screen px-5 pb-16 pt-28 lg:ml-80 lg:px-12">
+<div class="mx-auto max-w-6xl">
+<header class="flex flex-col gap-6 border-b border-white/10 pb-8 md:flex-row md:items-end md:justify-between">
+<div>
+<span class="font-label text-xs uppercase tracking-[.2em] text-primary">Seu observatório</span>
+<h1 class="mt-2 font-headline text-4xl md:text-5xl">Meus Mapas</h1>
+<p class="mt-3 max-w-2xl text-on-surface-variant">Consulte todos os mapas calculados. Horóscopos e o Chat Astral usam sempre o primeiro mapa, identificado como principal.</p>
+</div>
+<a class="flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-label text-sm text-on-primary" href="{{ url_for('charts.novo') }}">
+<span class="material-symbols-outlined">add_circle</span> Criar outro mapa
+</a>
+</header>
+
+{% if mapas %}
+<section class="mt-10 grid grid-cols-1 gap-6 xl:grid-cols-2" aria-label="Mapas natais criados">
+{% for mapa in mapas %}
+<article data-map-card="{{ mapa.id }}" class="glass-panel flex h-full flex-col rounded-2xl p-6 transition-all duration-500 hover:-translate-y-1 {% if mapa.principal %}shadow-[0_0_30px_rgba(255,177,195,.08)]{% endif %}">
+<div class="flex items-start justify-between gap-4">
+<div class="flex min-w-0 items-center gap-4">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-primary/30 bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-3xl">blur_circular</span>
+</div>
+<div class="min-w-0">
+<h2 class="truncate font-headline text-xl">{{ mapa.nome or ('Meu mapa natal' if mapa.principal else 'Mapa adicional') }}</h2>
+<p class="mt-1 truncate text-sm text-on-surface-variant">{{ mapa.local_nascimento }}</p>
+</div>
+</div>
+<span class="shrink-0 rounded-full border px-3 py-1 font-label text-[10px] uppercase tracking-wider {% if mapa.principal %}border-primary/30 bg-primary/10 text-primary{% else %}border-white/10 bg-white/5 text-outline{% endif %}">{{ 'Principal' if mapa.principal else 'Adicional' }}</span>
+</div>
+<dl class="mt-6 grid grid-cols-2 gap-3">
+<div class="rounded-lg border border-white/5 bg-surface-container-low/70 p-3">
+<dt class="font-label text-[10px] uppercase tracking-widest text-outline">Nascimento</dt>
+<dd class="mt-2 text-sm">{{ mapa.data_nascimento }}</dd>
+<dd class="mt-1 font-label text-xs text-secondary">{{ mapa.horario_nascimento }}</dd>
+</div>
+<div class="rounded-lg border border-white/5 bg-surface-container-low/70 p-3">
+<dt class="font-label text-[10px] uppercase tracking-widest text-outline">Assinatura</dt>
+<dd class="mt-2 text-sm">Sol em {{ mapa.resumo.sol_signo or '—' }}</dd>
+<dd class="mt-1 font-label text-xs text-tertiary">Asc. {{ mapa.resumo.ascendente_signo or '—' }}</dd>
+</div>
+</dl>
+{% if mapa.principal %}
+<p class="mt-4 flex gap-2 text-xs leading-relaxed text-on-surface-variant"><span class="material-symbols-outlined text-base text-primary">auto_awesome</span>Horóscopos e conversas do Chat Astral usam este mapa.</p>
+{% endif %}
+<div class="mt-auto flex flex-wrap items-center justify-end gap-2 pt-6">
+{% if not mapa.principal %}
+<div class="delete-control flex items-center">
+<button type="button" aria-label="Excluir {{ mapa.nome or 'mapa adicional' }}" title="Excluir mapa" onclick="mostrarConfirmacao(this)" class="delete-trigger flex h-9 w-9 items-center justify-center rounded-full border border-red-300/20 text-red-300/70 transition-all duration-300 hover:rotate-6 hover:scale-110 hover:border-red-300/40 hover:bg-red-300/10 hover:text-red-300 hover:shadow-[0_0_18px_rgba(255,180,171,.12)]">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+<div class="delete-confirm hidden items-center gap-2 rounded-full border border-red-300/20 bg-red-300/5 p-1">
+<button type="button" onclick="ocultarConfirmacao(this)" class="rounded-full px-3 py-2 font-label text-[10px] uppercase tracking-wider text-outline hover:bg-white/5 hover:text-on-surface">Cancelar</button>
+<button type="button" data-delete-url="{{ url_for('charts.excluir', mapa_id=mapa.id) }}" onclick="excluirMapa(this, {{ mapa.id }})" class="delete-submit flex items-center gap-2 rounded-full bg-red-300/15 px-3 py-2 font-label text-[10px] uppercase tracking-wider text-red-300 hover:bg-red-300/25">
+<span class="material-symbols-outlined text-base">delete_forever</span><span>Confirmar</span>
+</button>
+</div>
+</div>
+{% endif %}
+<a class="flex items-center gap-2 rounded-full border border-secondary/30 px-4 py-2 font-label text-xs text-secondary hover:bg-secondary/10" href="{{ url_for('charts.detalhe', mapa_id=mapa.id) }}">Abrir mapa <span class="material-symbols-outlined text-base">arrow_forward</span></a>
+</div>
+</article>
+{% endfor %}
+</section>
+{% else %}
+<section class="glass-panel mt-10 rounded-2xl p-12 text-center">
+<span class="material-symbols-outlined text-6xl text-primary/40">telescope</span>
+<h2 class="mt-4 font-headline text-2xl">Nenhum mapa criado ainda</h2>
+<p class="mt-2 text-on-surface-variant">Crie seu primeiro mapa para iniciar sua jornada pelo ORBIS.</p>
+<a class="mt-6 inline-flex rounded-full bg-primary px-6 py-3 font-label text-sm text-on-primary" href="{{ url_for('charts.novo') }}">Criar primeiro mapa</a>
+</section>
+{% endif %}
+</div>
+</main>
+<script>
+function mostrarConfirmacao(botao) {
+  botao.classList.add('hidden')
+  const confirmacao = botao.parentElement.querySelector('.delete-confirm')
+  confirmacao.classList.remove('hidden')
+  confirmacao.classList.add('flex')
+}
+
+function ocultarConfirmacao(botao) {
+  const controle = botao.closest('.delete-control')
+  const confirmacao = controle.querySelector('.delete-confirm')
+  confirmacao.classList.add('hidden')
+  confirmacao.classList.remove('flex')
+  controle.querySelector('.delete-trigger').classList.remove('hidden')
+}
+
+async function excluirMapa(botao, mapaId) {
+  if (botao.disabled) return
+  botao.disabled = true
+  const icone = botao.querySelector('.material-symbols-outlined')
+  const texto = botao.querySelector('span:last-child')
+  icone.textContent = 'progress_activity'
+  icone.classList.add('animate-spin')
+  texto.textContent = 'Excluindo…'
+
+  try {
+    const resposta = await fetch(botao.dataset.deleteUrl, {
+      method: 'DELETE',
+      headers: { Accept: 'application/json' },
+    })
+    const dados = await resposta.json()
+    if (!resposta.ok) throw new Error(dados.erro || 'Não foi possível excluir o mapa.')
+
+    const card = document.querySelector(`[data-map-card="${mapaId}"]`)
+    card.style.opacity = '0'
+    card.style.transform = 'translateY(-12px) scale(.95)'
+    card.style.filter = 'blur(4px)'
+    window.setTimeout(() => card.remove(), 500)
+  } catch (erro) {
+    botao.disabled = false
+    icone.textContent = 'delete_forever'
+    icone.classList.remove('animate-spin')
+    texto.textContent = 'Confirmar'
+    window.alert(erro.message)
+  }
+}
+</script>
+</body>
+</html>

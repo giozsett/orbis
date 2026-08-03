@@ -3,6 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from backend.app.database import db
+from backend.models.mapa_natal import MapaNatal
 from backend.models.usuario import Usuario
 
 
@@ -111,5 +112,8 @@ def perfil():
         "email": usuario.email,
         "criado_em": usuario.criado_em.isoformat(),
         "atualizado_em": usuario.atualizado_em.isoformat(),
-        "total_mapas": usuario.mapas.count(),
+        "total_mapas": MapaNatal.query.filter_by(
+            usuario_id=usuario.id,
+            status="concluido",
+        ).count(),
     })

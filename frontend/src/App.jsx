@@ -9,6 +9,7 @@ import Chat from './pages/Chat'
 import Carregando from './pages/Carregando'
 import Erro from './pages/Erro'
 import Perfil from './pages/Perfil'
+import MeusMapas from './pages/MeusMapas'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/criar-mapa" element={<CriarMapa />} />
+        <Route path="/meus-mapas" element={<MeusMapas />} />
         <Route path="/mapa" element={<MapaPrincipal />} />
         <Route path="/mapa/:id" element={<MapaPrincipal />} />
         <Route path="/interpretacoes" element={<Interpretacoes />} />

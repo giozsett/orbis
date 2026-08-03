@@ -3,7 +3,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard' },
+  { path: '/meus-mapas', label: 'Meus mapas' },
   { path: '/horoscopo', label: 'Horóscopo' },
+  { path: '/chat', label: 'Chat Astral' },
   { path: '/interpretacoes', label: 'Interpretações' },
   { path: '/mapa', label: 'Mapa natal' },
 ]
@@ -54,17 +56,17 @@ export default function TopNav() {
   return (
     <>
       <header className="fixed top-0 w-full z-50 flex justify-between items-center px-4 md:px-16 h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10">
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4 xl:gap-8">
           <Link to="/dashboard" className="flex items-center gap-2">
             <span className="material-symbols-outlined text-primary text-2xl">auto_awesome</span>
             <span className="font-headline text-2xl font-bold tracking-tighter text-secondary">ORBIS</span>
           </Link>
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-4 xl:gap-8">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`font-label text-sm transition-colors duration-300 ${
+                className={`font-label text-xs lg:text-sm transition-colors duration-300 ${
                   location.pathname === item.path
                     ? 'text-primary font-bold border-b-2 border-primary pb-1'
                     : 'text-on-surface-variant hover:text-secondary'

@@ -6,6 +6,7 @@ export default function CriarMapa() {
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
+    nome: '',
     data_nascimento: '',
     horario_nascimento: '',
     local_nascimento: '',
@@ -152,6 +153,25 @@ export default function CriarMapa() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="font-label text-sm text-secondary block" htmlFor="nome-mapa">Nome do mapa <span className="text-outline">(opcional)</span></label>
+                      <div className="relative">
+                        <input
+                          id="nome-mapa"
+                          type="text"
+                          value={formData.nome}
+                          onChange={(e) => updateForm('nome', e.target.value)}
+                          maxLength={100}
+                          placeholder="Ex.: Meu mapa, Ana, Projeto pessoal…"
+                          className="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:ring-0 focus:border-primary transition-all"
+                        />
+                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">
+                          label
+                        </span>
+                      </div>
+                      <p className="text-xs text-outline">Ajuda a identificar mapas adicionais na sua coleção.</p>
+                    </div>
+
                     <div className="space-y-2">
                       <label className="font-label text-sm text-secondary block">Data de Nascimento</label>
                       <div className="relative">
@@ -294,6 +314,10 @@ export default function CriarMapa() {
                   </div>
 
                   <div className="space-y-4 bg-white/5 p-6 rounded-xl border border-white/5">
+                    <div className="flex justify-between items-center py-2 border-b border-white/5">
+                      <span className="text-outline font-label text-xs">NOME DO MAPA</span>
+                      <span className="text-secondary font-label text-sm">{formData.nome || 'Meu mapa natal'}</span>
+                    </div>
                     <div className="flex justify-between items-center py-2 border-b border-white/5">
                       <span className="text-outline font-label text-xs">HORÁRIO</span>
                       <span className="text-secondary font-label text-sm">{formData.horario_nascimento || '--:--'}</span>

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 
 const menuItems = [
   { icon: 'blur_on', label: 'Planetary Data' },
@@ -10,6 +11,7 @@ const menuItems = [
 
 export default function Sidebar() {
   const [activeItem, setActiveItem] = useState(0)
+  const location = useLocation()
 
   return (
     <aside className="fixed left-0 top-16 h-[calc(100vh-64px)] z-40 p-6 flex flex-col bg-surface-container-low/60 backdrop-blur-lg border-r border-white/10 w-80 hidden lg:flex">
@@ -19,6 +21,18 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex flex-col gap-2 flex-grow">
+        <Link
+          to="/meus-mapas"
+          className={`mb-4 flex items-center gap-4 rounded-lg border p-3 text-left transition-all duration-300 group ${
+            location.pathname === '/meus-mapas'
+              ? 'border-primary/20 bg-primary/10 text-primary'
+              : 'border-white/5 bg-white/[0.03] text-on-surface-variant hover:border-primary/20 hover:bg-primary/5 hover:text-secondary'
+          }`}
+        >
+          <span className="material-symbols-outlined transition-transform group-hover:scale-110">folder_supervised</span>
+          <span className="font-label text-sm uppercase">Meus Mapas</span>
+        </Link>
+
         {menuItems.map((item, index) => (
           <button
             key={item.label}

@@ -154,6 +154,7 @@
 <nav class="hidden md:flex items-center gap-6">
 <a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 font-label-md text-label-md" href="{{ url_for('pages.dashboard') }}">Dashboard</a>
 <a class="text-primary font-bold border-b-2 border-secondary pb-1 font-label-md text-label-md" href="{{ url_for('horoscopo.pagina') }}">Horóscopo</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 font-label-md text-label-md" href="{{ url_for('chat.pagina') }}">Chat Astral</a>
 <a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 font-label-md text-label-md" href="{{ url_for('charts.interpretacoes') }}">Interpretações</a>
 <a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 font-label-md text-label-md" href="{{ url_for('charts.principal') }}">Mapa natal</a>
 </nav>
@@ -176,6 +177,10 @@
 </div>
 </div>
 <nav class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-4 p-3 mb-2 text-on-surface-variant bg-white/5 border border-white/5 hover:text-secondary rounded-lg transition-all text-left" href="{{ url_for('charts.listar') }}">
+<span class="material-symbols-outlined">folder_supervised</span>
+<span class="font-label-md text-label-md">Meus Mapas</span>
+</a>
 <button class="flex items-center gap-4 p-3 text-secondary bg-secondary-container/20 rounded-lg transition-all text-left">
 <span class="material-symbols-outlined">blur_on</span>
 <span class="font-label-md text-label-md">Planetary Data</span>
