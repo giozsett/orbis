@@ -116,7 +116,7 @@
         }
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-4px); }
         }
         @keyframes star-flicker {
             0%, 100% { opacity: 0.2; transform: scale(1); }
@@ -178,7 +178,7 @@
 <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
 <div class="absolute w-2 h-2 bg-secondary rounded-full animate-ping" style="top: 20%; left: 30%;"></div>
 <div class="absolute w-1 h-1 bg-tertiary rounded-full animate-pulse" style="bottom: 25%; right: 20%;"></div>
-<div class="absolute w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style="top: 45%; right: 10%; animation-duration: 3s;"></div>
+<div class="absolute w-1.5 h-1.5 bg-primary rounded-full" style="top: 45%; right: 10%; animation: float 3s ease-in-out infinite;"></div>
 </div>
 </div>
 <!-- Text Elements -->

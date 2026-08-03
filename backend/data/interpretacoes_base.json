@@ -1,0 +1,44 @@
+{
+  "versao": 1,
+  "planetas": {
+    "Sol": "O Sol representa a essência, a vitalidade e a identidade central.",
+    "Lua": "A Lua representa as emoções, os instintos e as necessidades de segurança.",
+    "Mercúrio": "Mercúrio representa o pensamento, a comunicação e a forma de aprender.",
+    "Vênus": "Vênus representa os afetos, os valores e a maneira de criar vínculos.",
+    "Marte": "Marte representa a iniciativa, o desejo e a forma de agir diante dos desafios.",
+    "Júpiter": "Júpiter representa expansão, confiança e busca por conhecimento e sentido.",
+    "Saturno": "Saturno representa limites, responsabilidade e amadurecimento por meio da experiência.",
+    "Urano": "Urano representa autonomia, mudanças e a necessidade de romper padrões.",
+    "Netuno": "Netuno representa imaginação, sensibilidade, intuição e idealismo.",
+    "Plutão": "Plutão representa transformação profunda, poder pessoal e capacidade de regeneração.",
+    "Nodo Norte": "O Nodo Norte representa aprendizados e a direção de crescimento ao longo da vida."
+  },
+  "signos": {
+    "Áries": "Essa posição expressa iniciativa, coragem e uma atitude direta.",
+    "Touro": "Essa posição busca estabilidade, constância e segurança por meio do que é concreto.",
+    "Gêmeos": "Essa posição se expressa com curiosidade, comunicação e adaptabilidade.",
+    "Câncer": "Essa posição ganha sensibilidade, cuidado e forte ligação com as raízes.",
+    "Leão": "Essa posição se expressa com criatividade, confiança e desejo de reconhecimento.",
+    "Virgem": "Essa posição age com análise, praticidade e vontade de aperfeiçoar.",
+    "Libra": "Essa posição busca equilíbrio, cooperação e harmonia nas relações.",
+    "Escorpião": "Essa posição traz intensidade, profundidade e desejo de transformação.",
+    "Sagitário": "Essa posição procura expansão, liberdade e um sentido maior para as experiências.",
+    "Capricórnio": "Essa posição se expressa com disciplina, ambição e responsabilidade.",
+    "Aquário": "Essa posição valoriza originalidade, autonomia e visão coletiva.",
+    "Peixes": "Essa posição ganha sensibilidade, imaginação e empatia."
+  },
+  "casas": {
+    "1": "na identidade, na presença e na maneira de iniciar ações.",
+    "2": "nos valores pessoais, nos recursos e na construção da autoestima.",
+    "3": "na comunicação, no aprendizado e nas relações do cotidiano.",
+    "4": "nas raízes, na família e na segurança emocional.",
+    "5": "na criatividade, nos romances, no prazer e na autoexpressão.",
+    "6": "nas rotinas, no trabalho diário, na saúde e no cuidado prático.",
+    "7": "nas parcerias, nos compromissos e na forma de se relacionar.",
+    "8": "na intimidade, nos recursos compartilhados e nas transformações profundas.",
+    "9": "nas crenças, nos estudos, nas viagens e na busca por significado.",
+    "10": "na vocação, na imagem pública e nos objetivos de longo prazo.",
+    "11": "nas amizades, nos grupos e nos projetos para o futuro.",
+    "12": "na vida interior, na espiritualidade e nos processos inconscientes."
+  }
+}

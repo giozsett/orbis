@@ -6,6 +6,7 @@ from math import isclose
 import swisseph as swe
 
 from backend.services.localizacao_service import converter_nascimento_para_utc
+from backend.services.interpretacao_base_service import gerar_interpretacao_base
 
 
 SIGNOS = (
@@ -114,6 +115,11 @@ def calcular_mapa_natal(dados: dict) -> dict:
             "latitude_ecliptica": round(posicao[1], 6),
             "retrogrado": posicao[3] < 0,
         })
+        planeta["interpretacao_base"] = gerar_interpretacao_base(
+            planeta["nome"],
+            planeta["signo"],
+            planeta["casa"],
+        )
         planetas.append(planeta)
 
     ascendente = _ponto("Ascendente", ascmc[0])

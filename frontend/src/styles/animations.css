@@ -221,7 +221,7 @@ body {
 /* ========== FLOATING ANIMATIONS ========== */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(var(--float-distance, -10px)); }
 }
 
 @keyframes float-slow {
@@ -258,7 +258,7 @@ body {
     box-shadow: 0 0 10px var(--planet-color, rgba(255, 177, 195, 0.5));
   }
   50% {
-    transform: scale(1.1);
+    transform: scale(1.045);
     box-shadow: 0 0 20px var(--planet-color, rgba(255, 177, 195, 0.8));
   }
 }

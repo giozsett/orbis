@@ -1,183 +1,315 @@
+import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+
 import Layout from '../components/layout/Layout'
+import Button from '../components/ui/Button'
 import GlassPanel from '../components/ui/GlassPanel'
 
-const ENERGY_DATA = [
-  { label: 'Amor', icon: 'favorite', value: 82, color: '#ffb1c3' },
-  { label: 'Trabalho', icon: 'work', value: 45, color: '#deb7ff' },
-  { label: 'Saúde', icon: 'health_and_safety', value: 67, color: '#eab9ce' },
+const PERIODOS = [
+  { id: 'diario', rotulo: 'Hoje', icone: 'today' },
+  { id: 'semanal', rotulo: 'Semana', icone: 'date_range' },
+  { id: 'quinzenal', rotulo: 'Quinzena', icone: 'calendar_view_week' },
+  { id: 'mensal', rotulo: 'Mês', icone: 'calendar_month' },
 ]
 
-const FORECASTS = [
-  {
-    titulo: 'Amor',
-    icon: 'favorite',
-    tipo: 'Diário',
-    descricao: 'Clareza emocional em alta. Se estiver em um relacionamento, aproveite para discutir planos futuros. Solteiros podem sentir uma conexão forte com alguém do passado.',
-    compatibilidade: 'Escorpião',
-    trend: 'up',
-  },
-  {
-    titulo: 'Trabalho',
-    icon: 'bolt',
-    tipo: 'Semanal',
-    descricao: 'Mercúrio influencia sua comunicação técnica. Ótimo momento para apresentar projetos ou resolver pendências burocráticas que estavam travadas.',
-    pico: '14:00',
-    trend: 'neutral',
-  },
-  {
-    titulo: 'Saúde',
-    icon: 'self_improvement',
-    tipo: 'Foco',
-    descricao: 'Sua vitalidade física está estável, mas a mente pede descanso. Práticas meditativas e contato com a natureza serão fundamentais para recarregar as baterias.',
-    recomendacao: 'Yoga',
-    trend: 'down',
-  },
-]
+const AREAS = {
+  Amor: { icone: 'favorite', cor: '#ffb1c3' },
+  Trabalho: { icone: 'work', cor: '#deb7ff' },
+  'Bem-estar': { icone: 'self_improvement', cor: '#eab9ce' },
+}
 
-const WEEKLY = [
-  { dia: 'SEG', value: 40 },
-  { dia: 'TER', value: 90, highlight: true },
-  { dia: 'QUA', value: 65 },
-  { dia: 'QUI', value: 55 },
-  { dia: 'SEX', value: 80 },
-  { dia: 'SAB', value: 30 },
-  { dia: 'DOM', value: 20 },
-]
+const ICONES_TENDENCIA = {
+  alta: 'trending_up',
+  estavel: 'horizontal_rule',
+  baixa: 'trending_down',
+}
+
+function formatarIntervalo(inicio, fim) {
+  if (!inicio || !fim) return ''
+  const opcoes = { day: '2-digit', month: 'short', timeZone: 'UTC' }
+  const dataInicio = new Date(`${inicio}T12:00:00Z`)
+  const dataFim = new Date(`${fim}T12:00:00Z`)
+  if (inicio === fim) {
+    return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC',
+    }).format(dataInicio)
+  }
+  return `${new Intl.DateTimeFormat('pt-BR', opcoes).format(dataInicio)} – ${new Intl.DateTimeFormat('pt-BR', { ...opcoes, year: 'numeric' }).format(dataFim)}`
+}
 
 export default function Horoscopo() {
+  const [dados, setDados] = useState(null)
+  const [periodoAtivo, setPeriodoAtivo] = useState('diario')
+  const [carregando, setCarregando] = useState(true)
+  const [gerando, setGerando] = useState(null)
+  const [erro, setErro] = useState(null)
+  const carregamentoIniciado = useRef(false)
+  const solicitados = useRef(new Set())
+
+  const gerarPeriodo = async (periodo) => {
+    if (solicitados.current.has(periodo)) return
+    solicitados.current.add(periodo)
+    setGerando(periodo)
+    setErro(null)
+
+    try {
+      const response = await fetch('/horoscopo/gerar', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ periodo }),
+      })
+      const payload = await response.json().catch(() => ({}))
+      if (response.status === 401) {
+        window.location.assign('/login')
+        return
+      }
+      if (!response.ok) throw new Error(payload.erro || 'Não foi possível gerar este ciclo.')
+
+      setDados((atual) => ({
+        ...atual,
+        periodos: atual.periodos.map((item) => (
+          item.id === periodo ? { ...item, disponivel: true } : item
+        )),
+        horoscopos: {
+          ...atual.horoscopos,
+          [periodo]: payload.horoscopo,
+        },
+      }))
+    } catch (error) {
+      setErro(error.message)
+    } finally {
+      solicitados.current.delete(periodo)
+      setGerando((atual) => (atual === periodo ? null : atual))
+    }
+  }
+
+  useEffect(() => {
+    if (carregamentoIniciado.current) return
+    carregamentoIniciado.current = true
+
+    const carregar = async () => {
+      try {
+        const response = await fetch('/horoscopo', {
+          credentials: 'include',
+          headers: { Accept: 'application/json' },
+        })
+        const payload = await response.json().catch(() => ({}))
+        if (response.status === 401) {
+          window.location.assign('/login')
+          return
+        }
+        if (!response.ok) {
+          setDados({ codigo: payload.codigo, erro: payload.erro })
+          return
+        }
+        setDados(payload)
+        setCarregando(false)
+        if (!payload.horoscopos?.diario) await gerarPeriodo('diario')
+      } catch {
+        setErro('Não foi possível carregar seu horóscopo agora.')
+      } finally {
+        setCarregando(false)
+      }
+    }
+
+    carregar()
+  }, [])
+
+  const selecionarPeriodo = (periodo) => {
+    setPeriodoAtivo(periodo)
+    setErro(null)
+    if (!dados?.horoscopos?.[periodo]) gerarPeriodo(periodo)
+  }
+
+  if (carregando) {
+    return (
+      <Layout>
+        <div className="flex min-h-screen items-center justify-center p-8">
+          <div className="text-center">
+            <span className="material-symbols-outlined animate-spin text-5xl text-primary">progress_activity</span>
+            <p className="mt-4 font-label text-sm uppercase tracking-widest text-outline">Consultando seu ciclo astral</p>
+          </div>
+        </div>
+      </Layout>
+    )
+  }
+
+  if (dados?.codigo === 'mapa_principal_ausente') {
+    return (
+      <Layout>
+        <div className="flex min-h-screen items-center justify-center p-8">
+          <GlassPanel className="max-w-xl p-10 text-center">
+            <span className="material-symbols-outlined text-6xl text-secondary">orbit</span>
+            <h1 className="mt-5 font-headline text-3xl">Seu mapa principal vem primeiro</h1>
+            <p className="mt-3 text-on-surface-variant">{dados.erro}</p>
+            <Link to="/criar-mapa" className="mt-7 inline-flex rounded-full bg-primary px-6 py-3 font-label text-sm text-on-primary">
+              Criar mapa principal
+            </Link>
+          </GlassPanel>
+        </div>
+      </Layout>
+    )
+  }
+
+  const periodo = dados?.periodos?.find((item) => item.id === periodoAtivo)
+  const horoscopo = dados?.horoscopos?.[periodoAtivo]
+  const estaGerando = gerando === periodoAtivo
+
   return (
     <Layout>
-      <div className="p-6 md:p-16 min-h-screen">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/5 pb-6 mb-8 animate-fade-in-up">
+      <div className="min-h-screen p-6 md:p-16">
+        <header className="mb-8 flex animate-fade-in-up flex-col gap-6 border-b border-white/5 pb-7 md:flex-row md:items-end md:justify-between">
           <div className="space-y-2">
-            <span className="font-label text-xs text-tertiary tracking-[0.2em] uppercase">Mapa Astral Personalizado</span>
-            <h1 className="font-headline text-4xl md:text-5xl text-on-surface">Horóscopo do Seu Mapa</h1>
-            <p className="text-on-surface-variant max-w-xl">
-              Sua jornada cósmica interpretada em tempo real através da posição atual dos astros sobre a sua assinatura estelar de nascimento.
+            <span className="font-label text-xs uppercase tracking-[0.2em] text-tertiary">Mapa principal · {dados?.mapa?.nome}</span>
+            <h1 className="font-headline text-4xl text-on-surface md:text-5xl">Horóscopo do Seu Mapa</h1>
+            <p className="max-w-2xl text-on-surface-variant">
+              Tendências simbólicas construídas a partir do seu mapa natal e dos trânsitos reais de cada ciclo.
             </p>
           </div>
-          <div className="bg-surface-container-high px-6 py-3 rounded-xl border border-white/10 flex items-center gap-4">
-            <span className="material-symbols-outlined text-secondary">calendar_today</span>
-            <div className="text-right">
-              <p className="font-label text-[10px] text-outline uppercase">Ciclo Atual</p>
-              <p className="font-label text-sm text-on-surface">Lua Crescente em Touro</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* Conselho principal */}
-          <GlassPanel className="md:col-span-8 rounded-2xl p-6 flex flex-col md:flex-row gap-6 animate-fade-in-up">
-            <div className="w-full md:w-1/3 aspect-square relative rounded-xl overflow-hidden bg-surface-container">
-              <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-60" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="material-symbols-outlined text-[80px] text-primary/30">auto_awesome</span>
+          {periodo && (
+            <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-surface-container-high px-5 py-3">
+              <span className="material-symbols-outlined text-secondary">calendar_today</span>
+              <div className="text-right">
+                <p className="font-label text-[10px] uppercase text-outline">Período atual</p>
+                <p className="font-label text-sm text-on-surface">{formatarIntervalo(periodo.inicio, periodo.fim)}</p>
               </div>
             </div>
-            <div className="flex-1 space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-                <h2 className="font-headline text-xl text-secondary">Conselho dos Astros</h2>
-              </div>
-              <p className="text-on-surface leading-relaxed">
-                "A oposição de Vênus com seu Saturno natal pede paciência nas negociações. Hoje não é dia de pressa, mas de consolidar as bases. Ouça mais e fale menos; o silêncio será seu maior aliado nas decisões de longo prazo."
-              </p>
-              <div className="flex flex-wrap gap-2 pt-2">
-                <span className="bg-tertiary-container/20 text-tertiary font-label text-xs px-3 py-1 rounded-full border border-tertiary/20">Foco Profissional</span>
-                <span className="bg-secondary-container/20 text-secondary font-label text-xs px-3 py-1 rounded-full border border-secondary/20">Prudência</span>
-                <span className="bg-primary-container/20 text-primary font-label text-xs px-3 py-1 rounded-full border border-primary/20">Alta Energia</span>
-              </div>
-            </div>
-          </GlassPanel>
+          )}
+        </header>
 
-          {/* Medidores de energia */}
-          <div className="md:col-span-4 space-y-6">
-            <GlassPanel className="rounded-2xl p-6 space-y-6 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-              <h3 className="font-label text-sm text-outline uppercase tracking-widest">Medidores de Energia</h3>
-              {ENERGY_DATA.map((item) => (
-                <div key={item.label} className="space-y-2">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-label text-sm text-on-surface flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary" style={{ fontSize: '18px' }}>{item.icon}</span>
-                      {item.label}
-                    </span>
-                    <span className="font-label text-xs text-primary">{item.value}%</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-white/5 overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-1500 ease-out"
-                      style={{
-                        width: `${item.value}%`,
-                        background: `linear-gradient(90deg, ${item.color}80, ${item.color})`,
-                        boxShadow: `0 0 10px ${item.color}80`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </GlassPanel>
-          </div>
-
-          {/* Cards de previsão */}
-          {FORECASTS.map((item, index) => (
-            <GlassPanel
-              key={item.titulo}
-              className="md:col-span-4 rounded-2xl p-6 hover:border-primary/30 transition-all duration-500 cursor-pointer group animate-fade-in-up"
-              style={{ animationDelay: `${200 + index * 100}ms` }}
+        <nav className="mb-8 grid grid-cols-2 gap-3 md:flex" aria-label="Periodicidade do horóscopo">
+          {PERIODOS.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => selecionarPeriodo(item.id)}
+              className={`flex items-center justify-center gap-2 rounded-full border px-5 py-3 font-label text-sm transition-all ${
+                periodoAtivo === item.id
+                  ? 'border-primary/50 bg-primary/15 text-primary shadow-[0_0_18px_rgba(255,0,122,.12)]'
+                  : 'border-white/10 bg-white/[.03] text-on-surface-variant hover:border-secondary/30 hover:text-secondary'
+              }`}
             >
-              <div className="flex justify-between items-start mb-6">
-                <div className="w-12 h-12 rounded-lg bg-primary-container/10 border border-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <span className="material-symbols-outlined text-primary text-3xl">{item.icon}</span>
-                </div>
-                <span className="text-[10px] font-label text-outline bg-surface-container-highest px-2 py-1 rounded">{item.tipo}</span>
+              <span className="material-symbols-outlined text-lg">{item.icone}</span>
+              {item.rotulo}
+            </button>
+          ))}
+        </nav>
+
+        {erro && (
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-error/30 bg-error/10 px-5 py-4 text-sm text-error">
+            <span>{erro}</span>
+            {!horoscopo && (
+              <Button size="sm" variant="outline" onClick={() => gerarPeriodo(periodoAtivo)}>Tentar novamente</Button>
+            )}
+          </div>
+        )}
+
+        {estaGerando && !horoscopo ? (
+          <GlassPanel className="flex min-h-[380px] flex-col items-center justify-center p-10 text-center animate-pulse">
+            <span className="material-symbols-outlined animate-spin text-6xl text-primary">progress_activity</span>
+            <h2 className="mt-5 font-headline text-2xl">Interpretando seu ciclo</h2>
+            <p className="mt-2 max-w-md text-on-surface-variant">Cruzando os trânsitos do período com as posições do seu mapa principal.</p>
+          </GlassPanel>
+        ) : horoscopo ? (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
+            <GlassPanel className="flex animate-fade-in-up flex-col gap-6 rounded-2xl p-7 md:col-span-8 md:flex-row">
+              <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-[radial-gradient(circle_at_center,rgba(255,177,195,.18),rgba(24,20,35,.7)_65%)] md:w-1/3">
+                <div className="absolute h-32 w-32 animate-pulse rounded-full border border-secondary/30" />
+                <div className="absolute h-48 w-48 rounded-full border border-primary/10" />
+                <span className="material-symbols-outlined text-[76px] text-primary/60">auto_awesome</span>
               </div>
-              <h4 className="font-headline text-xl mb-4">{item.titulo}</h4>
-              <p className="text-on-surface-variant text-sm mb-6">{item.descricao}</p>
-              <div className="border-t border-white/5 pt-4 flex items-center justify-between">
-                <span className="text-tertiary font-label text-xs">
-                  {item.compatibilidade && `Compatibilidade: ${item.compatibilidade}`}
-                  {item.pico && `Pico de Produtividade: ${item.pico}`}
-                  {item.recomendacao && `Recomendação: ${item.recomendacao}`}
-                </span>
-                <span className={`material-symbols-outlined ${
-                  item.trend === 'up' ? 'text-primary' : item.trend === 'down' ? 'text-error' : 'text-outline'
-                }`}>
-                  {item.trend === 'up' ? 'trending_up' : item.trend === 'down' ? 'trending_down' : 'horizontal_rule'}
-                </span>
+              <div className="flex-1 space-y-4">
+                <div>
+                  <p className="font-label text-xs uppercase tracking-widest text-outline">{PERIODOS.find((item) => item.id === periodoAtivo)?.rotulo}</p>
+                  <h2 className="mt-1 font-headline text-2xl text-secondary">{horoscopo.titulo}</h2>
+                </div>
+                <p className="leading-relaxed text-on-surface">{horoscopo.resumo}</p>
+                <div className="rounded-xl border border-primary/15 bg-primary/[.06] p-4">
+                  <p className="mb-1 font-label text-xs uppercase tracking-widest text-primary">Conselho do ciclo</p>
+                  <p className="text-sm leading-relaxed text-on-surface-variant">{horoscopo.conselho}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {horoscopo.palavras_chave.map((palavra) => (
+                    <span key={palavra} className="rounded-full border border-secondary/20 bg-secondary-container/10 px-3 py-1 font-label text-xs text-secondary">{palavra}</span>
+                  ))}
+                </div>
               </div>
             </GlassPanel>
-          ))}
 
-          {/* Transitosemana */}
-          <GlassPanel className="md:col-span-12 rounded-2xl p-6 animate-fade-in-up" style={{ animationDelay: '500ms' }}>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-headline text-2xl">Transitos da Semana</h3>
-              <div className="flex gap-2">
-                <button className="p-2 border border-white/10 rounded hover:bg-white/5 transition-colors">
-                  <span className="material-symbols-outlined">chevron_left</span>
-                </button>
-                <button className="p-2 border border-white/10 rounded hover:bg-white/5 transition-colors">
-                  <span className="material-symbols-outlined">chevron_right</span>
-                </button>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-7 gap-4">
-              {WEEKLY.map((item) => (
-                <div key={item.dia} className="flex flex-col items-center gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors">
-                  <span className={`font-label text-xs ${item.highlight ? 'text-secondary' : 'text-outline'}`}>{item.dia}</span>
-                  <div className="w-2 h-24 bg-surface-container rounded-full relative overflow-hidden">
-                    <div
-                      className="absolute bottom-0 w-full bg-primary rounded-full transition-all duration-1000"
-                      style={{ height: `${item.value}%` }}
-                    />
+            <GlassPanel className="space-y-6 rounded-2xl p-6 md:col-span-4">
+              <h3 className="font-label text-sm uppercase tracking-widest text-outline">Medidores do ciclo</h3>
+              {horoscopo.areas.map((area) => {
+                const visual = AREAS[area.nome] || AREAS['Bem-estar']
+                return (
+                  <div key={area.nome} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-2 font-label text-sm text-on-surface">
+                        <span className="material-symbols-outlined text-lg text-primary">{visual.icone}</span>
+                        {area.nome}
+                      </span>
+                      <span className="font-label text-xs text-primary">{area.energia}%</span>
+                    </div>
+                    <div className="h-2 overflow-hidden rounded-full bg-white/5">
+                      <div
+                        className="h-full rounded-full transition-all duration-1000"
+                        style={{
+                          width: `${area.energia}%`,
+                          background: `linear-gradient(90deg, ${visual.cor}80, ${visual.cor})`,
+                          boxShadow: `0 0 10px ${visual.cor}60`,
+                        }}
+                      />
+                    </div>
                   </div>
-                  <span className="font-label text-sm text-on-surface">{item.value}%</span>
+                )
+              })}
+            </GlassPanel>
+
+            {horoscopo.areas.map((area, index) => {
+              const visual = AREAS[area.nome] || AREAS['Bem-estar']
+              const tendencia = area.tendencia || 'estavel'
+              return (
+                <GlassPanel
+                  key={area.nome}
+                  className="group rounded-2xl p-6 transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 md:col-span-4"
+                  style={{ animationDelay: `${150 + index * 100}ms` }}
+                >
+                  <div className="mb-5 flex items-start justify-between">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-primary/20 bg-primary-container/10 transition-transform group-hover:scale-110">
+                      <span className="material-symbols-outlined text-3xl text-primary">{visual.icone}</span>
+                    </div>
+                    <span className="rounded bg-surface-container-highest px-2 py-1 font-label text-[10px] uppercase text-outline">{tendencia}</span>
+                  </div>
+                  <h3 className="mb-3 font-headline text-xl">{area.nome}</h3>
+                  <p className="min-h-20 text-sm leading-relaxed text-on-surface-variant">{area.texto}</p>
+                  <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-4">
+                    <span className="font-label text-xs text-tertiary">Energia simbólica: {area.energia}%</span>
+                    <span className={`material-symbols-outlined ${tendencia === 'baixa' ? 'text-error' : tendencia === 'alta' ? 'text-primary' : 'text-outline'}`}>
+                      {ICONES_TENDENCIA[tendencia] || ICONES_TENDENCIA.estavel}
+                    </span>
+                  </div>
+                </GlassPanel>
+              )
+            })}
+
+            <GlassPanel className="rounded-2xl p-6 md:col-span-12">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="font-label text-xs uppercase tracking-widest text-outline">Destaque astral considerado</p>
+                  <p className="mt-2 font-headline text-xl text-secondary">{horoscopo.destaque_astral}</p>
                 </div>
-              ))}
-            </div>
+                <div className="max-w-xl text-sm leading-relaxed text-on-surface-variant md:text-right">
+                  {horoscopo.aviso || dados.aviso}
+                </div>
+              </div>
+            </GlassPanel>
+          </div>
+        ) : (
+          <GlassPanel className="p-10 text-center">
+            <p className="text-on-surface-variant">Este ciclo ainda não foi interpretado.</p>
+            <Button className="mx-auto mt-5" onClick={() => gerarPeriodo(periodoAtivo)}>Gerar horóscopo</Button>
           </GlassPanel>
-        </div>
+        )}
       </div>
     </Layout>
   )

@@ -7,6 +7,7 @@ from backend.schemas.mapa_natal_schema import MapaNatalSchema
 from backend.app.database import db
 from backend.models.mapa_natal import MapaNatal
 from backend.services.mapa_natal_service import calcular_mapa_natal
+from backend.services.interpretacao_base_service import enriquecer_dados_mapa
 from backend.services.localizacao_service import (
     converter_nascimento_para_utc,
     resolver_localizacao,
@@ -177,7 +178,7 @@ def _serializar_mapa(mapa):
         "timezone_id": mapa.timezone_id,
         "utc_offset_minutos": mapa.utc_offset_minutos,
         "status": mapa.status,
-        "dados": mapa.dados,
+        "dados": enriquecer_dados_mapa(mapa.dados),
     }
 
 

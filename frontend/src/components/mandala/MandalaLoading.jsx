@@ -37,7 +37,10 @@ export default function MandalaLoading() {
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="absolute w-2 h-2 bg-secondary rounded-full animate-pulse-soft" style={{ top: '20%', left: '30%' }} />
         <div className="absolute w-1 h-1 bg-tertiary rounded-full animate-pulse-soft" style={{ bottom: '25%', right: '20%', animationDelay: '0.5s' }} />
-        <div className="absolute w-1.5 h-1.5 bg-primary rounded-full animate-float" style={{ top: '45%', right: '10%', animationDuration: '3s' }} />
+        <div
+          className="absolute w-1.5 h-1.5 bg-primary rounded-full animate-float"
+          style={{ top: '45%', right: '10%', animationDuration: '3s', '--float-distance': '-4px' }}
+        />
       </div>
     </div>
   )

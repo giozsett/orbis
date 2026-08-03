@@ -1,6 +1,11 @@
 /.venv/
 /venv/
 
+# Configurações locais e segredos
+/.env
+/.env.*
+!/.env.example
+
 # Python
 __pycache__/
 *.py[cod]

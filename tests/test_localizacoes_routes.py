@@ -63,6 +63,10 @@ def test_criacao_calcula_e_persiste_mapa(client, app):
     assert payload["mapa"]["utc_offset_minutos"] == -120
     assert payload["mapa"]["status"] == "concluido"
     assert len(payload["mapa"]["dados"]["planetas"]) == 11
+    assert all(
+        set(planeta["interpretacao_base"]) == {"planeta", "signo", "casa"}
+        for planeta in payload["mapa"]["dados"]["planetas"]
+    )
 
     detalhe = client.get(
         f"/mapas/{payload['id']}",

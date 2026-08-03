@@ -1,9 +1,3 @@
--- Apágina do chat sumiu, ela precisa voltar a aparecer no menu superior.
+
 
 -- O menu lateral não funciona.
-
--- Possibilidade de criar mais mapas para um mesmo usuário.
-""Mapas extras""
-
--- Ícones dos signos na mandala estão muito pequenos, corrigir layout.
-Modificar a fonte que aparece na mandala para ficar mais coerente com o layout atual do site.

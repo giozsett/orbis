@@ -140,7 +140,7 @@ def resolver_localizacao(local_nascimento: str) -> dict | None:
 
 ## 5. Serviços a implementar
 
-Todos em `backend/services/` (atualmente vazios).
+Todos em `backend/services/`, implementados de forma incremental por fase.
 
 ### 5.1 `mapa_natal_service.py` — cálculo com pyswisseph
 
@@ -193,6 +193,14 @@ Todos em `backend/services/` (atualmente vazios).
   sem promessas de precisão absoluta; tom informativo/entretenimento).
 - Usa `openrouter_service` para gerar o texto e salva em
   `horoscopo_dados` (JSON) do `MapaNatal`.
+- Calcula com Swiss Ephemeris as posições de trânsito no início, meio e fim do
+  ciclo e cruza aspectos com as posições natais antes de montar o prompt.
+- Mantém quatro periodicidades: diária, semanal, quinzenal (dias 1–15 e
+  16–fim do mês) e mensal. Cada uma possui uma chave de validade própria no
+  cache, evitando nova chamada ao OpenRouter durante o mesmo ciclo.
+- Exige resposta JSON curta para conselho, resumo, destaque astral e áreas de
+  amor, trabalho e bem-estar. O texto é tratado como conteúdo simbólico de
+  reflexão, sem previsões deterministas ou aconselhamento profissional.
 
 ## 6. Conexão das rotas que retornam 501
 
@@ -252,11 +260,11 @@ Todos em `backend/services/` (atualmente vazios).
 - [ ] Testes de cálculo e rota.
 
 ### Fase 2 — Interpretações e horóscopo
-- [ ] `openrouter_service.py` (cliente da API, key via `.env`).
+- [x] `openrouter_service.py` (cliente da API, key via `.env`).
 - [ ] `interpretation_service.py` (Agno) e conexão de
       `/mapas/principal/interpretacoes`.
-- [ ] `horoscopo_service.py` e conexão de `POST /horoscopo/gerar`.
-- [ ] Testes com mocks de API.
+- [x] `horoscopo_service.py` e conexão de `POST /horoscopo/gerar`.
+- [x] Testes do horóscopo com mocks de API.
 
 ### Fase 3 — Chat astral
 - [ ] `chat_service.py` (Agno + OpenRouter, com contexto do mapa e histórico).

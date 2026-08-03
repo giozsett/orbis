@@ -17,6 +17,10 @@ def test_calcula_planetas_casas_ascendente_mc_e_aspectos():
     assert 0 <= mapa["ascendente"]["grau"] < 360
     assert 0 <= mapa["meio_do_ceu"]["grau"] < 360
     assert all(1 <= planeta["casa"] <= 12 for planeta in mapa["planetas"])
+    assert all(
+        set(planeta["interpretacao_base"]) == {"planeta", "signo", "casa"}
+        for planeta in mapa["planetas"]
+    )
     assert mapa["aspectos"]
 
 

@@ -32,6 +32,27 @@ export default function PlanetCard({ planeta, index = 0 }) {
 
   const icon = PLANET_ICONS[planeta.nome] || 'blur_on'
   const color = PLANET_COLORS[planeta.nome] || '#ffb1c3'
+  const interpretacaoBase = planeta.interpretacao_base || {}
+  const secoesInterpretacao = [
+    {
+      titulo: 'Planeta',
+      icone: 'orbit',
+      texto: interpretacaoBase.planeta || planeta.interpretacao || `${planeta.nome} representa uma função importante da personalidade.`,
+    },
+    {
+      titulo: 'Signo',
+      icone: 'brightness_7',
+      texto: interpretacaoBase.signo || `${planeta.nome} está em ${planeta.signo}, indicando como essa energia tende a ser expressa.`,
+    },
+    {
+      titulo: 'Casa',
+      icone: 'home_work',
+      texto: interpretacaoBase.casa || `Na Casa ${planeta.casa}, essa energia ganha destaque em uma área específica da vida.`,
+    },
+  ]
+  const contentId = `planet-card-content-${index}`
+
+  const toggleExpanded = () => setIsExpanded(expanded => !expanded)
 
   return (
     <div
@@ -43,9 +64,19 @@ export default function PlanetCard({ planeta, index = 0 }) {
       {/* Header - sempre visível */}
       <div
         className="p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 transition-all duration-300"
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={toggleExpanded}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            toggleExpanded()
+          }
+        }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        role="button"
+        tabIndex="0"
+        aria-expanded={isExpanded}
+        aria-controls={contentId}
       >
         <div
           className="p-3 rounded-lg border transition-all duration-300"
@@ -68,7 +99,7 @@ export default function PlanetCard({ planeta, index = 0 }) {
 
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="font-label text-xs text-outline uppercase">Posição</span>
+            <span className="font-label text-xs text-outline uppercase">{planeta.nome}</span>
           </div>
           <span className="font-label text-sm" style={{ color }}>
             {planeta.signo}, Casa {planeta.casa}
@@ -89,6 +120,7 @@ export default function PlanetCard({ planeta, index = 0 }) {
 
       {/* Conteúdo expansível */}
       <div
+        id={contentId}
         className="overflow-hidden transition-all duration-500 ease-out"
         style={{
           maxHeight: isExpanded ? '500px' : '0',
@@ -105,9 +137,20 @@ export default function PlanetCard({ planeta, index = 0 }) {
             </h4>
           </div>
 
-          <p className="text-on-surface-variant text-sm leading-relaxed mb-4">
-            {planeta.interpretacao}
-          </p>
+          <div className="space-y-3 mb-4">
+            {secoesInterpretacao.map(secao => (
+              <div
+                key={secao.titulo}
+                className="rounded-lg border border-white/5 bg-surface-container-low/55 p-3 transition-colors hover:border-white/10"
+              >
+                <div className="mb-1.5 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm" style={{ color }}>{secao.icone}</span>
+                  <span className="font-label text-[10px] uppercase tracking-[0.16em] text-outline">{secao.titulo}</span>
+                </div>
+                <p className="text-sm leading-relaxed text-on-surface-variant">{secao.texto}</p>
+              </div>
+            ))}
+          </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {planeta.dignidade && (
