@@ -8,6 +8,7 @@ import Horoscopo from './pages/Horoscopo'
 import Chat from './pages/Chat'
 import Carregando from './pages/Carregando'
 import Erro from './pages/Erro'
+import Perfil from './pages/Perfil'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/horoscopo" element={<Horoscopo />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/carregando" element={<Carregando />} />
+        <Route path="/perfil" element={<Perfil />} />
         <Route path="*" element={<Erro />} />
       </Routes>
     </BrowserRouter>

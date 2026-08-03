@@ -1,0 +1,2997 @@
+[
+  {
+    "timezone_id": "Africa/Abidjan",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Accra",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Addis_Ababa",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Algiers",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Asmara",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Asmera",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Bamako",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Bangui",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Banjul",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Bissau",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Blantyre",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Brazzaville",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Bujumbura",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Cairo",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Africa/Casablanca",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Ceuta",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Africa/Conakry",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Dakar",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Dar_es_Salaam",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Djibouti",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Douala",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/El_Aaiun",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Freetown",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Gaborone",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Harare",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Johannesburg",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Juba",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Kampala",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Khartoum",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Kigali",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Kinshasa",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Lagos",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Libreville",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Lome",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Luanda",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Lubumbashi",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Lusaka",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Malabo",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Maputo",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Maseru",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Mbabane",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Mogadishu",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Monrovia",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Nairobi",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Ndjamena",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Niamey",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Nouakchott",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Ouagadougou",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Porto-Novo",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Sao_Tome",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Timbuktu",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Tripoli",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Tunis",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Africa/Windhoek",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Adak",
+    "utc_offset_minutes": -600,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Anchorage",
+    "utc_offset_minutes": -540,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Anguilla",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Antigua",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Araguaina",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/Buenos_Aires",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/Catamarca",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/ComodRivadavia",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/Cordoba",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/Jujuy",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/La_Rioja",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/Mendoza",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/Rio_Gallegos",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/Salta",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/San_Juan",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/San_Luis",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/Tucuman",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Argentina/Ushuaia",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Aruba",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Asuncion",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Atikokan",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Atka",
+    "utc_offset_minutes": -600,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Bahia",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Bahia_Banderas",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Barbados",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Belem",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Belize",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Blanc-Sablon",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Boa_Vista",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Bogota",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Boise",
+    "utc_offset_minutes": -420,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Buenos_Aires",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Cambridge_Bay",
+    "utc_offset_minutes": -420,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Campo_Grande",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Cancun",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Caracas",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Catamarca",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Cayenne",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Cayman",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Chicago",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Chihuahua",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Ciudad_Juarez",
+    "utc_offset_minutes": -420,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Coral_Harbour",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Cordoba",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Costa_Rica",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Coyhaique",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Creston",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Cuiaba",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Curacao",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Danmarkshavn",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Dawson",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Dawson_Creek",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Denver",
+    "utc_offset_minutes": -420,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Detroit",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Dominica",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Edmonton",
+    "utc_offset_minutes": -420,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Eirunepe",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/El_Salvador",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Ensenada",
+    "utc_offset_minutes": -480,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Fort_Nelson",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Fort_Wayne",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Fortaleza",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Glace_Bay",
+    "utc_offset_minutes": -240,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Godthab",
+    "utc_offset_minutes": -120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Goose_Bay",
+    "utc_offset_minutes": -240,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Grand_Turk",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Grenada",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Guadeloupe",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Guatemala",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Guayaquil",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Guyana",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Halifax",
+    "utc_offset_minutes": -240,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Havana",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Hermosillo",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Indiana/Indianapolis",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Indiana/Knox",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Indiana/Marengo",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Indiana/Petersburg",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Indiana/Tell_City",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Indiana/Vevay",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Indiana/Vincennes",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Indiana/Winamac",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Indianapolis",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Inuvik",
+    "utc_offset_minutes": -420,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Iqaluit",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Jamaica",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Jujuy",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Juneau",
+    "utc_offset_minutes": -540,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Kentucky/Louisville",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Kentucky/Monticello",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Knox_IN",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Kralendijk",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/La_Paz",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Lima",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Los_Angeles",
+    "utc_offset_minutes": -480,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Louisville",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Lower_Princes",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Maceio",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Managua",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Manaus",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Marigot",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Martinique",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Matamoros",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Mazatlan",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Mendoza",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Menominee",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Merida",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Metlakatla",
+    "utc_offset_minutes": -540,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Mexico_City",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Miquelon",
+    "utc_offset_minutes": -180,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Moncton",
+    "utc_offset_minutes": -240,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Monterrey",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Montevideo",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Montreal",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Montserrat",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Nassau",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/New_York",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Nipigon",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Nome",
+    "utc_offset_minutes": -540,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Noronha",
+    "utc_offset_minutes": -120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/North_Dakota/Beulah",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/North_Dakota/Center",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/North_Dakota/New_Salem",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Nuuk",
+    "utc_offset_minutes": -120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Ojinaga",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Panama",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Pangnirtung",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Paramaribo",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Phoenix",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Port-au-Prince",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Port_of_Spain",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Porto_Acre",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Porto_Velho",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Puerto_Rico",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Punta_Arenas",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Rainy_River",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Rankin_Inlet",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Recife",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Regina",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Resolute",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Rio_Branco",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Rosario",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Santa_Isabel",
+    "utc_offset_minutes": -480,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Santarem",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Santiago",
+    "utc_offset_minutes": -180,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Santo_Domingo",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Sao_Paulo",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Scoresbysund",
+    "utc_offset_minutes": -120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Shiprock",
+    "utc_offset_minutes": -420,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Sitka",
+    "utc_offset_minutes": -540,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/St_Barthelemy",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/St_Johns",
+    "utc_offset_minutes": -210,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/St_Kitts",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/St_Lucia",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/St_Thomas",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/St_Vincent",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Swift_Current",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Tegucigalpa",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Thule",
+    "utc_offset_minutes": -240,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Thunder_Bay",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Tijuana",
+    "utc_offset_minutes": -480,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Toronto",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Tortola",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Vancouver",
+    "utc_offset_minutes": -480,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Virgin",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Whitehorse",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "America/Winnipeg",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Yakutat",
+    "utc_offset_minutes": -540,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "America/Yellowknife",
+    "utc_offset_minutes": -420,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Antarctica/Casey",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Antarctica/Davis",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Antarctica/DumontDUrville",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Antarctica/Macquarie",
+    "utc_offset_minutes": 660,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Antarctica/Mawson",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Antarctica/McMurdo",
+    "utc_offset_minutes": 780,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Antarctica/Palmer",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Antarctica/Rothera",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Antarctica/South_Pole",
+    "utc_offset_minutes": 780,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Antarctica/Syowa",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Antarctica/Troll",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Antarctica/Vostok",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Arctic/Longyearbyen",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Asia/Aden",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Almaty",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Amman",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Anadyr",
+    "utc_offset_minutes": 720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Aqtau",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Aqtobe",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Ashgabat",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Ashkhabad",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Atyrau",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Baghdad",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Bahrain",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Baku",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Bangkok",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Barnaul",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Beirut",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Asia/Bishkek",
+    "utc_offset_minutes": 360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Brunei",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Calcutta",
+    "utc_offset_minutes": 330,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Chita",
+    "utc_offset_minutes": 540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Choibalsan",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Chongqing",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Chungking",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Colombo",
+    "utc_offset_minutes": 330,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Dacca",
+    "utc_offset_minutes": 360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Damascus",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Dhaka",
+    "utc_offset_minutes": 360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Dili",
+    "utc_offset_minutes": 540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Dubai",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Dushanbe",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Famagusta",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Asia/Gaza",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Asia/Harbin",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Hebron",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Asia/Ho_Chi_Minh",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Hong_Kong",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Hovd",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Irkutsk",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Istanbul",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Jakarta",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Jayapura",
+    "utc_offset_minutes": 540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Jerusalem",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Asia/Kabul",
+    "utc_offset_minutes": 270,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Kamchatka",
+    "utc_offset_minutes": 720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Karachi",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Kashgar",
+    "utc_offset_minutes": 360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Kathmandu",
+    "utc_offset_minutes": 345,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Katmandu",
+    "utc_offset_minutes": 345,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Khandyga",
+    "utc_offset_minutes": 540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Kolkata",
+    "utc_offset_minutes": 330,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Krasnoyarsk",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Kuala_Lumpur",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Kuching",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Kuwait",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Macao",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Macau",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Magadan",
+    "utc_offset_minutes": 660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Makassar",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Manila",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Muscat",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Nicosia",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Asia/Novokuznetsk",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Novosibirsk",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Omsk",
+    "utc_offset_minutes": 360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Oral",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Phnom_Penh",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Pontianak",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Pyongyang",
+    "utc_offset_minutes": 540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Qatar",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Qostanay",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Qyzylorda",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Rangoon",
+    "utc_offset_minutes": 390,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Riyadh",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Saigon",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Sakhalin",
+    "utc_offset_minutes": 660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Samarkand",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Seoul",
+    "utc_offset_minutes": 540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Shanghai",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Singapore",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Srednekolymsk",
+    "utc_offset_minutes": 660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Taipei",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Tashkent",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Tbilisi",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Tehran",
+    "utc_offset_minutes": 210,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Tel_Aviv",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Asia/Thimbu",
+    "utc_offset_minutes": 360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Thimphu",
+    "utc_offset_minutes": 360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Tokyo",
+    "utc_offset_minutes": 540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Tomsk",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Ujung_Pandang",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Ulaanbaatar",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Ulan_Bator",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Urumqi",
+    "utc_offset_minutes": 360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Ust-Nera",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Vientiane",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Vladivostok",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Yakutsk",
+    "utc_offset_minutes": 540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Yangon",
+    "utc_offset_minutes": 390,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Yekaterinburg",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Asia/Yerevan",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Atlantic/Azores",
+    "utc_offset_minutes": -60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Atlantic/Bermuda",
+    "utc_offset_minutes": -240,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Atlantic/Canary",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Atlantic/Cape_Verde",
+    "utc_offset_minutes": -60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Atlantic/Faeroe",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Atlantic/Faroe",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Atlantic/Jan_Mayen",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Atlantic/Madeira",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Atlantic/Reykjavik",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Atlantic/South_Georgia",
+    "utc_offset_minutes": -120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Atlantic/St_Helena",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Atlantic/Stanley",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Australia/ACT",
+    "utc_offset_minutes": 660,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/Adelaide",
+    "utc_offset_minutes": 630,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/Brisbane",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Australia/Broken_Hill",
+    "utc_offset_minutes": 630,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/Canberra",
+    "utc_offset_minutes": 660,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/Currie",
+    "utc_offset_minutes": 660,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/Darwin",
+    "utc_offset_minutes": 570,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Australia/Eucla",
+    "utc_offset_minutes": 525,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Australia/Hobart",
+    "utc_offset_minutes": 660,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/LHI",
+    "utc_offset_minutes": 660,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/Lindeman",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Australia/Lord_Howe",
+    "utc_offset_minutes": 660,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/Melbourne",
+    "utc_offset_minutes": 660,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/NSW",
+    "utc_offset_minutes": 660,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/North",
+    "utc_offset_minutes": 570,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Australia/Perth",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Australia/Queensland",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Australia/South",
+    "utc_offset_minutes": 630,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/Sydney",
+    "utc_offset_minutes": 660,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/Tasmania",
+    "utc_offset_minutes": 660,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/Victoria",
+    "utc_offset_minutes": 660,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Australia/West",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Australia/Yancowinna",
+    "utc_offset_minutes": 630,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Brazil/Acre",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Brazil/DeNoronha",
+    "utc_offset_minutes": -120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Brazil/East",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Brazil/West",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "CET",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "CST6CDT",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Canada/Atlantic",
+    "utc_offset_minutes": -240,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Canada/Central",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Canada/Eastern",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Canada/Mountain",
+    "utc_offset_minutes": -420,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Canada/Newfoundland",
+    "utc_offset_minutes": -210,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Canada/Pacific",
+    "utc_offset_minutes": -480,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Canada/Saskatchewan",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Canada/Yukon",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Chile/Continental",
+    "utc_offset_minutes": -180,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Chile/EasterIsland",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Cuba",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "EET",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "EST",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "EST5EDT",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Egypt",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Eire",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Etc/GMT",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+0",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+1",
+    "utc_offset_minutes": -60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+10",
+    "utc_offset_minutes": -600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+11",
+    "utc_offset_minutes": -660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+12",
+    "utc_offset_minutes": -720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+2",
+    "utc_offset_minutes": -120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+3",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+4",
+    "utc_offset_minutes": -240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+5",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+6",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+7",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+8",
+    "utc_offset_minutes": -480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT+9",
+    "utc_offset_minutes": -540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-0",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-1",
+    "utc_offset_minutes": 60,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-10",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-11",
+    "utc_offset_minutes": 660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-12",
+    "utc_offset_minutes": 720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-13",
+    "utc_offset_minutes": 780,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-14",
+    "utc_offset_minutes": 840,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-2",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-3",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-4",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-5",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-6",
+    "utc_offset_minutes": 360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-7",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-8",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT-9",
+    "utc_offset_minutes": 540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/GMT0",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/Greenwich",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/UCT",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/UTC",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/Universal",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Etc/Zulu",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Europe/Amsterdam",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Andorra",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Astrakhan",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Europe/Athens",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Belfast",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Belgrade",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Berlin",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Bratislava",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Brussels",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Bucharest",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Budapest",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Busingen",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Chisinau",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Copenhagen",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Dublin",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Gibraltar",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Guernsey",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Helsinki",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Isle_of_Man",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Istanbul",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Europe/Jersey",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Kaliningrad",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Europe/Kiev",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Kirov",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Europe/Kyiv",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Lisbon",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Ljubljana",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/London",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Luxembourg",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Madrid",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Malta",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Mariehamn",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Minsk",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Europe/Monaco",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Moscow",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Europe/Nicosia",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Oslo",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Paris",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Podgorica",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Prague",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Riga",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Rome",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Samara",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Europe/San_Marino",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Sarajevo",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Saratov",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Europe/Simferopol",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Europe/Skopje",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Sofia",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Stockholm",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Tallinn",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Tirane",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Tiraspol",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Ulyanovsk",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Europe/Uzhgorod",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Vaduz",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Vatican",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Vienna",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Vilnius",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Volgograd",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Europe/Warsaw",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Zagreb",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Zaporozhye",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Europe/Zurich",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Factory",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "GB",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "GB-Eire",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "GMT",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "GMT+0",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "GMT-0",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "GMT0",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Greenwich",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "HST",
+    "utc_offset_minutes": -600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Hongkong",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Iceland",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Indian/Antananarivo",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Indian/Chagos",
+    "utc_offset_minutes": 360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Indian/Christmas",
+    "utc_offset_minutes": 420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Indian/Cocos",
+    "utc_offset_minutes": 390,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Indian/Comoro",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Indian/Kerguelen",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Indian/Mahe",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Indian/Maldives",
+    "utc_offset_minutes": 300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Indian/Mauritius",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Indian/Mayotte",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Indian/Reunion",
+    "utc_offset_minutes": 240,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Iran",
+    "utc_offset_minutes": 210,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Israel",
+    "utc_offset_minutes": 120,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Jamaica",
+    "utc_offset_minutes": -300,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Japan",
+    "utc_offset_minutes": 540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Kwajalein",
+    "utc_offset_minutes": 720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Libya",
+    "utc_offset_minutes": 120,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "MET",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "MST",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "MST7MDT",
+    "utc_offset_minutes": -420,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Mexico/BajaNorte",
+    "utc_offset_minutes": -480,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Mexico/BajaSur",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Mexico/General",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "NZ",
+    "utc_offset_minutes": 780,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "NZ-CHAT",
+    "utc_offset_minutes": 825,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Navajo",
+    "utc_offset_minutes": -420,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "PRC",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "PST8PDT",
+    "utc_offset_minutes": -480,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Pacific/Apia",
+    "utc_offset_minutes": 780,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Auckland",
+    "utc_offset_minutes": 780,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Pacific/Bougainville",
+    "utc_offset_minutes": 660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Chatham",
+    "utc_offset_minutes": 825,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Pacific/Chuuk",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Easter",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Pacific/Efate",
+    "utc_offset_minutes": 660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Enderbury",
+    "utc_offset_minutes": 780,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Fakaofo",
+    "utc_offset_minutes": 780,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Fiji",
+    "utc_offset_minutes": 720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Funafuti",
+    "utc_offset_minutes": 720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Galapagos",
+    "utc_offset_minutes": -360,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Gambier",
+    "utc_offset_minutes": -540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Guadalcanal",
+    "utc_offset_minutes": 660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Guam",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Honolulu",
+    "utc_offset_minutes": -600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Johnston",
+    "utc_offset_minutes": -600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Kanton",
+    "utc_offset_minutes": 780,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Kiritimati",
+    "utc_offset_minutes": 840,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Kosrae",
+    "utc_offset_minutes": 660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Kwajalein",
+    "utc_offset_minutes": 720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Majuro",
+    "utc_offset_minutes": 720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Marquesas",
+    "utc_offset_minutes": -570,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Midway",
+    "utc_offset_minutes": -660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Nauru",
+    "utc_offset_minutes": 720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Niue",
+    "utc_offset_minutes": -660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Norfolk",
+    "utc_offset_minutes": 720,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Pacific/Noumea",
+    "utc_offset_minutes": 660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Pago_Pago",
+    "utc_offset_minutes": -660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Palau",
+    "utc_offset_minutes": 540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Pitcairn",
+    "utc_offset_minutes": -480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Pohnpei",
+    "utc_offset_minutes": 660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Ponape",
+    "utc_offset_minutes": 660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Port_Moresby",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Rarotonga",
+    "utc_offset_minutes": -600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Saipan",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Samoa",
+    "utc_offset_minutes": -660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Tahiti",
+    "utc_offset_minutes": -600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Tarawa",
+    "utc_offset_minutes": 720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Tongatapu",
+    "utc_offset_minutes": 780,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Truk",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Wake",
+    "utc_offset_minutes": 720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Wallis",
+    "utc_offset_minutes": 720,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Pacific/Yap",
+    "utc_offset_minutes": 600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Poland",
+    "utc_offset_minutes": 60,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Portugal",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "ROC",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "ROK",
+    "utc_offset_minutes": 540,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Singapore",
+    "utc_offset_minutes": 480,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Turkey",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "UCT",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "US/Alaska",
+    "utc_offset_minutes": -540,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "US/Aleutian",
+    "utc_offset_minutes": -600,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "US/Arizona",
+    "utc_offset_minutes": -420,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "US/Central",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "US/East-Indiana",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "US/Eastern",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "US/Hawaii",
+    "utc_offset_minutes": -600,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "US/Indiana-Starke",
+    "utc_offset_minutes": -360,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "US/Michigan",
+    "utc_offset_minutes": -300,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "US/Mountain",
+    "utc_offset_minutes": -420,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "US/Pacific",
+    "utc_offset_minutes": -480,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "US/Samoa",
+    "utc_offset_minutes": -660,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "UTC",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "Universal",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "W-SU",
+    "utc_offset_minutes": 180,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "WET",
+    "utc_offset_minutes": 0,
+    "observes_dst": true
+  },
+  {
+    "timezone_id": "Zulu",
+    "utc_offset_minutes": 0,
+    "observes_dst": false
+  },
+  {
+    "timezone_id": "localtime",
+    "utc_offset_minutes": -180,
+    "observes_dst": false
+  }
+]

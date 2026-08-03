@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../components/layout/Layout'
 
@@ -9,11 +9,75 @@ export default function CriarMapa() {
     data_nascimento: '',
     horario_nascimento: '',
     local_nascimento: '',
+    cidade_ibge: '',
   })
+  const [sugestoes, setSugestoes] = useState([])
+  const [buscandoCidade, setBuscandoCidade] = useState(false)
+  const [erroCidade, setErroCidade] = useState('')
+  const [erroEnvio, setErroEnvio] = useState('')
+  const abortRef = useRef(null)
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const consulta = formData.local_nascimento.trim()
+    if (formData.cidade_ibge || consulta.length < 2) {
+      setSugestoes([])
+      setBuscandoCidade(false)
+      return undefined
+    }
+
+    const timer = window.setTimeout(async () => {
+      abortRef.current?.abort()
+      const controller = new AbortController()
+      abortRef.current = controller
+      setBuscandoCidade(true)
+      setErroCidade('')
+
+      try {
+        const response = await fetch(
+          `/api/localizacoes/cidades?q=${encodeURIComponent(consulta)}&limite=10`,
+          { signal: controller.signal },
+        )
+        if (!response.ok) throw new Error('Falha ao buscar cidades.')
+        const data = await response.json()
+        setSugestoes(data.cidades || [])
+        if (!data.cidades?.length) setErroCidade('Nenhuma cidade brasileira encontrada.')
+      } catch (error) {
+        if (error.name !== 'AbortError') setErroCidade('Não foi possível buscar as cidades.')
+      } finally {
+        if (!controller.signal.aborted) setBuscandoCidade(false)
+      }
+    }, 300)
+
+    return () => {
+      window.clearTimeout(timer)
+      abortRef.current?.abort()
+    }
+  }, [formData.local_nascimento, formData.cidade_ibge])
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    navigate('/carregando')
+    if (!formData.cidade_ibge) {
+      setErroCidade('Selecione uma cidade da lista de sugestões.')
+      setStep(2)
+      return
+    }
+
+    setErroEnvio('')
+    try {
+      const response = await fetch('/mapas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+      const data = await response.json()
+      if (!response.ok) {
+        setErroEnvio(data.erro || 'Não foi possível criar o mapa.')
+        return
+      }
+      navigate(data.redirect || '/carregando')
+    } catch (_error) {
+      setErroEnvio('Não foi possível conectar ao servidor.')
+    }
   }
 
   const updateForm = (field, value) => {
@@ -25,10 +89,25 @@ export default function CriarMapa() {
       case 1:
         return formData.data_nascimento && formData.horario_nascimento
       case 2:
-        return formData.local_nascimento
+        return Boolean(formData.cidade_ibge)
       default:
         return false
     }
+  }
+
+  const alterarCidade = (value) => {
+    setFormData(prev => ({ ...prev, local_nascimento: value, cidade_ibge: '' }))
+    setErroCidade('')
+  }
+
+  const selecionarCidade = (cidade) => {
+    setFormData(prev => ({
+      ...prev,
+      local_nascimento: `${cidade.municipio}, ${cidade.uf}`,
+      cidade_ibge: cidade.ibge,
+    }))
+    setSugestoes([])
+    setErroCidade('')
   }
 
   return (
@@ -89,7 +168,7 @@ export default function CriarMapa() {
                       </div>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-2 relative">
                       <label className="font-label text-sm text-secondary block">Horário Exato</label>
                       <div className="relative">
                         <input
@@ -140,12 +219,38 @@ export default function CriarMapa() {
                         <input
                           type="text"
                           value={formData.local_nascimento}
-                          onChange={(e) => updateForm('local_nascimento', e.target.value)}
+                          onChange={(e) => alterarCidade(e.target.value)}
                           placeholder="Digite o nome da cidade..."
+                          autoComplete="off"
+                          role="combobox"
+                          aria-autocomplete="list"
+                          aria-expanded={sugestoes.length > 0}
+                          aria-controls="sugestoes-cidades"
                           className="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:ring-0 focus:border-primary transition-all"
                           required
                         />
+                        {buscandoCidade && (
+                          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-outline">Buscando…</span>
+                        )}
                       </div>
+                      {sugestoes.length > 0 && (
+                        <ul id="sugestoes-cidades" role="listbox" className="absolute z-20 w-full mt-2 glass-panel rounded-lg border border-white/10 overflow-y-auto max-h-60 shadow-2xl">
+                          {sugestoes.map(cidade => (
+                            <li key={cidade.ibge} role="option" aria-selected="false">
+                              <button
+                                type="button"
+                                onClick={() => selecionarCidade(cidade)}
+                                className="w-full px-4 py-3 hover:bg-white/5 text-left transition-colors flex justify-between gap-3"
+                              >
+                                <span>{cidade.municipio}, {cidade.uf}</span>
+                                <span className="text-xs text-outline">{cidade.regiao}</span>
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      {formData.cidade_ibge && <p className="text-xs text-secondary">Cidade validada.</p>}
+                      {erroCidade && <p className="text-xs text-error" role="alert">{erroCidade}</p>}
                     </div>
 
                     <div className="rounded-xl overflow-hidden h-40 border border-white/5 relative">
@@ -204,6 +309,7 @@ export default function CriarMapa() {
                   </div>
 
                   <div className="mt-12 space-y-4">
+                    {erroEnvio && <p className="text-sm text-error text-center" role="alert">{erroEnvio}</p>}
                     <button
                       type="submit"
                       className="w-full bg-primary text-on-primary py-5 rounded-full font-headline flex items-center justify-center gap-4 transition-all uppercase tracking-widest text-lg hover:shadow-[0_0_30px_rgba(255,0,122,0.4)] active:scale-[0.98]"

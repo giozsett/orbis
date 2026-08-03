@@ -86,3 +86,30 @@ def cadastro():
 def logout():
     session.clear()
     return redirect(url_for("auth.acesso"))
+
+
+@auth_bp.post("/logout")
+def logout_json():
+    session.clear()
+    return jsonify(ok=True, redirect="/login")
+
+
+@auth_bp.get("/perfil")
+def perfil():
+    usuario_id = session.get("usuario_id")
+    if usuario_id is None:
+        return jsonify(erro="Faça login para acessar seu perfil."), 401
+
+    usuario = db.session.get(Usuario, usuario_id)
+    if usuario is None:
+        session.clear()
+        return jsonify(erro="Usuário não encontrado."), 404
+
+    return jsonify(usuario={
+        "id": usuario.id,
+        "nome": usuario.nome,
+        "email": usuario.email,
+        "criado_em": usuario.criado_em.isoformat(),
+        "atualizado_em": usuario.atualizado_em.isoformat(),
+        "total_mapas": usuario.mapas.count(),
+    })

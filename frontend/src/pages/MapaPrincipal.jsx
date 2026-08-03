@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import Layout from '../components/layout/Layout'
 import Mandala from '../components/mandala/Mandala'
 import PlanetCard from '../components/planet/PlanetCard'
@@ -102,6 +103,44 @@ const MOCK_DATA = {
 
 export default function MapaPrincipal() {
   const [hoveredPlanet, setHoveredPlanet] = useState(null)
+  const [mapa, setMapa] = useState(null)
+  const [erro, setErro] = useState('')
+  const { id } = useParams()
+
+  useEffect(() => {
+    const endpoint = id ? `/mapas/${id}` : '/mapas/principal'
+    fetch(endpoint, { headers: { Accept: 'application/json' } })
+      .then(async response => {
+        const data = await response.json()
+        if (!response.ok) throw new Error(data.erro || 'Não foi possível carregar o mapa.')
+        setMapa(data.mapa)
+      })
+      .catch(error => setErro(error.message))
+  }, [id])
+
+  const chartData = mapa?.dados
+  const heroCards = useMemo(() => {
+    if (!chartData) return []
+    const sol = chartData.planetas.find(planeta => planeta.nome === 'Sol')
+    const lua = chartData.planetas.find(planeta => planeta.nome === 'Lua')
+    const ascendente = chartData.ascendente
+    return [
+      { ponto: sol, subtitulo: 'IDENTIDADE', icon: 'sunny', color: '#ffb1c3' },
+      { ponto: lua, subtitulo: 'EMOÇÕES', icon: 'nightlight', color: '#eab9ce' },
+      { ponto: ascendente, subtitulo: 'PERSONA', icon: 'expand_less', color: '#deb7ff' },
+    ].filter(item => item.ponto).map(item => ({
+      ...item,
+      titulo: `${item.ponto.nome} em ${item.ponto.signo}`,
+      casa: item.ponto.casa ? `Casa ${item.ponto.casa} • ${item.ponto.posicao}` : item.ponto.posicao,
+    }))
+  }, [chartData])
+
+  if (erro) {
+    return <Layout><div className="p-16 text-error">{erro}</div></Layout>
+  }
+  if (!chartData) {
+    return <Layout><div className="p-16 text-on-surface-variant">Carregando mapa natal…</div></Layout>
+  }
 
   return (
     <Layout>
@@ -113,7 +152,7 @@ export default function MapaPrincipal() {
         <div className="max-w-7xl mx-auto space-y-12 relative z-10">
           {/* Hero Cards: Sol, Lua, Ascendente */}
           <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {MOCK_DATA.heroCards.map((card, index) => (
+            {heroCards.map((card, index) => (
               <GlassCard
                 key={card.titulo}
                 magnetic
@@ -134,7 +173,9 @@ export default function MapaPrincipal() {
 
                 <div className="mt-4 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
-                <p className="mt-4 text-sm text-on-surface-variant leading-relaxed">{card.descricao}</p>
+                <p className="mt-4 text-sm text-on-surface-variant leading-relaxed">
+                  Posição calculada para {mapa.local_nascimento} no sistema Placidus.
+                </p>
               </GlassCard>
             ))}
           </section>
@@ -145,7 +186,7 @@ export default function MapaPrincipal() {
             <div className="xl:col-span-7 flex justify-center items-center py-6">
               <div className="w-full max-w-[600px] aspect-square">
                 <Mandala
-                  data={MOCK_DATA}
+                  data={chartData}
                   animated={true}
                   onPlanetHover={setHoveredPlanet}
                   onPlanetClick={(p) => console.log('Planeta clicado:', p)}
@@ -162,7 +203,7 @@ export default function MapaPrincipal() {
                 </div>
               </div>
 
-              {MOCK_DATA.planetas.map((planeta, index) => (
+              {chartData.planetas.map((planeta, index) => (
                 <PlanetCard
                   key={planeta.nome}
                   planeta={planeta}

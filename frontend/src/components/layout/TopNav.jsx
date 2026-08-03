@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard' },
@@ -10,7 +10,46 @@ const navItems = [
 
 export default function TopNav() {
   const location = useLocation()
+  const navigate = useNavigate()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const userMenuRef = useRef(null)
+
+  useEffect(() => {
+    const closeOnOutsideClick = (event) => {
+      if (!userMenuRef.current?.contains(event.target)) setIsUserMenuOpen(false)
+    }
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setIsUserMenuOpen(false)
+    }
+    document.addEventListener('pointerdown', closeOnOutsideClick)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsideClick)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [])
+
+  useEffect(() => {
+    setIsUserMenuOpen(false)
+    setIsMobileMenuOpen(false)
+  }, [location.pathname])
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return
+    setIsLoggingOut(true)
+    try {
+      await fetch('/acesso/logout', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      })
+    } finally {
+      setIsUserMenuOpen(false)
+      setIsLoggingOut(false)
+      navigate('/login', { replace: true })
+    }
+  }
 
   return (
     <>
@@ -36,12 +75,62 @@ export default function TopNav() {
             ))}
           </nav>
         </div>
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden material-symbols-outlined text-on-surface-variant hover:text-secondary transition-colors cursor-pointer"
-        >
-          {isMobileMenuOpen ? 'close' : 'menu'}
-        </button>
+        <div className="flex items-center gap-2">
+          <div ref={userMenuRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setIsUserMenuOpen(open => !open)}
+              aria-haspopup="menu"
+              aria-expanded={isUserMenuOpen}
+              aria-label="Abrir menu do usuário"
+              className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 ${
+                isUserMenuOpen
+                  ? 'bg-primary/15 border-primary/60 text-primary shadow-[0_0_18px_rgba(255,177,195,0.18)]'
+                  : 'bg-surface-container-low border-white/10 text-on-surface-variant hover:text-secondary hover:border-secondary/40'
+              }`}
+            >
+              <span className="material-symbols-outlined">person</span>
+            </button>
+
+            {isUserMenuOpen && (
+              <div
+                role="menu"
+                className="absolute right-0 top-12 w-52 glass-panel rounded-xl border border-white/10 p-2 shadow-2xl animate-user-menu origin-top-right"
+              >
+                <div className="px-3 py-2 mb-1 border-b border-white/5">
+                  <p className="font-label text-[10px] uppercase tracking-widest text-outline">Sua conta</p>
+                </div>
+                <Link
+                  to="/perfil"
+                  role="menuitem"
+                  className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-on-surface-variant hover:text-secondary hover:bg-white/5 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-xl">account_circle</span>
+                  Meu Perfil
+                </Link>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                  className="w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-error hover:bg-error/10 transition-colors disabled:opacity-50"
+                >
+                  <span className="material-symbols-outlined text-xl">logout</span>
+                  {isLoggingOut ? 'Saindo…' : 'Sair'}
+                </button>
+              </div>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Abrir menu de navegação"
+            className="md:hidden material-symbols-outlined text-on-surface-variant hover:text-secondary transition-colors cursor-pointer"
+          >
+            {isMobileMenuOpen ? 'close' : 'menu'}
+          </button>
+        </div>
       </header>
 
       {/* Menu mobile */}
