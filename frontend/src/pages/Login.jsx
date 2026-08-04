@@ -1,15 +1,27 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
   const navigate = useNavigate()
   const [isLogin, setIsLogin] = useState(true)
+  const [verificandoSessao, setVerificandoSessao] = useState(true)
+  const [manterConectado, setManterConectado] = useState(true)
   const [erro, setErro] = useState('')
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
     senha: '',
   })
+
+  useEffect(() => {
+    fetch('/acesso/sessao', { credentials: 'include' })
+      .then(response => response.json())
+      .then(data => {
+        if (data.autenticado) navigate('/dashboard', { replace: true })
+      })
+      .catch(() => {})
+      .finally(() => setVerificandoSessao(false))
+  }, [navigate])
 
   const updateForm = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -20,7 +32,11 @@ export default function Login() {
     e.preventDefault()
     setErro('')
 
-    const body = new URLSearchParams({ email: formData.email, senha: formData.senha })
+    const body = new URLSearchParams({
+      email: formData.email,
+      senha: formData.senha,
+      manter_conectado: String(manterConectado),
+    })
 
     try {
       const res = await fetch('/acesso/login', {
@@ -64,6 +80,20 @@ export default function Login() {
     } catch {
       setErro('Erro de conexão com o servidor.')
     }
+  }
+
+  if (verificandoSessao) {
+    return (
+      <div className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-[#020817]">
+        <div className="absolute h-72 w-72 animate-pulse-soft rounded-full bg-primary/10 blur-[90px]" />
+        <div className="relative flex h-40 w-40 items-center justify-center">
+          <div className="absolute inset-0 animate-rotate-slow rounded-full border border-dashed border-primary/30" />
+          <div className="absolute inset-8 animate-rotate-reverse rounded-full border border-secondary/30" />
+          <span className="material-symbols-outlined animate-float text-4xl text-primary">orbit</span>
+        </div>
+        <p className="absolute mt-56 font-label text-xs uppercase tracking-[0.22em] text-outline">Restaurando sua sessão</p>
+      </div>
+    )
   }
 
   return (
@@ -155,7 +185,13 @@ export default function Login() {
                   </div>
 
                   <div className="flex items-center gap-2 px-1">
-                    <input type="checkbox" id="remember" className="w-4 h-4 rounded bg-surface-container-highest border-white/10 text-primary focus:ring-primary" />
+                    <input
+                      type="checkbox"
+                      id="remember"
+                      checked={manterConectado}
+                      onChange={(event) => setManterConectado(event.target.checked)}
+                      className="w-4 h-4 rounded bg-surface-container-highest border-white/10 text-primary focus:ring-primary"
+                    />
                     <label htmlFor="remember" className="font-label text-xs text-on-surface-variant cursor-pointer">
                       Manter-me conectado
                     </label>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import Layout from '../components/layout/Layout'
+import { CelestialError, CelestialLoading } from '../components/map/CelestialPageState'
 import GlassCard from '../components/ui/GlassCard'
 
 const PLANETAS_VISUAIS = {
@@ -17,38 +18,33 @@ const PLANETAS_VISUAIS = {
   'Nodo Norte': { icon: 'route', color: '#f4c2d7' },
 }
 
-function textoInterpretacao(planeta) {
-  const interpretacao = planeta.interpretacao_base || {}
-  return [interpretacao.planeta, interpretacao.signo, interpretacao.casa]
-    .filter(Boolean)
-    .join(' ')
-}
-
 export default function Interpretacoes() {
   const [mapa, setMapa] = useState(null)
+  const [interpretacoes, setInterpretacoes] = useState([])
   const [erro, setErro] = useState('')
 
   useEffect(() => {
-    fetch('/mapas/principal', {
+    fetch('/mapas/principal/interpretacoes', {
       credentials: 'include',
       headers: { Accept: 'application/json' },
     })
       .then(async (response) => {
         const payload = await response.json().catch(() => ({}))
-        if (!response.ok || !payload.mapa) {
+        if (!response.ok || !payload.mapa || !payload.interpretacoes) {
           throw new Error(payload.erro || 'Não foi possível carregar as interpretações do mapa principal.')
         }
         setMapa(payload.mapa)
+        setInterpretacoes(payload.interpretacoes)
       })
       .catch((error) => setErro(error.message))
   }, [])
 
   if (erro) {
-    return <Layout><div className="p-16 text-error">{erro}</div></Layout>
+    return <CelestialError mensagem={erro} />
   }
 
-  if (!mapa?.dados) {
-    return <Layout><div className="p-16 text-on-surface-variant">Carregando interpretações do mapa natal…</div></Layout>
+  if (!mapa || !interpretacoes.length) {
+    return <CelestialLoading texto="Interpretando seu mapa natal" />
   }
 
   return (
@@ -66,11 +62,12 @@ export default function Interpretacoes() {
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {mapa.dados.planetas.map((planeta, index) => {
-            const visual = PLANETAS_VISUAIS[planeta.nome] || { icon: 'blur_on', color: '#ffb1c3' }
+          {interpretacoes.map((planeta, index) => {
+            const visualBase = PLANETAS_VISUAIS[planeta.planeta] || { icon: 'blur_on', color: '#ffb1c3' }
+            const visual = { ...visualBase, color: planeta.cor || visualBase.color }
             return (
               <GlassCard
-                key={planeta.nome}
+                key={planeta.id || planeta.planeta}
                 magnetic
                 className="p-6 flex flex-col gap-6 relative overflow-hidden group animate-fade-in-up"
                 style={{ animationDelay: `${index * 100}ms` }}
@@ -94,18 +91,22 @@ export default function Interpretacoes() {
                 </div>
 
                 <div>
-                  <h2 className="font-headline text-2xl mb-2">{planeta.nome}</h2>
-                  <p className="text-sm text-on-surface-variant leading-relaxed">{textoInterpretacao(planeta)}</p>
+                  <h2 className="font-headline text-2xl mb-2">{planeta.planeta}</h2>
+                  <p className="text-sm text-on-surface-variant leading-relaxed">{planeta.interpretacao}</p>
                 </div>
 
-                <div className="mt-auto pt-6 border-t border-white/5 flex gap-8">
+                <div className="mt-auto pt-6 border-t border-white/5 grid grid-cols-3 gap-4">
                   <div className="flex flex-col">
-                    <span className="font-label text-xs text-outline">Coordenada</span>
-                    <span className="font-label text-sm" style={{ color: visual.color }}>{planeta.posicao}</span>
+                    <span className="font-label text-xs text-outline">Elemento</span>
+                    <span className="font-label text-sm" style={{ color: visual.color }}>{planeta.elemento || '—'}</span>
                   </div>
                   <div className="flex flex-col">
                     <span className="font-label text-xs text-outline">Movimento</span>
-                    <span className="font-label text-sm" style={{ color: visual.color }}>{planeta.retrogrado ? 'Retrógrado' : 'Direto'}</span>
+                    <span className="font-label text-sm" style={{ color: visual.color }}>{planeta.estado}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-label text-xs text-outline">Dignidade</span>
+                    <span className="font-label text-sm" style={{ color: visual.color }}>{planeta.dignidade}</span>
                   </div>
                 </div>
               </GlassCard>
@@ -115,7 +116,7 @@ export default function Interpretacoes() {
           <div className="col-span-1 md:col-span-2 xl:col-span-3 h-64 glass-panel rounded-xl flex items-center justify-center relative overflow-hidden">
             <div className="relative z-10 text-center">
               <p className="font-label text-xs text-primary uppercase tracking-[0.4em] mb-2">Sistema de casas</p>
-              <p className="font-headline text-2xl text-on-surface">{mapa.dados.sistema_casas}</p>
+              <p className="font-headline text-2xl text-on-surface">Interpretação integrada e personalizada</p>
             </div>
           </div>
         </div>

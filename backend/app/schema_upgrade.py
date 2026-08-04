@@ -9,6 +9,8 @@ COLUNAS_LOCALIZACAO = {
     "cidade_ibge": "VARCHAR(7)",
     "timezone_id": "VARCHAR(64)",
     "utc_offset_minutos": "INTEGER",
+    "pais_codigo": "VARCHAR(2) DEFAULT 'BR'",
+    "geoname_id": "VARCHAR(20)",
 }
 
 
@@ -28,4 +30,12 @@ def aplicar_atualizacoes_aditivas() -> None:
         conexao.execute(text(
             "CREATE INDEX IF NOT EXISTS ix_mapas_natais_cidade_ibge "
             "ON mapas_natais (cidade_ibge)"
+        ))
+        conexao.execute(text(
+            "CREATE INDEX IF NOT EXISTS ix_mapas_natais_pais_codigo "
+            "ON mapas_natais (pais_codigo)"
+        ))
+        conexao.execute(text(
+            "CREATE INDEX IF NOT EXISTS ix_mapas_natais_geoname_id "
+            "ON mapas_natais (geoname_id)"
         ))

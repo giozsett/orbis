@@ -38,7 +38,7 @@ def completar(
     modelo = str(modelo or "").strip()
     if not modelo:
         raise OpenRouterConfigurationError(
-            "Defina o modelo do OpenRouter no arquivo .env."
+            "Nenhum modelo foi definido no catálogo backend/data/modelos_openrouter.json."
         )
 
     base_url = str(current_app.config["OPENROUTER_BASE_URL"]).rstrip("/")
@@ -54,7 +54,7 @@ def completar(
     modelos = list(dict.fromkeys([
         modelo,
         *(modelos_fallback or []),
-    ]))
+    ]))[:3]
     payload: dict[str, Any] = {
         "messages": mensagens,
         "temperature": temperatura,
@@ -66,6 +66,10 @@ def completar(
         payload["model"] = modelo
     if formato_json:
         payload["response_format"] = {"type": "json_object"}
+        payload["reasoning"] = {
+            "effort": "none",
+            "exclude": True,
+        }
 
     timeout = float(current_app.config.get("OPENROUTER_TIMEOUT_SECONDS", 30))
     try:

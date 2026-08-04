@@ -43,3 +43,35 @@ def test_envia_lista_de_fallbacks_ao_openrouter(app, monkeypatch):
         "modelo/primario:free", "openrouter/free",
     ]
     assert "model" not in capturado["json"]
+
+
+def test_limita_fallbacks_e_desativa_raciocinio_em_json(app, monkeypatch):
+    capturado = {}
+    monkeypatch.setattr(
+        "backend.services.openrouter_service.httpx.Client",
+        lambda **kwargs: ClienteFake(capturado, **kwargs),
+    )
+
+    with app.app_context():
+        app.config["OPENROUTER_API_KEY"] = "sk-or-teste"
+        completar(
+            [{"role": "user", "content": "responda em JSON"}],
+            "modelo/primario:free",
+            modelos_fallback=[
+                "modelo/fallback-1:free",
+                "modelo/fallback-2:free",
+                "modelo/fallback-3:free",
+            ],
+            formato_json=True,
+        )
+
+    assert capturado["json"]["models"] == [
+        "modelo/primario:free",
+        "modelo/fallback-1:free",
+        "modelo/fallback-2:free",
+    ]
+    assert capturado["json"]["response_format"] == {"type": "json_object"}
+    assert capturado["json"]["reasoning"] == {
+        "effort": "none",
+        "exclude": True,
+    }

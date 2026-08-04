@@ -2,6 +2,7 @@
 
 from io import BytesIO
 from math import cos, pi, sin
+from pathlib import Path
 from xml.sax.saxutils import escape
 
 from reportlab.lib import colors
@@ -9,6 +10,8 @@ from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     Flowable,
     PageBreak,
@@ -23,6 +26,22 @@ from backend.models.mapa_natal import MapaNatal
 
 
 TAMANHO_MAXIMO_PDF = 15 * 1024 * 1024
+CAMINHO_FONTE = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")
+CAMINHO_FONTE_NEGRITO = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")
+FONTE = "Helvetica"
+FONTE_NEGRITO = "Helvetica-Bold"
+SIGNOS = [
+    ("Áries", "♈"), ("Touro", "♉"), ("Gêmeos", "♊"),
+    ("Câncer", "♋"), ("Leão", "♌"), ("Virgem", "♍"),
+    ("Libra", "♎"), ("Escorpião", "♏"), ("Sagitário", "♐"),
+    ("Capricórnio", "♑"), ("Aquário", "♒"), ("Peixes", "♓"),
+]
+CORES_PLANETAS = {
+    "Sol": "#ffd16a", "Lua": "#d9c5ff", "Mercúrio": "#9cd7ee",
+    "Vênus": "#ff9ec1", "Marte": "#ff897d", "Júpiter": "#c997ff",
+    "Saturno": "#d3b99d", "Urano": "#87dfd8", "Netuno": "#76b9ff",
+    "Plutão": "#e3a8c6", "Nodo Norte": "#f1d6aa",
+}
 
 
 class RelatorioPdfError(RuntimeError):
@@ -33,39 +52,116 @@ class RelatorioMuitoGrandeError(RelatorioPdfError):
     pass
 
 
+def _registrar_fontes():
+    global FONTE, FONTE_NEGRITO
+    if CAMINHO_FONTE.exists() and "OrbisSans" not in pdfmetrics.getRegisteredFontNames():
+        pdfmetrics.registerFont(TTFont("OrbisSans", str(CAMINHO_FONTE)))
+    if CAMINHO_FONTE_NEGRITO.exists() and "OrbisSansBold" not in pdfmetrics.getRegisteredFontNames():
+        pdfmetrics.registerFont(TTFont("OrbisSansBold", str(CAMINHO_FONTE_NEGRITO)))
+    if CAMINHO_FONTE.exists():
+        FONTE = "OrbisSans"
+    if CAMINHO_FONTE_NEGRITO.exists():
+        FONTE_NEGRITO = "OrbisSansBold"
+
+
+def _meios_das_casas(casas: list[dict]) -> list[tuple[int, float]]:
+    cuspides = [float(casa.get("grau", indice * 30)) % 360 for indice, casa in enumerate(casas[:12])]
+    if len(cuspides) != 12:
+        cuspides = [indice * 30.0 for indice in range(12)]
+    return [
+        (indice + 1, (grau + ((cuspides[(indice + 1) % 12] - grau) % 360) / 2) % 360)
+        for indice, grau in enumerate(cuspides)
+    ]
+
+
 class MandalaVetorial(Flowable):
-    def __init__(self, dados: dict, tamanho: float = 150 * mm):
+    def __init__(self, dados: dict, tamanho: float = 158 * mm):
         super().__init__()
         self.dados = dados
         self.width = tamanho
         self.height = tamanho
 
     def draw(self):
+        _registrar_fontes()
         centro = self.width / 2
-        raio = self.width * 0.43
+        raio = self.width * 0.46
         self.canv.setStrokeColor(colors.HexColor("#ffb1c3"))
         self.canv.setFillColor(colors.HexColor("#0b1323"))
         self.canv.circle(centro, centro, raio, fill=1, stroke=1)
-        self.canv.setStrokeColor(colors.HexColor("#ac878f"))
+
+        # Faixa zodiacal alternada para separar visualmente cada signo.
         for indice in range(12):
+            if indice % 2 == 0:
+                self.canv.setFillColor(colors.HexColor("#131e33"))
+                self.canv.setStrokeColor(colors.HexColor("#131e33"))
+                self.canv.wedge(
+                    centro - raio, centro - raio, centro + raio, centro + raio,
+                    indice * 30 - 90, 30, fill=1, stroke=0,
+                )
+        self.canv.setFillColor(colors.HexColor("#0b1323"))
+        self.canv.circle(centro, centro, raio * 0.79, fill=1, stroke=0)
+
+        self.canv.setStrokeColor(colors.HexColor("#ac878f"))
+        self.canv.setLineWidth(0.55)
+        for indice, (_, simbolo) in enumerate(SIGNOS):
             angulo = (indice * 30 - 90) * pi / 180
             self.canv.line(
-                centro + raio * 0.46 * cos(angulo),
-                centro + raio * 0.46 * sin(angulo),
+                centro + raio * 0.79 * cos(angulo),
+                centro + raio * 0.79 * sin(angulo),
                 centro + raio * cos(angulo),
                 centro + raio * sin(angulo),
             )
+            meio = (indice * 30 + 15 - 90) * pi / 180
+            self.canv.setFillColor(colors.HexColor("#f7c5d5"))
+            self.canv.setFont(FONTE, 11)
+            self.canv.drawCentredString(
+                centro + raio * 0.895 * cos(meio),
+                centro + raio * 0.895 * sin(meio) - 4,
+                simbolo,
+            )
+
+        casas = self.dados.get("casas", [])
+        cuspides = [float(casa.get("grau", indice * 30)) for indice, casa in enumerate(casas[:12])]
+        if len(cuspides) != 12:
+            cuspides = [indice * 30.0 for indice in range(12)]
+        self.canv.setStrokeColor(colors.HexColor("#896573"))
+        for grau in cuspides:
+            angulo = (grau - 90) * pi / 180
+            self.canv.line(
+                centro + raio * 0.34 * cos(angulo), centro + raio * 0.34 * sin(angulo),
+                centro + raio * 0.79 * cos(angulo), centro + raio * 0.79 * sin(angulo),
+            )
         self.canv.setStrokeColor(colors.HexColor("#633e4f"))
-        self.canv.circle(centro, centro, raio * 0.72, fill=0, stroke=1)
-        self.canv.circle(centro, centro, raio * 0.46, fill=0, stroke=1)
+        self.canv.circle(centro, centro, raio * 0.79, fill=0, stroke=1)
+        self.canv.circle(centro, centro, raio * 0.68, fill=0, stroke=1)
+        self.canv.circle(centro, centro, raio * 0.34, fill=0, stroke=1)
+
+        for numero, grau in _meios_das_casas(casas):
+            angulo = (grau - 90) * pi / 180
+            x = centro + raio * 0.405 * cos(angulo)
+            y = centro + raio * 0.405 * sin(angulo)
+            self.canv.setFillColor(colors.HexColor("#633e4f"))
+            self.canv.circle(x, y, 7, fill=1, stroke=0)
+            self.canv.setFillColor(colors.white)
+            self.canv.setFont(FONTE_NEGRITO, 6.5)
+            self.canv.drawCentredString(x, y - 2.3, str(numero))
 
         pontos = {}
-        for planeta in self.dados.get("planetas", []):
+        planetas = sorted(self.dados.get("planetas", []), key=lambda item: float(item.get("grau", 0)))
+        grau_anterior = None
+        nivel = 0
+        for planeta in planetas:
             grau = float(planeta.get("grau", 0))
+            if grau_anterior is not None and abs(grau - grau_anterior) < 8:
+                nivel = (nivel + 1) % 3
+            else:
+                nivel = 0
+            grau_anterior = grau
             angulo = (grau - 90) * pi / 180
+            raio_planeta = (0.56 + nivel * 0.055) * raio
             pontos[planeta.get("nome")] = (
-                centro + raio * 0.68 * cos(angulo),
-                centro + raio * 0.68 * sin(angulo),
+                centro + raio_planeta * cos(angulo),
+                centro + raio_planeta * sin(angulo),
             )
         cores = {
             "conjunção": "#ffb1c3", "sextil": "#b86dfd",
@@ -79,14 +175,15 @@ class MandalaVetorial(Flowable):
                 self.canv.setLineWidth(0.5)
                 self.canv.line(*primeiro, *segundo)
         for nome, (x, y) in pontos.items():
-            self.canv.setFillColor(colors.HexColor("#ffb1c3"))
-            self.canv.circle(x, y, 3.2, fill=1, stroke=0)
+            self.canv.setFillColor(colors.HexColor(CORES_PLANETAS.get(nome, "#ffb1c3")))
+            self.canv.circle(x, y, 3.6, fill=1, stroke=0)
             self.canv.setFillColor(colors.white)
-            self.canv.setFont("Helvetica", 6.5)
-            self.canv.drawCentredString(x, y + 6, str(nome))
+            self.canv.setFont(FONTE, 6.2)
+            self.canv.drawCentredString(x, y + 6.5, str(nome))
 
 
 def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
+    _registrar_fontes()
     memoria = BytesIO()
     documento = SimpleDocTemplate(
         memoria,
@@ -102,15 +199,15 @@ def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
     estilos = getSampleStyleSheet()
     titulo = ParagraphStyle(
         "OrbisTitulo", parent=estilos["Title"], textColor=colors.HexColor("#66002c"),
-        fontName="Helvetica-Bold", fontSize=25, leading=29, alignment=TA_CENTER,
+        fontName=FONTE_NEGRITO, fontSize=25, leading=29, alignment=TA_CENTER,
     )
     subtitulo = ParagraphStyle(
         "OrbisSubtitulo", parent=estilos["Heading2"], textColor=colors.HexColor("#633e4f"),
-        fontName="Helvetica-Bold", fontSize=15, leading=18, spaceAfter=7,
+        fontName=FONTE_NEGRITO, fontSize=15, leading=18, spaceAfter=7,
     )
     corpo = ParagraphStyle(
         "OrbisCorpo", parent=estilos["BodyText"], textColor=colors.HexColor("#2d3546"),
-        fontName="Helvetica", fontSize=9.2, leading=13,
+        fontName=FONTE, fontSize=9.2, leading=13,
     )
     dados = mapa.dados or {}
     historia = [
@@ -133,6 +230,7 @@ def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
                 for p in dados.get("planetas", [])
             ],
             cabecalho=True,
+            larguras=[35 * mm, 34 * mm, 19 * mm, 38 * mm, 37 * mm],
         ),
         Spacer(1, 7 * mm),
         Paragraph("Casas", subtitulo),
@@ -142,6 +240,7 @@ def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
                 for c in dados.get("casas", [])
             ],
             cabecalho=True,
+            larguras=[30 * mm, 68 * mm, 65 * mm],
         ),
         PageBreak(),
         Paragraph("Aspectos natais", subtitulo),
@@ -157,6 +256,7 @@ def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
                 for a in aspectos
             ],
             cabecalho=True,
+            larguras=[42 * mm, 42 * mm, 42 * mm, 30 * mm],
         ))
     else:
         historia.append(Paragraph("Nenhum aspecto foi registrado para este mapa.", corpo))
@@ -175,23 +275,55 @@ def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
 
 
 def _tabela(linhas, *, cabecalho=False, larguras=None):
-    seguras = [[escape(str(valor if valor is not None else "—")) for valor in linha] for linha in linhas]
+    estilo_celula = ParagraphStyle(
+        "OrbisCelula", fontName=FONTE, fontSize=8.3, leading=11,
+        textColor=colors.HexColor("#2d3546"),
+    )
+    estilo_cabecalho = ParagraphStyle(
+        "OrbisCabecalho", parent=estilo_celula, fontName=FONTE_NEGRITO,
+        textColor=colors.white,
+    )
+    estilo_rotulo = ParagraphStyle(
+        "OrbisRotulo", parent=estilo_celula, fontName=FONTE_NEGRITO,
+        textColor=colors.HexColor("#633e4f"),
+    )
+    seguras = [
+        [
+            Paragraph(
+                escape(str(valor if valor is not None else "—")),
+                estilo_cabecalho if cabecalho and indice_linha == 0
+                else estilo_rotulo if not cabecalho and indice_coluna == 0
+                else estilo_celula,
+            )
+            for indice_coluna, valor in enumerate(linha)
+        ]
+        for indice_linha, linha in enumerate(linhas)
+    ]
     tabela = Table(seguras, colWidths=larguras, repeatRows=1 if cabecalho else 0, hAlign="LEFT")
     comandos = [
-        ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
+        ("FONTNAME", (0, 0), (-1, -1), FONTE),
         ("FONTSIZE", (0, 0), (-1, -1), 8.2),
         ("TEXTCOLOR", (0, 0), (-1, -1), colors.HexColor("#2d3546")),
-        ("GRID", (0, 0), (-1, -1), 0.35, colors.HexColor("#e5bcc4")),
+        ("BOX", (0, 0), (-1, -1), 0.55, colors.HexColor("#e5bcc4")),
+        ("LINEBELOW", (0, 0), (-1, -2), 0.28, colors.HexColor("#efd7dd")),
         ("ROWBACKGROUNDS", (0, 0), (-1, -1), [colors.white, colors.HexColor("#fff6f8")]),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ("TOPPADDING", (0, 0), (-1, -1), 5),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+        ("LEFTPADDING", (0, 0), (-1, -1), 7),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 7),
+        ("TOPPADDING", (0, 0), (-1, -1), 6),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
     ]
     if cabecalho:
         comandos.extend([
             ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#633e4f")),
             ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("FONTNAME", (0, 0), (-1, 0), FONTE_NEGRITO),
+        ])
+    else:
+        comandos.extend([
+            ("BACKGROUND", (0, 0), (0, -1), colors.HexColor("#fff0f4")),
+            ("FONTNAME", (0, 0), (0, -1), FONTE_NEGRITO),
+            ("TEXTCOLOR", (0, 0), (0, -1), colors.HexColor("#633e4f")),
         ])
     tabela.setStyle(TableStyle(comandos))
     return tabela
@@ -202,7 +334,7 @@ def _rodape(canvas, documento):
     canvas.setStrokeColor(colors.HexColor("#e5bcc4"))
     canvas.line(16 * mm, 11 * mm, A4[0] - 16 * mm, 11 * mm)
     canvas.setFillColor(colors.HexColor("#633e4f"))
-    canvas.setFont("Helvetica", 7.5)
+    canvas.setFont(FONTE, 7.5)
     canvas.drawString(16 * mm, 7 * mm, "ORBIS · Efemérides natais")
     canvas.drawRightString(A4[0] - 16 * mm, 7 * mm, f"Página {documento.page}")
     canvas.restoreState()

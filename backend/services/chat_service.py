@@ -2,20 +2,15 @@
 
 from __future__ import annotations
 
-import asyncio
 from copy import deepcopy
-from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
-from typing import Any, AsyncIterator, Iterator
 
 from agno.agent import Agent
-from agno.models.base import Model
-from agno.models.message import Message
-from agno.models.response import ModelResponse
 from agno.run.base import RunStatus
 from backend.app.database import db
 from backend.models.chat_mensagem import ChatMensagem
 from backend.models.mapa_natal import MapaNatal
+from backend.services.agno_openrouter_model import OpenRouterAgnoModel
 from backend.services.modelo_config_service import obter_modelos
 from backend.services.openrouter_service import completar
 
@@ -43,47 +38,6 @@ class LimitePerguntasExcedido(ChatError):
 
 class ChatGeracaoError(ChatError):
     """O agente não devolveu uma resposta utilizável."""
-
-
-@dataclass
-class OpenRouterAgnoModel(Model):
-    """Adaptador Agno que mantém o acesso HTTP no OpenRouterService do projeto."""
-
-    id: str
-    name: str = "OpenRouter via ORBIS"
-    provider: str = "OpenRouter"
-    temperatura: float = 0.45
-    max_tokens: int = 420
-    modelos_fallback: tuple[str, ...] = ()
-
-    def invoke(self, messages: list[Message], assistant_message: Message, **_kwargs) -> ModelResponse:
-        assistant_message.metrics.start_timer()
-        try:
-            conteudo = completar(
-                _serializar_mensagens_agno(messages),
-                self.id,
-                modelos_fallback=self.modelos_fallback,
-                temperatura=self.temperatura,
-                max_tokens=self.max_tokens,
-            )
-        finally:
-            assistant_message.metrics.stop_timer()
-        return ModelResponse(content=conteudo)
-
-    async def ainvoke(self, *args, **kwargs) -> ModelResponse:
-        return await asyncio.to_thread(self.invoke, *args, **kwargs)
-
-    def invoke_stream(self, *args, **kwargs) -> Iterator[ModelResponse]:
-        yield self.invoke(*args, **kwargs)
-
-    async def ainvoke_stream(self, *args, **kwargs) -> AsyncIterator[ModelResponse]:
-        yield await self.ainvoke(*args, **kwargs)
-
-    def _parse_provider_response(self, response: Any, **_kwargs) -> ModelResponse:
-        return response if isinstance(response, ModelResponse) else ModelResponse(content=str(response))
-
-    def _parse_provider_response_delta(self, response: Any) -> ModelResponse:
-        return self._parse_provider_response(response)
 
 
 def obter_estado_chat(usuario_id: int, *, agora: datetime | None = None) -> dict:
@@ -238,6 +192,7 @@ def _executar_agente(mapa: MapaNatal, historico: list[ChatMensagem], mensagem: s
         model=OpenRouterAgnoModel(
             id=modelos[0],
             modelos_fallback=tuple(modelos[1:]),
+            cliente=completar,
         ),
         description="Assistente de astrologia reflexiva do ORBIS.",
         instructions=[
@@ -285,16 +240,6 @@ def _contexto_agente(mapa: MapaNatal, historico: list[ChatMensagem]) -> str:
         f"ASPECTOS NATAIS: {'; '.join(aspectos) or 'não informados'}\n"
         f"HISTÓRICO RECENTE: {' | '.join(conversa) or 'primeira pergunta'}"
     )
-
-
-def _serializar_mensagens_agno(messages: list[Message]) -> list[dict[str, str]]:
-    resultado = []
-    for item in messages:
-        papel = str(item.role or "user")
-        if papel not in {"system", "user", "assistant"}:
-            papel = "system" if papel == "developer" else "user"
-        resultado.append({"role": papel, "content": str(item.content or "")})
-    return resultado
 
 
 def _obter_limite(usuario_id: int, agora: datetime) -> dict:

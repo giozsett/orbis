@@ -1,5 +1,6 @@
-from flask import Blueprint, current_app, jsonify, render_template, request, session
+from flask import Blueprint, current_app, jsonify, request, session
 
+from backend.app.frontend import servir_spa
 from backend.services.horoscopo_service import (
     HoroscopoGeracaoError,
     MapaPrincipalNaoEncontrado,
@@ -25,7 +26,7 @@ def pagina():
             return jsonify(listar_horoscopos(session["usuario_id"]))
         except MapaPrincipalNaoEncontrado as erro:
             return jsonify(erro=str(erro), codigo="mapa_principal_ausente"), 404
-    return render_template("horoscopoPersonalizado.html")
+    return servir_spa()
 
 
 @horoscopo_bp.post("/gerar")

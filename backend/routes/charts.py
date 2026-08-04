@@ -7,10 +7,21 @@ from pydantic import ValidationError
 
 from backend.schemas.mapa_natal_schema import MapaNatalSchema
 from backend.app.database import db
+from backend.app.frontend import servir_spa
 from backend.models.mapa_natal import MapaNatal
 from backend.services.mapa_natal_service import calcular_mapa_natal
 from backend.services.asteroide_service import AsteroideCalculoError, calcular_asteroides_mapa
 from backend.services.interpretacao_base_service import enriquecer_dados_mapa
+from backend.services.interpretation_service import (
+    InterpretacaoError,
+    MapaInterpretacaoNaoEncontrado,
+    obter_interpretacoes,
+)
+from backend.services.modelo_config_service import ModeloConfigError
+from backend.services.openrouter_service import (
+    OpenRouterConfigurationError,
+    OpenRouterResponseError,
+)
 from backend.services.relatorio_pdf_service import (
     RelatorioMuitoGrandeError,
     gerar_relatorio_pdf,
@@ -33,7 +44,7 @@ def _mapas_concluidos_do_usuario(usuario_id):
 
 @charts_bp.get("/novo")
 def novo():
-    return render_template("criacaoMapa.html")
+    return redirect("/criar-mapa")
 
 
 @charts_bp.get("")
@@ -47,7 +58,7 @@ def listar():
     principal_id = mapas[0].id if mapas else None
     resumos = [_serializar_resumo_mapa(mapa, principal_id) for mapa in mapas]
     if request.accept_mimetypes.best == "text/html":
-        return render_template("meusMapas.html", mapas=resumos)
+        return redirect("/meus-mapas")
     return jsonify(mapas=resumos)
 
 
@@ -60,7 +71,7 @@ def principal():
         return redirect(url_for("charts.novo"))
     if request.accept_mimetypes.best == "application/json":
         return jsonify(mapa=_serializar_mapa(mapa))
-    return render_template("home.html", mapa=mapa, dados=mapa.dados)
+    return redirect("/mapa")
 
 
 @charts_bp.post("")
@@ -76,7 +87,7 @@ def criar():
             erro="Data, horário e uma cidade selecionada são obrigatórios."
         ), 400
 
-    localizacao = resolver_localizacao(dados.cidade_ibge)
+    localizacao = resolver_localizacao(dados.cidade_id, dados.pais_codigo)
     if localizacao is None:
         return jsonify(erro="Selecione uma cidade válida da lista de sugestões."), 400
 
@@ -100,7 +111,9 @@ def criar():
             data_nascimento=dados.data_nascimento,
             horario_nascimento=dados.horario_nascimento,
             local_nascimento=localizacao["local_nascimento"],
-            cidade_ibge=localizacao["ibge"],
+            cidade_ibge=localizacao.get("ibge"),
+            pais_codigo=localizacao["pais_codigo"],
+            geoname_id=localizacao.get("geoname_id"),
             latitude=localizacao["latitude"],
             longitude=localizacao["longitude"],
             timezone_id=localizacao["timezone_id"],
@@ -135,7 +148,7 @@ def detalhe(mapa_id):
         return jsonify(erro="Mapa não encontrado."), 404
     if request.accept_mimetypes.best == "application/json":
         return jsonify(mapa=_serializar_mapa(mapa))
-    return render_template("result.html", mapa=mapa, mapa_id=mapa.id, dados=mapa.dados)
+    return redirect(f"/mapa/{mapa.id}")
 
 
 @charts_bp.delete("/<int:mapa_id>")
@@ -164,7 +177,29 @@ def excluir(mapa_id):
 
 @charts_bp.get("/principal/interpretacoes")
 def interpretacoes():
-    return render_template("interpretacoesPlanetas.html")
+    if request.accept_mimetypes.best == "application/json":
+        if "usuario_id" not in session:
+            return jsonify(erro="Faça login para acessar as interpretações."), 401
+        try:
+            resposta, veio_do_cache = obter_interpretacoes(
+                session["usuario_id"],
+                forcar=request.args.get("forcar", "").casefold() in {"1", "true", "sim"},
+            )
+            return jsonify(**resposta, cache=veio_do_cache)
+        except MapaInterpretacaoNaoEncontrado as erro:
+            return jsonify(erro=str(erro), codigo="mapa_principal_ausente"), 404
+        except (ModeloConfigError, OpenRouterConfigurationError) as erro:
+            current_app.logger.warning("Configuração do agente de interpretação inválida: %s", erro)
+            return jsonify(erro="O agente de interpretação não está configurado."), 503
+        except (InterpretacaoError, OpenRouterResponseError) as erro:
+            current_app.logger.warning("Falha no agente de interpretação: %s", erro)
+            return jsonify(
+                erro="As interpretações estão temporariamente indisponíveis. Tente novamente em instantes."
+            ), 502
+        except Exception:
+            current_app.logger.exception("Falha inesperada ao gerar interpretações")
+            return jsonify(erro="Não foi possível gerar as interpretações."), 500
+    return servir_spa()
 
 
 @charts_bp.get("/principal/asteroides")
@@ -205,7 +240,7 @@ def exportar_principal():
 
 @charts_bp.get("/processando")
 def processando():
-    return render_template("carregando.html")
+    return redirect("/carregando")
 
 
 def _serializar_mapa(mapa):
@@ -216,6 +251,8 @@ def _serializar_mapa(mapa):
         "horario_nascimento": mapa.horario_nascimento.isoformat(),
         "local_nascimento": mapa.local_nascimento,
         "cidade_ibge": mapa.cidade_ibge,
+        "pais_codigo": mapa.pais_codigo or "BR",
+        "geoname_id": mapa.geoname_id,
         "latitude": mapa.latitude,
         "longitude": mapa.longitude,
         "timezone_id": mapa.timezone_id,

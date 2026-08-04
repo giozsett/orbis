@@ -5,6 +5,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from backend.app.database import db
 from backend.models.mapa_natal import MapaNatal
 from backend.models.usuario import Usuario
+from backend.app.frontend import servir_spa
 
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/acesso")
@@ -16,7 +17,21 @@ def _is_ajax():
 
 @auth_bp.get("")
 def acesso():
-    return render_template("loginCadastro.html")
+    return redirect("/login")
+
+
+@auth_bp.get("/sessao")
+def estado_sessao():
+    usuario_id = session.get("usuario_id")
+    usuario = db.session.get(Usuario, usuario_id) if usuario_id else None
+    if usuario is None:
+        if usuario_id:
+            session.clear()
+        return jsonify(autenticado=False)
+    return jsonify(
+        autenticado=True,
+        usuario={"id": usuario.id, "nome": usuario.nome, "email": usuario.email},
+    )
 
 
 @auth_bp.post("/login")
@@ -36,6 +51,8 @@ def login():
             return jsonify(erro="E-mail ou senha inválidos."), 401
         return render_template("loginCadastro.html", erro="E-mail ou senha inválidos.")
 
+    session.clear()
+    session.permanent = request.form.get("manter_conectado", "true").casefold() != "false"
     session["usuario_id"] = usuario.id
     session["usuario_nome"] = usuario.nome
 
@@ -75,6 +92,8 @@ def cadastro():
             return jsonify(erro="Este e-mail já está cadastrado."), 409
         return render_template("loginCadastro.html", erro="Este e-mail já está cadastrado.")
 
+    session.clear()
+    session.permanent = True
     session["usuario_id"] = usuario.id
     session["usuario_nome"] = usuario.nome
 
@@ -86,7 +105,7 @@ def cadastro():
 @auth_bp.get("/logout")
 def logout():
     session.clear()
-    return redirect(url_for("auth.acesso"))
+    return redirect("/login")
 
 
 @auth_bp.post("/logout")

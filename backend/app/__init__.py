@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from dotenv import load_dotenv
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 
 project_root = Path(__file__).resolve().parents[2]
@@ -17,8 +17,8 @@ def create_app(config_object=Config):
     app = Flask(
         __name__,
         template_folder=str(project_root / "frontend" / "templates"),
-        static_folder=str(project_root / "frontend" / "static"),
-        static_url_path="/static",
+        static_folder=str(project_root / "frontend" / "dist" / "assets"),
+        static_url_path="/assets",
     )
     app.config.from_object(config_object)
 
@@ -48,6 +48,10 @@ def create_app(config_object=Config):
 
     @app.errorhandler(404)
     def pagina_nao_encontrada(_error):
+        from backend.app.frontend import eh_rota_spa, servir_spa
+
+        if request.method == "GET" and eh_rota_spa(request.path):
+            return servir_spa()
         return render_template("erro.html"), 404
 
     @app.errorhandler(500)

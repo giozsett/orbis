@@ -2,6 +2,14 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../components/layout/Layout'
 
+const NOMES_PAISES = typeof Intl.DisplayNames === 'function'
+  ? new Intl.DisplayNames(['pt-BR'], { type: 'region' })
+  : null
+
+function nomeDoPais(pais) {
+  return NOMES_PAISES?.of(pais.codigo) || pais.nome
+}
+
 export default function CriarMapa() {
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
@@ -10,8 +18,11 @@ export default function CriarMapa() {
     data_nascimento: '',
     horario_nascimento: '',
     local_nascimento: '',
+    pais_codigo: 'BR',
+    cidade_id: '',
     cidade_ibge: '',
   })
+  const [paises, setPaises] = useState([])
   const [sugestoes, setSugestoes] = useState([])
   const [buscandoCidade, setBuscandoCidade] = useState(false)
   const [erroCidade, setErroCidade] = useState('')
@@ -19,8 +30,18 @@ export default function CriarMapa() {
   const abortRef = useRef(null)
 
   useEffect(() => {
+    fetch('/api/localizacoes/paises')
+      .then(async response => {
+        const data = await response.json()
+        if (!response.ok) throw new Error()
+        setPaises(data.paises || [])
+      })
+      .catch(() => setErroCidade('Não foi possível carregar a lista de países.'))
+  }, [])
+
+  useEffect(() => {
     const consulta = formData.local_nascimento.trim()
-    if (formData.cidade_ibge || consulta.length < 2) {
+    if (formData.cidade_id || consulta.length < 2) {
       setSugestoes([])
       setBuscandoCidade(false)
       return undefined
@@ -35,13 +56,13 @@ export default function CriarMapa() {
 
       try {
         const response = await fetch(
-          `/api/localizacoes/cidades?q=${encodeURIComponent(consulta)}&limite=10`,
+          `/api/localizacoes/cidades?q=${encodeURIComponent(consulta)}&pais=${formData.pais_codigo}&limite=10`,
           { signal: controller.signal },
         )
         if (!response.ok) throw new Error('Falha ao buscar cidades.')
         const data = await response.json()
         setSugestoes(data.cidades || [])
-        if (!data.cidades?.length) setErroCidade('Nenhuma cidade brasileira encontrada.')
+        if (!data.cidades?.length) setErroCidade('Nenhuma cidade encontrada nesse país.')
       } catch (error) {
         if (error.name !== 'AbortError') setErroCidade('Não foi possível buscar as cidades.')
       } finally {
@@ -53,11 +74,11 @@ export default function CriarMapa() {
       window.clearTimeout(timer)
       abortRef.current?.abort()
     }
-  }, [formData.local_nascimento, formData.cidade_ibge])
+  }, [formData.local_nascimento, formData.cidade_id, formData.pais_codigo])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!formData.cidade_ibge) {
+    if (!formData.cidade_id) {
       setErroCidade('Selecione uma cidade da lista de sugestões.')
       setStep(2)
       return
@@ -65,10 +86,12 @@ export default function CriarMapa() {
 
     setErroEnvio('')
     try {
+      const payload = { ...formData }
+      if (payload.pais_codigo !== 'BR') delete payload.cidade_ibge
       const response = await fetch('/mapas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       })
       const data = await response.json()
       if (!response.ok) {
@@ -90,22 +113,23 @@ export default function CriarMapa() {
       case 1:
         return formData.data_nascimento && formData.horario_nascimento
       case 2:
-        return Boolean(formData.cidade_ibge)
+        return Boolean(formData.cidade_id)
       default:
         return false
     }
   }
 
   const alterarCidade = (value) => {
-    setFormData(prev => ({ ...prev, local_nascimento: value, cidade_ibge: '' }))
+    setFormData(prev => ({ ...prev, local_nascimento: value, cidade_id: '', cidade_ibge: '' }))
     setErroCidade('')
   }
 
   const selecionarCidade = (cidade) => {
     setFormData(prev => ({
       ...prev,
-      local_nascimento: `${cidade.municipio}, ${cidade.uf}`,
-      cidade_ibge: cidade.ibge,
+      local_nascimento: [cidade.nome, cidade.subdivisao, cidade.pais_codigo === 'BR' ? null : cidade.pais_nome].filter(Boolean).join(', '),
+      cidade_id: cidade.id,
+      cidade_ibge: cidade.pais_codigo === 'BR' ? cidade.ibge : '',
     }))
     setSugestoes([])
     setErroCidade('')
@@ -233,6 +257,34 @@ export default function CriarMapa() {
 
                   <div className="space-y-6">
                     <div className="space-y-2">
+                      <label className="font-label text-sm text-secondary block" htmlFor="pais-nascimento">País de Nascimento</label>
+                      <div className="relative">
+                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">public</span>
+                        <select
+                          id="pais-nascimento"
+                          value={formData.pais_codigo}
+                          onChange={(e) => {
+                            setFormData(prev => ({
+                              ...prev,
+                              pais_codigo: e.target.value,
+                              local_nascimento: '',
+                              cidade_id: '',
+                              cidade_ibge: '',
+                            }))
+                            setSugestoes([])
+                            setErroCidade('')
+                          }}
+                          className="w-full appearance-none bg-surface-container-low border border-white/10 rounded-lg py-4 pl-12 pr-12 text-on-surface focus:ring-0 focus:border-primary transition-all"
+                        >
+                          {[...paises].sort((a, b) => nomeDoPais(a).localeCompare(nomeDoPais(b), 'pt-BR')).map(pais => (
+                            <option key={pais.codigo} value={pais.codigo}>{nomeDoPais(pais)}</option>
+                          ))}
+                        </select>
+                        <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 relative">
                       <label className="font-label text-sm text-secondary block">Cidade de Nascimento</label>
                       <div className="relative">
                         <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">location_on</span>
@@ -256,20 +308,20 @@ export default function CriarMapa() {
                       {sugestoes.length > 0 && (
                         <ul id="sugestoes-cidades" role="listbox" className="absolute z-20 w-full mt-2 glass-panel rounded-lg border border-white/10 overflow-y-auto max-h-60 shadow-2xl">
                           {sugestoes.map(cidade => (
-                            <li key={cidade.ibge} role="option" aria-selected="false">
+                            <li key={`${cidade.pais_codigo}-${cidade.id}`} role="option" aria-selected="false">
                               <button
                                 type="button"
                                 onClick={() => selecionarCidade(cidade)}
                                 className="w-full px-4 py-3 hover:bg-white/5 text-left transition-colors flex justify-between gap-3"
                               >
-                                <span>{cidade.municipio}, {cidade.uf}</span>
-                                <span className="text-xs text-outline">{cidade.regiao}</span>
+                                <span>{cidade.nome}, {cidade.subdivisao}</span>
+                                <span className="text-xs text-outline">{cidade.pais_nome}</span>
                               </button>
                             </li>
                           ))}
                         </ul>
                       )}
-                      {formData.cidade_ibge && <p className="text-xs text-secondary">Cidade validada.</p>}
+                      {formData.cidade_id && <p className="text-xs text-secondary">Cidade e fuso horário validados.</p>}
                       {erroCidade && <p className="text-xs text-error" role="alert">{erroCidade}</p>}
                     </div>
 

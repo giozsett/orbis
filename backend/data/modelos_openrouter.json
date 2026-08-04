@@ -6,5 +6,11 @@
   "horoscopo": [
     "google/gemma-4-26b-a4b-it:free",
     "openrouter/free"
+  ],
+  "interpretacoes": [
+    "google/gemma-4-26b-a4b-it:free",
+    "inclusionai/ling-3.0-flash:free",
+    "openai/gpt-oss-20b:free",
+    "openrouter/free"
   ]
 }

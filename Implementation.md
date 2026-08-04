@@ -11,9 +11,9 @@ frontend é React + Vite + Tailwind CSS, e os templates HTML atuais em
 `frontend/templates` servem de referência visual/funcional até a migração
 completa para o app React.
 
-O backend já está esboçado com rotas funcionais de navegação e formulários,
-mas as **rotas de escrita retornam `501`** enquanto os serviços de cálculo,
-IA e persistência não forem conectados.
+O backend já possui cálculo natal, persistência, horóscopo, chat e
+interpretações conectados. O Flask entrega o bundle React nas rotas de página
+e mantém os blueprints como API JSON.
 
 ### Objetivos do plano
 
@@ -22,8 +22,8 @@ IA e persistência não forem conectados.
 3. Implementar a **localização** do mapa astral:
    - arquivo JSON com **todas as cidades do Brasil**;
    - arquivo JSON com **todos os fusos horários do mundo**;
-   - o cálculo inicia **apenas com cidades do Brasil**;
-   - posteriormente, os demais países entram no JSON para ampliar o cálculo.
+   - dataset municipal completo do Brasil;
+   - dataset internacional GeoNames, seletor de país e autocomplete por país.
 4. Conectar interpretações planetárias e chat via **Agno + OpenRouter**.
 5. Persistir dados no **SQLite** (`orbis.db`) usando os modelos existentes.
 6. Cobrir com testes **Pytest** (backend) e **Vitest** (frontend).
@@ -35,8 +35,7 @@ IA e persistência não forem conectados.
 │  Frontend (React)    │      │  Backend (Flask)                       │
 │  Vite + Tailwind     │ HTTP │                                        │
 │                      │◄────►│  Blueprints: pages, auth, charts,      │
-│  templates/ HTML     │ JSON │  horoscopo, chat                       │
-│  (referência atual)  │      │                                        │
+│  dist/ servido Flask │ JSON │  horoscopo, chat, localizações         │
 └──────────────────────┘      │  Services (stubs a implementar):       │
                               │  mapa_natal, chat, openrouter,         │
                               │  interpretation                        │
@@ -67,7 +66,7 @@ e `TestingConfig` (`sqlite:///:memory:`).
 | Modelo | Tabela | Campos principais |
 |---|---|---|
 | `Usuario` | `usuarios` | id, nome, email (unique), senha_hash, criado_em, atualizado_em |
-| `MapaNatal` | `mapas_natais` | id, usuario_id FK, nome, data_nascimento, horario_nascimento, **local_nascimento**, **latitude**, **longitude**, dados (JSON), status, horoscopo_dados (JSON), criado_em |
+| `MapaNatal` | `mapas_natais` | id, usuario_id FK, nome, nascimento, local, cidade_ibge, pais_codigo, geoname_id, latitude, longitude, timezone_id, dados (JSON), status, horoscopo_dados (JSON), criado_em |
 | `Interpretation` | `interpretacoes` | id, mapa_id FK, planeta, signo, casa, grau, dignidade, elemento, estado, cor, interpretacao, criado_em |
 | `ChatMensagem` | `chat_mensagens` | id, usuario_id FK (nullable), mapa_id FK (nullable), papel, mensagem, criado_em |
 
@@ -78,7 +77,7 @@ campos diretamente afetados pela funcionalidade de localização.
 
 ### 4.1 Arquivos de dados (JSON)
 
-Novos arquivos, criados sob `backend/data/`:
+Arquivos sob `backend/data/`:
 
 - `backend/data/cidades_brasil.json`
   - Lista de todas as cidades do Brasil com dados necessários ao cálculo.
@@ -95,9 +94,12 @@ Novos arquivos, criados sob `backend/data/`:
       "dst": false
     }
     ```
-  - Fontes candidatas: IBGE (código, nome, UF), dados de coordenadas oficiais
-    das prefeituras/malhas municipais. O seed inicial pode começar com as
-    capitais e ser ampliado até cobrir os 5.570 municípios.
+  - Cobertura atual: 5.571 municípios, com código IBGE, coordenadas e fuso IANA.
+- `backend/data/cidades_mundo.json`
+  - 65.158 cidades internacionais do recorte `cities5000` do GeoNames.
+  - Contém ID GeoNames, nome, país, subdivisão, coordenadas, população e fuso IANA.
+- `backend/data/paises.json`
+  - 252 países e territórios derivados do `countryInfo.txt` do GeoNames.
 - `backend/data/fusos_horarios.json`
   - Todos os fusos horários do mundo (identificador IANA, ex.:
     `America/Sao_Paulo`, `Europe/Lisbon`, `Asia/Tokyo`) com:
@@ -109,38 +111,31 @@ Novos arquivos, criados sob `backend/data/`:
     }
     ```
 
-### 4.2 Escopo por fases
+### 4.2 Escopo atual
 
-- **Fase 1 (MVP):** cálculo aceita **apenas cidades do Brasil**. O campo
-  `local_nascimento` no formulário é validado contra `cidades_brasil.json` e a
-  latitude/longitude/fuso são derivados do JSON.
-- **Fases futuras:** adicionar os demais países ao JSON de cidades (ou um
-  segundo dataset `cidades_mundo.json`) e aos fusos horários, ampliando o
-  cálculo para outras localidades. A estrutura do `MapaNatalService` e do
-  resolvedor de localização deve ser desenhada para não exigir mudança de
-  assinatura quando isso acontecer.
+- Brasil: autocomplete baseado no código IBGE e dataset municipal completo.
+- Exterior: país obrigatório e autocomplete restrito ao país selecionado,
+  usando IDs GeoNames.
+- Ambos os fluxos resolvem latitude, longitude e fuso IANA no backend antes do
+  cálculo; texto digitado sem seleção não é aceito.
 
 ### 4.3 Resolvedor de localização (novo módulo)
 
 Sugestão de arquivo: `backend/services/localizacao_service.py`
 
 ```python
-def buscar_cidade_brasil(nome: str) -> dict | None: ...
-def listar_cidades_brasil(filtro: str | None = None) -> list[dict]: ...
-def buscar_fuso_horario(timezone_id: str) -> dict | None: ...
-def resolver_localizacao(local_nascimento: str) -> dict | None:
+def listar_paises() -> list[dict]: ...
+def listar_cidades(filtro: str, pais_codigo: str, limite: int = 10) -> list[dict]: ...
+def resolver_localizacao(cidade_id: str, pais_codigo: str = "BR") -> dict | None:
     """Retorna {latitude, longitude, fuso_utc, timezone_id} ou None."""
 ```
 
 - Carregamento dos JSONs **uma única vez** (cache em módulo) para evitar I/O
   repetido a cada cálculo.
-- Validação de entrada: nome da cidade normalizado (sem acentos/caixa),
-  fallback para "capital do estado" quando a cidade não for encontrada, e erro
-  claro quando não houver correspondência.
+- Validação de entrada: busca normalizada sem acentos/caixa e erro claro quando
+  não houver uma seleção válida.
 
-## 5. Serviços a implementar
-
-Todos em `backend/services/`, implementados de forma incremental por fase.
+## 5. Serviços
 
 ### 5.1 `mapa_natal_service.py` — cálculo com pyswisseph
 
@@ -166,7 +161,8 @@ Todos em `backend/services/`, implementados de forma incremental por fase.
 - Saída esperada alimenta a tabela `Interpretation` (planeta, signo, casa,
   grau, dignidade, elemento, estado, cor, interpretacao).
 - As interpretações textuais são geradas via Agno (agente) com modelo
-  configurado via OpenRouter.
+  gratuito configurado via OpenRouter, fallbacks gratuitos e persistência por
+  mapa para evitar regeneração.
 
 ### 5.3 `openrouter_service.py` — cliente de modelo
 
@@ -202,13 +198,13 @@ Todos em `backend/services/`, implementados de forma incremental por fase.
   amor, trabalho e bem-estar. O texto é tratado como conteúdo simbólico de
   reflexão, sem previsões deterministas ou aconselhamento profissional.
 
-## 6. Conexão das rotas que retornam 501
+## 6. Rotas conectadas
 
 | Rota | Serviço a conectar | Observações |
 |---|---|---|
 | `POST /mapas` | `MapaNatalService` + `LocalizacaoService` + persistir `MapaNatal` | Validar `data_nascimento`, `horario_nascimento`, `local_nascimento`; resolver cidade → lat/long/fuso; retornar redirect ou JSON com o `id` do mapa |
 | `GET /mapas/principal` | consultar mapa principal do usuário | hoje serve `home.html`; passar dados do mapa |
-| `GET /mapas/principal/interpretacoes` | `InterpretationService` | gerar/persistir interpretações e servir em `interpretacoesPlanetas.html` |
+| `GET /mapas/principal/interpretacoes` | `InterpretationService` | gerar/persistir interpretações e retornar JSON para o React |
 | `POST /horoscopo/gerar` | `HoroscopoService` | buscar mapa principal e gerar previsão |
 | `POST /chat/mensagens` | `ChatService` | validar `mensagem`; persistir e responder |
 
@@ -220,13 +216,10 @@ Todos em `backend/services/`, implementados de forma incremental por fase.
 - App existente em `frontend/src/` com páginas: Carregando, Chat, CriarMapa,
   Dashboard, Erro, Horoscopo, Interpretacoes, Login, MapaPrincipal.
 - Componentes: layout, mandala (SVG), PlanetCard, zodíaco.
-- Integrar as rotas do React às rotas do Flask servidas pelo backend
-  (o app React é servido como static; ou o Flask expõe API JSON e o React
-  consome — decisão a validar em implementação, mantendo os HTMLs atuais
-  como fallback).
-- Validação de formulário de mapa: ao digitar o local de nascimento, sugerir
-  cidades do Brasil a partir de `GET` (endpoint do resolvedor de localização);
-  desabilitar envio enquanto o local não for resolvido (fase 1 = Brasil).
+- O bundle `frontend/dist` é servido pelo Flask, com fallback de navegação para
+  as rotas do React Router; no desenvolvimento, o Vite mantém proxy para a API.
+- O formulário seleciona país, consulta cidades do país via API e desabilita o
+  envio enquanto o ID da cidade não for resolvido.
 
 ## 8. Testes
 
@@ -246,46 +239,53 @@ Todos em `backend/services/`, implementados de forma incremental por fase.
 ## 9. Roadmap faseado
 
 ### Fase 0 — Fundações
-- [ ] `backend/data/cidades_brasil.json` (seed inicial: capitais; depois os
-      5.570 municípios).
-- [ ] `backend/data/fusos_horarios.json` (todos os fusos do mundo, IANA).
-- [ ] `backend/services/localizacao_service.py` com cache e validação.
-- [ ] Testes do resolvedor.
+- [x] `backend/data/cidades_brasil.json` com todos os municípios.
+- [x] `backend/data/fusos_horarios.json` com fusos IANA.
+- [x] `backend/services/localizacao_service.py` com cache e validação.
+- [x] Testes do resolvedor.
 
 ### Fase 1 — Cálculo do mapa (apenas Brasil)
-- [ ] `mapa_natal_service.py` com pyswisseph (posições, ascendente, MC, casas).
-- [ ] Conectar `POST /mapas` (validação + persistência em `MapaNatal`).
-- [ ] Conectar `GET /mapas/principal` e `GET /mapas/<id>`.
-- [ ] Sugestão de cidades do Brasil no formulário (frontend).
-- [ ] Testes de cálculo e rota.
+- [x] `mapa_natal_service.py` com pyswisseph (posições, ascendente, MC, casas).
+- [x] Conectar `POST /mapas` (validação + persistência em `MapaNatal`).
+- [x] Conectar `GET /mapas/principal` e `GET /mapas/<id>`.
+- [x] Sugestão de cidades no formulário React.
+- [x] Testes de cálculo e rota.
 
 ### Fase 2 — Interpretações e horóscopo
 - [x] `openrouter_service.py` (cliente da API, key via `.env`).
-- [ ] `interpretation_service.py` (Agno) e conexão de
+- [x] `interpretation_service.py` (Agno) e conexão de
       `/mapas/principal/interpretacoes`.
 - [x] `horoscopo_service.py` e conexão de `POST /horoscopo/gerar`.
 - [x] Testes do horóscopo com mocks de API.
 
 ### Fase 3 — Chat astral
-- [ ] `chat_service.py` (Agno + OpenRouter, com contexto do mapa e histórico).
-- [ ] Conectar `POST /chat/mensagens`.
-- [ ] Testes com mocks de API.
+- [x] `chat_service.py` (Agno + OpenRouter, com contexto do mapa e histórico).
+- [x] Conectar `POST /chat/mensagens`.
+- [x] Testes com mocks de API.
 
 ### Fase 4 — Expansão da localização
-- [ ] Adicionar demais países ao dataset de cidades e liberar o cálculo
+- [x] Adicionar demais países ao dataset de cidades e liberar o cálculo
       para outras localidades.
-- [ ] Ampliar testes de fusos horários (incl. DST).
+- [x] Ampliar testes de fusos e persistência internacional.
+
+### Pendências conhecidas
+
+- [ ] Adicionar Vitest e testes dos componentes React (o backend possui 54
+      testes Pytest neste estágio).
+- [ ] Automatizar a atualização periódica do recorte GeoNames; hoje existe o
+      script reproduzível `scripts/gerar_cidades_mundo.py`.
 
 ## 10. Como testar localmente
 
 ```bash
-# backend (ambiente virtual ativado)
-python run.py          # http://127.0.0.1:5000
-pytest                 # testes do backend
-
-# frontend
 cd frontend
 npm install
-npm run dev            # dev server Vite
-npm test               # Vitest
+npm run build
+cd ..
+python run.py          # React + API em http://127.0.0.1:5000
+python -m pytest       # testes do backend
+
+# desenvolvimento do frontend, em outro terminal
+cd frontend
+npm run dev            # Vite com proxy para Flask
 ```

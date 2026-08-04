@@ -160,7 +160,7 @@ def gerar_horoscopo(
         modelo,
         modelos_fallback=modelos[1:],
         temperatura=0.55,
-        max_tokens=1100,
+        max_tokens=1600,
         formato_json=True,
     )
     conteudo = _validar_conteudo(_extrair_json(resposta))

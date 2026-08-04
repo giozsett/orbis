@@ -95,6 +95,7 @@ def test_gera_com_mapa_principal_e_reutiliza_cache(app, monkeypatch):
         assert chamadas[0][1] == "google/gemma-4-26b-a4b-it:free"
         assert chamadas[0][2]["modelos_fallback"] == ["openrouter/free"]
         assert chamadas[0][2]["formato_json"] is True
+        assert chamadas[0][2]["max_tokens"] == 1600
 
         salvo = db.session.get(MapaNatal, mapa_id)
         assert salvo.horoscopo_dados["periodos"]["diario"]["titulo"] == primeiro["titulo"]

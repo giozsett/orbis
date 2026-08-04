@@ -13,6 +13,8 @@ class MapaNatal(db.Model):
     horario_nascimento = db.Column(db.Time, nullable=False)
     local_nascimento = db.Column(db.String(200), nullable=False)
     cidade_ibge = db.Column(db.String(7), nullable=True, index=True)
+    pais_codigo = db.Column(db.String(2), nullable=False, default="BR", index=True)
+    geoname_id = db.Column(db.String(20), nullable=True, index=True)
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
     timezone_id = db.Column(db.String(64), nullable=True)

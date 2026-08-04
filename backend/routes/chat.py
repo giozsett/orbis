@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, jsonify, render_template, request, session
+from flask import Blueprint, current_app, jsonify, request, session
 from pydantic import ValidationError
 
 from backend.schemas.chat_schema import ChatMensagemSchema
@@ -14,6 +14,7 @@ from backend.services.openrouter_service import (
     OpenRouterConfigurationError,
     OpenRouterResponseError,
 )
+from backend.app.frontend import servir_spa
 
 
 chat_bp = Blueprint("chat", __name__, url_prefix="/chat")
@@ -28,7 +29,7 @@ def pagina():
             return jsonify(obter_estado_chat(session["usuario_id"]))
         except MapaPrincipalNaoEncontrado as erro:
             return jsonify(erro=str(erro), codigo="mapa_principal_ausente"), 404
-    return render_template("chatAstral.html")
+    return servir_spa()
 
 
 @chat_bp.post("/mensagens")

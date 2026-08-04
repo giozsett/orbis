@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 
@@ -9,6 +10,9 @@ class Config:
     """Configuração base da aplicação."""
 
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-change-me")
+    PERMANENT_SESSION_LIFETIME = timedelta(days=30)
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
     JSON_SORT_KEYS = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
