@@ -1,13 +1,20 @@
 from datetime import date, time
 
-from flask import Blueprint, current_app, jsonify, redirect, render_template, request, session, url_for
+from io import BytesIO
+
+from flask import Blueprint, current_app, jsonify, redirect, render_template, request, send_file, session, url_for
 from pydantic import ValidationError
 
 from backend.schemas.mapa_natal_schema import MapaNatalSchema
 from backend.app.database import db
 from backend.models.mapa_natal import MapaNatal
 from backend.services.mapa_natal_service import calcular_mapa_natal
+from backend.services.asteroide_service import AsteroideCalculoError, calcular_asteroides_mapa
 from backend.services.interpretacao_base_service import enriquecer_dados_mapa
+from backend.services.relatorio_pdf_service import (
+    RelatorioMuitoGrandeError,
+    gerar_relatorio_pdf,
+)
 from backend.services.localizacao_service import (
     converter_nascimento_para_utc,
     resolver_localizacao,
@@ -158,6 +165,42 @@ def excluir(mapa_id):
 @charts_bp.get("/principal/interpretacoes")
 def interpretacoes():
     return render_template("interpretacoesPlanetas.html")
+
+
+@charts_bp.get("/principal/asteroides")
+def asteroides():
+    if "usuario_id" not in session:
+        return jsonify(erro="Faça login para acessar os asteroides."), 401
+    mapa = _mapas_concluidos_do_usuario(session["usuario_id"]).first()
+    if mapa is None:
+        return jsonify(erro="Crie seu mapa principal primeiro.", codigo="mapa_principal_ausente"), 404
+    try:
+        return jsonify(mapa={"id": mapa.id, "nome": mapa.nome}, asteroides=calcular_asteroides_mapa(mapa))
+    except AsteroideCalculoError as erro:
+        return jsonify(erro=str(erro)), 422
+
+
+@charts_bp.get("/principal/exportacao")
+def exportar_principal():
+    if "usuario_id" not in session:
+        return jsonify(erro="Faça login para exportar seu mapa."), 401
+    if request.args.get("formato", "pdf").casefold() != "pdf":
+        return jsonify(erro="O formato disponível para exportação é PDF."), 400
+    mapa = _mapas_concluidos_do_usuario(session["usuario_id"]).first()
+    if mapa is None:
+        return jsonify(erro="Crie seu mapa principal primeiro.", codigo="mapa_principal_ausente"), 404
+    try:
+        conteudo = gerar_relatorio_pdf(mapa)
+    except RelatorioMuitoGrandeError as erro:
+        return jsonify(erro=str(erro)), 413
+    nome = f"orbis-efemerides-mapa-{mapa.id}.pdf"
+    return send_file(
+        BytesIO(conteudo),
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name=nome,
+        max_age=0,
+    )
 
 
 @charts_bp.get("/processando")

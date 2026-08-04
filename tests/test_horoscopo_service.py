@@ -8,6 +8,7 @@ from backend.models.mapa_natal import MapaNatal
 from backend.models.usuario import Usuario
 from backend.services.horoscopo_service import (
     HoroscopoGeracaoError,
+    _normalizar_horoscopo_armazenado,
     gerar_horoscopo,
     limites_periodo,
 )
@@ -79,7 +80,6 @@ def test_gera_com_mapa_principal_e_reutiliza_cache(app, monkeypatch):
     )
 
     with app.app_context():
-        app.config["OPENROUTER_HOROSCOPE_MODEL"] = "modelo/teste:free"
         primeiro, veio_do_cache = gerar_horoscopo(
             usuario_id, "diario", referencia=date(2026, 8, 3)
         )
@@ -92,7 +92,8 @@ def test_gera_com_mapa_principal_e_reutiliza_cache(app, monkeypatch):
         assert segundo == primeiro
         assert len(chamadas) == 1
         assert "Capricórnio" in chamadas[0][0][1]["content"]
-        assert chamadas[0][1] == "modelo/teste:free"
+        assert chamadas[0][1] == "google/gemma-4-26b-a4b-it:free"
+        assert chamadas[0][2]["modelos_fallback"] == ["openrouter/free"]
         assert chamadas[0][2]["formato_json"] is True
 
         salvo = db.session.get(MapaNatal, mapa_id)
@@ -110,3 +111,18 @@ def test_rejeita_resposta_do_modelo_fora_do_contrato(app, monkeypatch):
         app.config["OPENROUTER_HOROSCOPE_MODEL"] = "modelo/teste:free"
         with pytest.raises(HoroscopoGeracaoError):
             gerar_horoscopo(usuario_id, "mensal", referencia=date(2026, 8, 3))
+
+
+def test_normaliza_percentuais_zerados_de_ciclos_armazenados():
+    ciclo = {
+        "areas": [
+            {"nome": "Amor", "energia": 0, "tendencia": "baixa"},
+            {"nome": "Trabalho", "energia": 0, "tendencia": "alta"},
+            {"nome": "Bem-estar", "energia": 0, "tendencia": "estavel"},
+        ]
+    }
+
+    normalizado = _normalizar_horoscopo_armazenado(ciclo)
+
+    assert [area["energia"] for area in normalizado["areas"]] == [35, 75, 55]
+    assert [area["energia"] for area in ciclo["areas"]] == [0, 0, 0]

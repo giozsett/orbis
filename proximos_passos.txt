@@ -1,3 +1,7 @@
 
 
--- O menu lateral não funciona.
+-- Verificar o que ainda falta do Implementation.md
+
+-- Limpar arquivos desnecessáios (dois arquivos .db)
+
+

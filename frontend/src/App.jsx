@@ -10,6 +10,11 @@ import Carregando from './pages/Carregando'
 import Erro from './pages/Erro'
 import Perfil from './pages/Perfil'
 import MeusMapas from './pages/MeusMapas'
+import PosicoesPlanetarias from './pages/PosicoesPlanetarias'
+import Aspectos from './pages/Aspectos'
+import Casas from './pages/Casas'
+import Retrogrados from './pages/Retrogrados'
+import Asteroides from './pages/Asteroides'
 
 export default function App() {
   return (
@@ -22,6 +27,11 @@ export default function App() {
         <Route path="/meus-mapas" element={<MeusMapas />} />
         <Route path="/mapa" element={<MapaPrincipal />} />
         <Route path="/mapa/:id" element={<MapaPrincipal />} />
+        <Route path="/mapa/posicoes" element={<PosicoesPlanetarias />} />
+        <Route path="/mapa/aspectos" element={<Aspectos />} />
+        <Route path="/mapa/casas" element={<Casas />} />
+        <Route path="/mapa/retrogrados" element={<Retrogrados />} />
+        <Route path="/mapa/asteroides" element={<Asteroides />} />
         <Route path="/interpretacoes" element={<Interpretacoes />} />
         <Route path="/horoscopo" element={<Horoscopo />} />
         <Route path="/chat" element={<Chat />} />

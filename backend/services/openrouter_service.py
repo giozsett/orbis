@@ -22,6 +22,7 @@ def completar(
     mensagens: list[dict[str, str]],
     modelo: str,
     *,
+    modelos_fallback: list[str] | tuple[str, ...] | None = None,
     temperatura: float = 0.55,
     max_tokens: int = 1200,
     formato_json: bool = False,
@@ -50,12 +51,19 @@ def completar(
     if app_url:
         headers["HTTP-Referer"] = app_url
 
+    modelos = list(dict.fromkeys([
+        modelo,
+        *(modelos_fallback or []),
+    ]))
     payload: dict[str, Any] = {
-        "model": modelo,
         "messages": mensagens,
         "temperature": temperatura,
         "max_tokens": max_tokens,
     }
+    if len(modelos) > 1:
+        payload["models"] = modelos
+    else:
+        payload["model"] = modelo
     if formato_json:
         payload["response_format"] = {"type": "json_object"}
 

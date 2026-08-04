@@ -14,6 +14,7 @@ from flask import current_app
 from backend.app.database import db
 from backend.models.mapa_natal import MapaNatal
 from backend.services.mapa_natal_service import ASPECTOS, PLANETAS, _signo
+from backend.services.modelo_config_service import obter_modelos
 from backend.services.openrouter_service import completar
 
 
@@ -28,6 +29,11 @@ AVISO = (
     "Conteúdo simbólico para reflexão e entretenimento; não substitui "
     "orientação médica, financeira, jurídica ou psicológica."
 )
+ENERGIA_POR_TENDENCIA = {
+    "alta": 75,
+    "estavel": 55,
+    "baixa": 35,
+}
 
 
 class HoroscopoError(RuntimeError):
@@ -114,7 +120,7 @@ def listar_horoscopos(usuario_id: int, *, referencia: date | None = None) -> dic
         disponivel = bool(item and item.get("chave") == limites["chave"])
         periodos.append({**limites, "disponivel": disponivel})
         if disponivel:
-            horoscopos[periodo] = item
+            horoscopos[periodo] = _normalizar_horoscopo_armazenado(item)
 
     return {
         "mapa": {
@@ -143,14 +149,16 @@ def gerar_horoscopo(
     existente = armazenados.get(periodo)
 
     if not forcar and existente and existente.get("chave") == limites["chave"]:
-        return existente, True
+        return _normalizar_horoscopo_armazenado(existente), True
 
-    modelo = str(current_app.config.get("OPENROUTER_HOROSCOPE_MODEL", "")).strip()
+    modelos = obter_modelos("horoscopo")
+    modelo = modelos[0]
     contexto = _contexto_astral(mapa.dados or {}, limites)
     mensagens = _montar_mensagens(mapa, limites, contexto)
     resposta = completar(
         mensagens,
         modelo,
+        modelos_fallback=modelos[1:],
         temperatura=0.55,
         max_tokens=1100,
         formato_json=True,
@@ -265,19 +273,19 @@ def _montar_mensagens(mapa: MapaNatal, limites: dict, contexto: dict) -> list[di
             {
                 "nome": "Amor",
                 "texto": "no máximo 40 palavras",
-                "energia": 0,
+                "energia": 68,
                 "tendencia": "alta, estavel ou baixa",
             },
             {
                 "nome": "Trabalho",
                 "texto": "no máximo 40 palavras",
-                "energia": 0,
+                "energia": 61,
                 "tendencia": "alta, estavel ou baixa",
             },
             {
                 "nome": "Bem-estar",
                 "texto": "no máximo 40 palavras",
-                "energia": 0,
+                "energia": 57,
                 "tendencia": "alta, estavel ou baixa",
             },
         ],
@@ -302,7 +310,10 @@ def _montar_mensagens(mapa: MapaNatal, limites: dict, contexto: dict) -> list[di
                 f"'{mapa.nome or 'Meu mapa natal'}', válido de "
                 f"{limites['inicio']} a {limites['fim']}.\n\n"
                 f"DADOS ASTRAIS:\n{json.dumps(contexto, ensure_ascii=False)}\n\n"
-                f"CONTRATO EXATO:\n{json.dumps(contrato, ensure_ascii=False)}"
+                f"CONTRATO EXATO:\n{json.dumps(contrato, ensure_ascii=False)}\n\n"
+                "Os números de energia acima são somente exemplos de formato. "
+                "Calcule para cada área um inteiro próprio entre 1 e 100, coerente "
+                "com a tendência e diferente de zero."
             ),
         },
     ]
@@ -369,5 +380,37 @@ def _validar_conteudo(dados: dict) -> dict:
             "energia": max(0, min(100, energia)),
             "tendencia": tendencia,
         })
-    resultado["areas"] = areas
+    resultado["areas"] = _normalizar_energias_areas(areas)
     return resultado
+
+
+def _normalizar_energias_areas(areas: list[dict]) -> list[dict]:
+    """Substitui placeholders zerados ou ausentes por medidores coerentes."""
+    energias = []
+    for area in areas:
+        try:
+            energias.append(int(float(area.get("energia"))))
+        except (TypeError, ValueError):
+            energias.append(None)
+
+    usa_placeholder = bool(energias) and all(
+        energia in {None, 0} for energia in energias
+    )
+    normalizadas = []
+    for area, energia in zip(areas, energias):
+        item = deepcopy(area)
+        tendencia = str(item.get("tendencia", "estavel")).casefold().strip()
+        if usa_placeholder or energia is None:
+            energia = ENERGIA_POR_TENDENCIA.get(tendencia, 55)
+        item["energia"] = max(0, min(100, energia))
+        normalizadas.append(item)
+    return normalizadas
+
+
+def _normalizar_horoscopo_armazenado(item: dict) -> dict:
+    """Compatibiliza ciclos salvos antes da validação dos percentuais."""
+    normalizado = deepcopy(item)
+    areas = normalizado.get("areas")
+    if isinstance(areas, list):
+        normalizado["areas"] = _normalizar_energias_areas(areas)
+    return normalizado

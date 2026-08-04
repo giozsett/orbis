@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import Layout from '../components/layout/Layout'
 import Button from '../components/ui/Button'
+import GlassCard from '../components/ui/GlassCard'
 import GlassPanel from '../components/ui/GlassPanel'
 
 const PERIODOS = [
@@ -213,7 +214,7 @@ export default function Horoscopo() {
           </GlassPanel>
         ) : horoscopo ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
-            <GlassPanel className="flex animate-fade-in-up flex-col gap-6 rounded-2xl p-7 md:col-span-8 md:flex-row">
+            <GlassCard magnetic className="flex animate-fade-in-up flex-col gap-6 rounded-2xl p-7 md:col-span-8 md:flex-row">
               <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-[radial-gradient(circle_at_center,rgba(255,177,195,.18),rgba(24,20,35,.7)_65%)] md:w-1/3">
                 <div className="absolute h-32 w-32 animate-pulse rounded-full border border-secondary/30" />
                 <div className="absolute h-48 w-48 rounded-full border border-primary/10" />
@@ -235,9 +236,9 @@ export default function Horoscopo() {
                   ))}
                 </div>
               </div>
-            </GlassPanel>
+            </GlassCard>
 
-            <GlassPanel className="space-y-6 rounded-2xl p-6 md:col-span-4">
+            <GlassCard magnetic className="space-y-6 rounded-2xl p-6 md:col-span-4">
               <h3 className="font-label text-sm uppercase tracking-widest text-outline">Medidores do ciclo</h3>
               {horoscopo.areas.map((area) => {
                 const visual = AREAS[area.nome] || AREAS['Bem-estar']
@@ -263,14 +264,15 @@ export default function Horoscopo() {
                   </div>
                 )
               })}
-            </GlassPanel>
+            </GlassCard>
 
             {horoscopo.areas.map((area, index) => {
               const visual = AREAS[area.nome] || AREAS['Bem-estar']
               const tendencia = area.tendencia || 'estavel'
               return (
-                <GlassPanel
+                <GlassCard
                   key={area.nome}
+                  magnetic
                   className="group rounded-2xl p-6 transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 md:col-span-4"
                   style={{ animationDelay: `${150 + index * 100}ms` }}
                 >
@@ -288,11 +290,11 @@ export default function Horoscopo() {
                       {ICONES_TENDENCIA[tendencia] || ICONES_TENDENCIA.estavel}
                     </span>
                   </div>
-                </GlassPanel>
+                </GlassCard>
               )
             })}
 
-            <GlassPanel className="rounded-2xl p-6 md:col-span-12">
+            <GlassCard magnetic className="rounded-2xl p-6 md:col-span-12">
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="font-label text-xs uppercase tracking-widest text-outline">Destaque astral considerado</p>
@@ -302,7 +304,7 @@ export default function Horoscopo() {
                   {horoscopo.aviso || dados.aviso}
                 </div>
               </div>
-            </GlassPanel>
+            </GlassCard>
           </div>
         ) : (
           <GlassPanel className="p-10 text-center">

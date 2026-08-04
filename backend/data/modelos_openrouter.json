@@ -1,0 +1,10 @@
+{
+  "chat": [
+    "google/gemma-4-26b-a4b-it:free",
+    "openrouter/free"
+  ],
+  "horoscopo": [
+    "google/gemma-4-26b-a4b-it:free",
+    "openrouter/free"
+  ]
+}

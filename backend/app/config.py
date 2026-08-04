@@ -12,14 +12,6 @@ class Config:
     JSON_SORT_KEYS = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
-    OPENROUTER_HOROSCOPE_MODEL = os.getenv(
-        "OPENROUTER_HOROSCOPE_MODEL",
-        os.getenv("OPENROUTER_MODEL", ""),
-    )
-    OPENROUTER_CHAT_MODEL = os.getenv(
-        "OPENROUTER_CHAT_MODEL",
-        os.getenv("OPENROUTER_MODEL", ""),
-    )
     OPENROUTER_BASE_URL = os.getenv(
         "OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"
     )
