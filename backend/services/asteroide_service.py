@@ -44,7 +44,7 @@ def calcular_asteroides_mapa(mapa: MapaNatal) -> list[dict]:
     resultado = []
     try:
         for nome, codigo, interpretacao in ASTEROIDES:
-            posicao, _ = swe.calc_ut(dia_juliano, codigo, flags)
+            posicao = swe.calc_ut(dia_juliano, codigo, flags)[0]
             item = _ponto(nome, posicao[0])
             item.update({
                 "casa": _casa(posicao[0], cuspides),

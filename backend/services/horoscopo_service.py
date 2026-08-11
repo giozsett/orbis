@@ -223,7 +223,7 @@ def _calcular_transitos(dados_natais: dict, referencia: date) -> dict:
     planetas_transito = []
 
     for nome, codigo in PLANETAS:
-        posicao, _ = swe.calc_ut(dia_juliano, codigo, flags)
+        posicao = swe.calc_ut(dia_juliano, codigo, flags)[0]
         signo, grau_signo = _signo(posicao[0])
         planetas_transito.append({
             "nome": nome,

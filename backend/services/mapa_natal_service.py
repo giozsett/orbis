@@ -104,11 +104,13 @@ def calcular_mapa_natal(dados: dict) -> dict:
     latitude = float(dados["latitude"])
     longitude = float(dados["longitude"])
     cuspides, ascmc = swe.houses(dia_juliano, latitude, longitude, b"P")
+    if len(cuspides) == 13:
+        cuspides = cuspides[1:]
 
     planetas = []
     flags = swe.FLG_SWIEPH | swe.FLG_SPEED
     for nome, codigo in PLANETAS:
-        posicao, _ = swe.calc_ut(dia_juliano, codigo, flags)
+        posicao = swe.calc_ut(dia_juliano, codigo, flags)[0]
         planeta = _ponto(nome, posicao[0])
         planeta.update({
             "casa": _casa(posicao[0], cuspides),

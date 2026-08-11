@@ -67,7 +67,6 @@ def completar(
     if formato_json:
         payload["response_format"] = {"type": "json_object"}
         payload["reasoning"] = {
-            "effort": "none",
             "exclude": True,
         }
 
