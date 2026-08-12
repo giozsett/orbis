@@ -4,13 +4,21 @@ import { useNavigate } from 'react-router-dom'
 export default function Login() {
   const navigate = useNavigate()
   const [isLogin, setIsLogin] = useState(true)
+  const [recuperandoSenha, setRecuperandoSenha] = useState(false)
+  const [emailRecuperacaoVerificado, setEmailRecuperacaoVerificado] = useState(false)
   const [verificandoSessao, setVerificandoSessao] = useState(true)
   const [manterConectado, setManterConectado] = useState(true)
   const [erro, setErro] = useState('')
+  const [mostrarSenhaLogin, setMostrarSenhaLogin] = useState(false)
+  const [mostrarSenhaCadastro, setMostrarSenhaCadastro] = useState(false)
+  const [mostrarConfirmacaoSenha, setMostrarConfirmacaoSenha] = useState(false)
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
     senha: '',
+    confirmacaoSenha: '',
+    novaSenha: '',
+    confirmacaoNovaSenha: '',
   })
 
   useEffect(() => {
@@ -59,10 +67,16 @@ export default function Login() {
     e.preventDefault()
     setErro('')
 
+    if (formData.senha !== formData.confirmacaoSenha) {
+      setErro('As senhas não coincidem.')
+      return
+    }
+
     const body = new URLSearchParams({
       nome: formData.nome,
       email: formData.email,
       senha: formData.senha,
+      confirmacao_senha: formData.confirmacaoSenha,
     })
 
     try {
@@ -77,6 +91,51 @@ export default function Login() {
       } else {
         setErro(data.erro || 'Erro ao criar conta.')
       }
+    } catch {
+      setErro('Erro de conexão com o servidor.')
+    }
+  }
+
+  const handleVerificarEmail = async (e) => {
+    e.preventDefault()
+    setErro('')
+    try {
+      const res = await fetch('/acesso/recuperar-senha/verificar-email', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: new URLSearchParams({ email: formData.email }),
+      })
+      const data = await res.json()
+      if (!res.ok) return setErro(data.erro || 'Não foi possível verificar o e-mail.')
+      setEmailRecuperacaoVerificado(true)
+    } catch {
+      setErro('Erro de conexão com o servidor.')
+    }
+  }
+
+  const handleRedefinirSenha = async (e) => {
+    e.preventDefault()
+    setErro('')
+    if (formData.novaSenha !== formData.confirmacaoNovaSenha) {
+      setErro('As senhas não coincidem.')
+      return
+    }
+    try {
+      const res = await fetch('/acesso/recuperar-senha/redefinir', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: new URLSearchParams({
+          email: formData.email,
+          nova_senha: formData.novaSenha,
+          confirmacao_senha: formData.confirmacaoNovaSenha,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) return setErro(data.erro || 'Não foi possível alterar a senha.')
+      setFormData((prev) => ({ ...prev, senha: '', novaSenha: '', confirmacaoNovaSenha: '' }))
+      setEmailRecuperacaoVerificado(false)
+      setRecuperandoSenha(false)
+      setIsLogin(true)
     } catch {
       setErro('Erro de conexão com o servidor.')
     }
@@ -138,7 +197,54 @@ export default function Login() {
             )}
 
             {/* Formulário de Login */}
-            {isLogin ? (
+            {recuperandoSenha ? (
+              <div className="animate-fade-in">
+                <header className="mb-6">
+                  <h2 className="font-headline text-3xl text-on-surface mb-1">Alterar senha</h2>
+                  <p className="text-on-surface-variant/80">
+                    {emailRecuperacaoVerificado ? 'Crie uma nova senha para sua conta.' : 'Informe o e-mail cadastrado na sua conta.'}
+                  </p>
+                </header>
+
+                {!emailRecuperacaoVerificado ? (
+                  <form className="space-y-4" onSubmit={handleVerificarEmail}>
+                    <div className="space-y-2">
+                      <label className="font-label text-xs text-outline px-1 block">E-MAIL</label>
+                      <div className="input-glow flex items-center bg-surface-container-low border border-white/10 rounded-lg px-4 h-14 focus-within:border-primary/60 transition-all">
+                        <span className="material-symbols-outlined text-outline mr-3">alternate_email</span>
+                        <input type="email" value={formData.email} onChange={(e) => updateForm('email', e.target.value)} placeholder="astronauta@orbis.com" className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant" required />
+                      </div>
+                    </div>
+                    <button type="submit" className="w-full bg-primary-container text-on-primary-container h-14 rounded-full font-headline flex items-center justify-center gap-2 transition-all active:scale-95">
+                      Verificar e-mail
+                    </button>
+                  </form>
+                ) : (
+                  <form className="space-y-4" onSubmit={handleRedefinirSenha}>
+                    {[['novaSenha', 'NOVA SENHA', 'Crie uma nova senha'], ['confirmacaoNovaSenha', 'CONFIRMAR NOVA SENHA', 'Digite a nova senha novamente']].map(([campo, rotulo, placeholder]) => (
+                      <div className="space-y-2" key={campo}>
+                        <label className="font-label text-xs text-outline px-1 block">{rotulo}</label>
+                        <div className="input-glow flex items-center bg-surface-container-low border border-white/10 rounded-lg px-4 h-14 focus-within:border-primary/60 transition-all">
+                          <span className="material-symbols-outlined text-outline mr-3">lock_reset</span>
+                          <input type="password" minLength={6} value={formData[campo]} onChange={(e) => updateForm(campo, e.target.value)} placeholder={placeholder} className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant" required />
+                        </div>
+                      </div>
+                    ))}
+                    <p className="text-xs text-outline">A senha deve ter pelo menos 6 caracteres.</p>
+                    <button type="submit" className="w-full bg-primary-container text-on-primary-container h-14 rounded-full font-headline flex items-center justify-center gap-2 transition-all active:scale-95">
+                      Alterar senha
+                    </button>
+                  </form>
+                )}
+
+                <div className="mt-6 pt-5 border-t border-white/5 flex justify-center">
+                  <button onClick={() => { setRecuperandoSenha(false); setEmailRecuperacaoVerificado(false); setErro('') }} className="font-label text-sm text-secondary hover:text-primary transition-colors">
+                    Voltar para o login
+                  </button>
+                </div>
+                <p className="mt-4 text-center text-[11px] leading-relaxed text-outline">Fluxo temporário do MVP. Uma versão futura deverá confirmar a identidade por e-mail.</p>
+              </div>
+            ) : isLogin ? (
               <div className="animate-fade-in">
                 <header className="mb-6">
                   <h2 className="font-headline text-3xl text-on-surface mb-1">Bem-vindo de volta</h2>
@@ -164,22 +270,28 @@ export default function Login() {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center px-1">
                       <label className="font-label text-xs text-outline">SENHA</label>
-                      <a href="#" className="font-label text-xs text-primary hover:text-primary-container transition-colors">
-                        Esqueceu a senha?
-                      </a>
+                      <button type="button" onClick={() => { setRecuperandoSenha(true); setErro('') }} className="font-label text-xs text-primary hover:text-primary-container transition-colors">
+                        Esqueceu sua senha?
+                      </button>
                     </div>
                     <div className="input-glow flex items-center bg-surface-container-low border border-white/10 rounded-lg px-4 h-14 focus-within:border-primary/60 transition-all">
                       <span className="material-symbols-outlined text-outline mr-3">lock</span>
                       <input
-                        type="password"
+                        type={mostrarSenhaLogin ? 'text' : 'password'}
                         value={formData.senha}
                         onChange={(e) => updateForm('senha', e.target.value)}
                         placeholder="••••••••"
                         className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant"
                         required
                       />
-                      <button type="button" className="text-outline hover:text-on-surface transition-colors">
-                        <span className="material-symbols-outlined">visibility</span>
+                      <button
+                        type="button"
+                        onClick={() => setMostrarSenhaLogin((valor) => !valor)}
+                        className="text-outline hover:text-on-surface transition-colors"
+                        aria-label={mostrarSenhaLogin ? 'Ocultar senha' : 'Mostrar senha'}
+                        aria-pressed={mostrarSenhaLogin}
+                      >
+                        <span className="material-symbols-outlined">{mostrarSenhaLogin ? 'visibility_off' : 'visibility'}</span>
                       </button>
                     </div>
                   </div>
@@ -257,13 +369,46 @@ export default function Login() {
                     <div className="input-glow flex items-center bg-surface-container-low border border-white/10 rounded-lg px-4 h-14 focus-within:border-primary/60 transition-all">
                       <span className="material-symbols-outlined text-outline mr-3">lock</span>
                       <input
-                        type="password"
+                        type={mostrarSenhaCadastro ? 'text' : 'password'}
                         value={formData.senha}
                         onChange={(e) => updateForm('senha', e.target.value)}
                         placeholder="Crie uma senha forte"
                         className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant"
                         required
                       />
+                      <button
+                        type="button"
+                        onClick={() => setMostrarSenhaCadastro((valor) => !valor)}
+                        className="text-outline hover:text-on-surface transition-colors"
+                        aria-label={mostrarSenhaCadastro ? 'Ocultar senha' : 'Mostrar senha'}
+                        aria-pressed={mostrarSenhaCadastro}
+                      >
+                        <span className="material-symbols-outlined">{mostrarSenhaCadastro ? 'visibility_off' : 'visibility'}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="font-label text-xs text-outline px-1 block">CONFIRMAR SENHA</label>
+                    <div className="input-glow flex items-center bg-surface-container-low border border-white/10 rounded-lg px-4 h-14 focus-within:border-primary/60 transition-all">
+                      <span className="material-symbols-outlined text-outline mr-3">lock_reset</span>
+                      <input
+                        type={mostrarConfirmacaoSenha ? 'text' : 'password'}
+                        value={formData.confirmacaoSenha}
+                        onChange={(e) => updateForm('confirmacaoSenha', e.target.value)}
+                        placeholder="Digite a senha novamente"
+                        className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setMostrarConfirmacaoSenha((valor) => !valor)}
+                        className="text-outline hover:text-on-surface transition-colors"
+                        aria-label={mostrarConfirmacaoSenha ? 'Ocultar confirmação de senha' : 'Mostrar confirmação de senha'}
+                        aria-pressed={mostrarConfirmacaoSenha}
+                      >
+                        <span className="material-symbols-outlined">{mostrarConfirmacaoSenha ? 'visibility_off' : 'visibility'}</span>
+                      </button>
                     </div>
                   </div>
 

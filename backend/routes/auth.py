@@ -66,11 +66,17 @@ def cadastro():
     nome = request.form.get("nome", "").strip()
     email = request.form.get("email", "").strip()
     senha = request.form.get("senha", "")
+    confirmacao_senha = request.form.get("confirmacao_senha", "")
 
-    if not nome or not email or not senha:
+    if not nome or not email or not senha or not confirmacao_senha:
         if _is_ajax():
-            return jsonify(erro="Nome, e-mail e senha são obrigatórios."), 400
-        return render_template("loginCadastro.html", erro="Nome, e-mail e senha são obrigatórios.")
+            return jsonify(erro="Nome, e-mail, senha e confirmação são obrigatórios."), 400
+        return render_template("loginCadastro.html", erro="Nome, e-mail, senha e confirmação são obrigatórios.")
+
+    if senha != confirmacao_senha:
+        if _is_ajax():
+            return jsonify(erro="As senhas não coincidem."), 400
+        return render_template("loginCadastro.html", erro="As senhas não coincidem."), 400
 
     if len(senha) < 6:
         if _is_ajax():
@@ -100,6 +106,41 @@ def cadastro():
     if _is_ajax():
         return jsonify(ok=True, redirect=url_for("pages.dashboard"))
     return redirect(url_for("pages.dashboard"))
+
+
+@auth_bp.post("/recuperar-senha/verificar-email")
+def verificar_email_recuperacao():
+    email = request.form.get("email", "").strip()
+    if not email:
+        return jsonify(erro="Informe o e-mail cadastrado."), 400
+
+    usuario = Usuario.query.filter_by(email=email).first()
+    if usuario is None:
+        return jsonify(erro="Não encontramos uma conta com este e-mail."), 404
+
+    return jsonify(ok=True)
+
+
+@auth_bp.post("/recuperar-senha/redefinir")
+def redefinir_senha():
+    email = request.form.get("email", "").strip()
+    nova_senha = request.form.get("nova_senha", "")
+    confirmacao_senha = request.form.get("confirmacao_senha", "")
+
+    if not email or not nova_senha or not confirmacao_senha:
+        return jsonify(erro="E-mail, nova senha e confirmação são obrigatórios."), 400
+    if len(nova_senha) < 6:
+        return jsonify(erro="A nova senha deve ter pelo menos 6 caracteres."), 400
+    if nova_senha != confirmacao_senha:
+        return jsonify(erro="As senhas não coincidem."), 400
+
+    usuario = Usuario.query.filter_by(email=email).first()
+    if usuario is None:
+        return jsonify(erro="Não encontramos uma conta com este e-mail."), 404
+
+    usuario.senha_hash = generate_password_hash(nova_senha)
+    db.session.commit()
+    return jsonify(ok=True, mensagem="Senha alterada com sucesso.")
 
 
 @auth_bp.get("/logout")

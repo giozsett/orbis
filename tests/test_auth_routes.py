@@ -1,4 +1,4 @@
-from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from backend.app.database import db
 from backend.models.usuario import Usuario
@@ -71,3 +71,99 @@ def test_login_cria_cookie_persistente_e_raiz_reabre_dashboard(client, app):
         assert sessao.permanent is True
     assert client.get("/acesso/sessao").get_json()["autenticado"] is True
     assert client.get("/").headers["Location"].endswith("/dashboard")
+
+
+def test_cadastro_exige_confirmacao_de_senha(client):
+    response = client.post(
+        "/acesso/cadastro",
+        data={
+            "nome": "Nova pessoa",
+            "email": "nova@orbis.local",
+            "senha": "segredo123",
+        },
+        headers={"X-Requested-With": "XMLHttpRequest"},
+    )
+
+    assert response.status_code == 400
+    assert "confirmação" in response.get_json()["erro"]
+
+
+def test_cadastro_rejeita_senhas_diferentes(client, app):
+    response = client.post(
+        "/acesso/cadastro",
+        data={
+            "nome": "Nova pessoa",
+            "email": "nova@orbis.local",
+            "senha": "segredo123",
+            "confirmacao_senha": "outra-senha",
+        },
+        headers={"X-Requested-With": "XMLHttpRequest"},
+    )
+
+    assert response.status_code == 400
+    assert response.get_json()["erro"] == "As senhas não coincidem."
+    with app.app_context():
+        assert Usuario.query.filter_by(email="nova@orbis.local").first() is None
+
+
+def test_cadastro_aceita_senhas_iguais(client, app):
+    response = client.post(
+        "/acesso/cadastro",
+        data={
+            "nome": "Nova pessoa",
+            "email": "nova@orbis.local",
+            "senha": "segredo123",
+            "confirmacao_senha": "segredo123",
+        },
+        headers={"X-Requested-With": "XMLHttpRequest"},
+    )
+
+    assert response.status_code == 200
+    with app.app_context():
+        assert Usuario.query.filter_by(email="nova@orbis.local").first() is not None
+
+
+def test_recuperacao_informa_quando_email_nao_existe(client):
+    response = client.post(
+        "/acesso/recuperar-senha/verificar-email",
+        data={"email": "inexistente@orbis.local"},
+    )
+
+    assert response.status_code == 404
+
+
+def test_recuperacao_rejeita_novas_senhas_diferentes(client, app):
+    _criar_usuario(app)
+    response = client.post(
+        "/acesso/recuperar-senha/redefinir",
+        data={
+            "email": "giovana@orbis.local",
+            "nova_senha": "novaSenha123",
+            "confirmacao_senha": "senhaDiferente",
+        },
+    )
+
+    assert response.status_code == 400
+    assert response.get_json()["erro"] == "As senhas não coincidem."
+
+
+def test_recuperacao_altera_senha_existente(client, app):
+    _criar_usuario(app)
+    assert client.post(
+        "/acesso/recuperar-senha/verificar-email",
+        data={"email": "giovana@orbis.local"},
+    ).status_code == 200
+
+    response = client.post(
+        "/acesso/recuperar-senha/redefinir",
+        data={
+            "email": "giovana@orbis.local",
+            "nova_senha": "novaSenha123",
+            "confirmacao_senha": "novaSenha123",
+        },
+    )
+
+    assert response.status_code == 200
+    with app.app_context():
+        usuario = Usuario.query.filter_by(email="giovana@orbis.local").first()
+        assert check_password_hash(usuario.senha_hash, "novaSenha123")
