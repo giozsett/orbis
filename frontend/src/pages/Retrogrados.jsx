@@ -1,11 +1,11 @@
 import Layout from '../components/layout/Layout'
 import { CelestialError, CelestialLoading, TechnicalHeader } from '../components/map/CelestialPageState'
 import GlassCard from '../components/ui/GlassCard'
-import useMapaPrincipal from '../hooks/useMapaPrincipal'
+import useMapaSelecionado from '../hooks/useMapaSelecionado'
 import { visualPlaneta } from '../utils/mapVisuals'
 
 export default function Retrogrados() {
-  const { mapa, erro } = useMapaPrincipal()
+  const { mapa, erro } = useMapaSelecionado()
   if (erro) return <CelestialError mensagem={erro} />
   if (!mapa?.dados) return <CelestialLoading texto="Verificando movimentos retrógrados" />
   const retrogrados = mapa.dados.planetas.filter((planeta) => planeta.retrogrado)

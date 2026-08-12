@@ -3,13 +3,13 @@ import { useMemo, useState } from 'react'
 import Layout from '../components/layout/Layout'
 import { CelestialError, CelestialLoading, TechnicalHeader } from '../components/map/CelestialPageState'
 import GlassCard from '../components/ui/GlassCard'
-import useMapaPrincipal from '../hooks/useMapaPrincipal'
+import useMapaSelecionado from '../hooks/useMapaSelecionado'
 import { ASPECT_VISUALS } from '../utils/mapVisuals'
 
 const chave = (a, b) => [a, b].sort().join('|')
 
 export default function Aspectos() {
-  const { mapa, erro } = useMapaPrincipal()
+  const { mapa, erro } = useMapaSelecionado()
   const [selecionado, setSelecionado] = useState(null)
   const grade = useMemo(() => new Map((mapa?.dados?.aspectos || []).map((aspecto) => [chave(aspecto.planeta1.nome, aspecto.planeta2.nome), aspecto])), [mapa])
 

@@ -26,10 +26,12 @@ from backend.models.mapa_natal import MapaNatal
 
 
 TAMANHO_MAXIMO_PDF = 15 * 1024 * 1024
-CAMINHO_FONTE = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")
-CAMINHO_FONTE_NEGRITO = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")
+CAMINHOS_FONTE = [Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"), Path("C:/Windows/Fonts/arial.ttf")]
+CAMINHOS_FONTE_NEGRITO = [Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"), Path("C:/Windows/Fonts/arialbd.ttf")]
+CAMINHOS_FONTE_SIGNOS = [Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"), Path("C:/Windows/Fonts/seguisym.ttf")]
 FONTE = "Helvetica"
 FONTE_NEGRITO = "Helvetica-Bold"
+FONTE_SIGNOS = "Helvetica"
 SIGNOS = [
     ("Áries", "♈"), ("Touro", "♉"), ("Gêmeos", "♊"),
     ("Câncer", "♋"), ("Leão", "♌"), ("Virgem", "♍"),
@@ -53,15 +55,22 @@ class RelatorioMuitoGrandeError(RelatorioPdfError):
 
 
 def _registrar_fontes():
-    global FONTE, FONTE_NEGRITO
-    if CAMINHO_FONTE.exists() and "OrbisSans" not in pdfmetrics.getRegisteredFontNames():
-        pdfmetrics.registerFont(TTFont("OrbisSans", str(CAMINHO_FONTE)))
-    if CAMINHO_FONTE_NEGRITO.exists() and "OrbisSansBold" not in pdfmetrics.getRegisteredFontNames():
-        pdfmetrics.registerFont(TTFont("OrbisSansBold", str(CAMINHO_FONTE_NEGRITO)))
-    if CAMINHO_FONTE.exists():
+    global FONTE, FONTE_NEGRITO, FONTE_SIGNOS
+    caminho = next((item for item in CAMINHOS_FONTE if item.exists()), None)
+    caminho_negrito = next((item for item in CAMINHOS_FONTE_NEGRITO if item.exists()), None)
+    caminho_signos = next((item for item in CAMINHOS_FONTE_SIGNOS if item.exists()), None)
+    if caminho and "OrbisSans" not in pdfmetrics.getRegisteredFontNames():
+        pdfmetrics.registerFont(TTFont("OrbisSans", str(caminho)))
+    if caminho_negrito and "OrbisSansBold" not in pdfmetrics.getRegisteredFontNames():
+        pdfmetrics.registerFont(TTFont("OrbisSansBold", str(caminho_negrito)))
+    if caminho_signos and "OrbisSymbols" not in pdfmetrics.getRegisteredFontNames():
+        pdfmetrics.registerFont(TTFont("OrbisSymbols", str(caminho_signos)))
+    if caminho:
         FONTE = "OrbisSans"
-    if CAMINHO_FONTE_NEGRITO.exists():
+    if caminho_negrito:
         FONTE_NEGRITO = "OrbisSansBold"
+    if caminho_signos:
+        FONTE_SIGNOS = "OrbisSymbols"
 
 
 def _meios_das_casas(casas: list[dict]) -> list[tuple[int, float]]:
@@ -113,7 +122,7 @@ class MandalaVetorial(Flowable):
             )
             meio = (indice * 30 + 15 - 90) * pi / 180
             self.canv.setFillColor(colors.HexColor("#f7c5d5"))
-            self.canv.setFont(FONTE, 11)
+            self.canv.setFont(FONTE_SIGNOS, 11)
             self.canv.drawCentredString(
                 centro + raio * 0.895 * cos(meio),
                 centro + raio * 0.895 * sin(meio) - 4,

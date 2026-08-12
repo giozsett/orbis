@@ -1,12 +1,12 @@
 import Layout from '../components/layout/Layout'
 import { CelestialError, CelestialLoading, TechnicalHeader } from '../components/map/CelestialPageState'
 import GlassCard from '../components/ui/GlassCard'
-import useMapaPrincipal from '../hooks/useMapaPrincipal'
+import useMapaSelecionado from '../hooks/useMapaSelecionado'
 
 const TEMAS = ['Identidade e começos', 'Recursos e valores', 'Comunicação e entorno', 'Raízes e intimidade', 'Criatividade e expressão', 'Rotina e aperfeiçoamento', 'Parcerias e acordos', 'Transformação e partilhas', 'Sentido e expansão', 'Vocação e contribuição', 'Grupos e projetos', 'Recolhimento e integração']
 
 export default function Casas() {
-  const { mapa, erro } = useMapaPrincipal()
+  const { mapa, erro } = useMapaSelecionado()
   if (erro) return <CelestialError mensagem={erro} />
   if (!mapa?.dados) return <CelestialLoading texto="Abrindo as doze casas" />
 

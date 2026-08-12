@@ -4,6 +4,7 @@ import Layout from '../components/layout/Layout'
 import Mandala from '../components/mandala/Mandala'
 import PlanetCard from '../components/planet/PlanetCard'
 import GlassCard from '../components/ui/GlassCard'
+import { selecionarMapa } from '../hooks/useMapaSelecionado'
 
 const MOCK_DATA = {
   planetas: [
@@ -114,6 +115,7 @@ export default function MapaPrincipal() {
         const data = await response.json()
         if (!response.ok) throw new Error(data.erro || 'Não foi possível carregar o mapa.')
         setMapa(data.mapa)
+        selecionarMapa(data.mapa.id)
       })
       .catch(error => setErro(error.message))
   }, [id])

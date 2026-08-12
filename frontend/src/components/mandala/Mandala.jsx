@@ -187,12 +187,6 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
           )
         })}
 
-        {/* Núcleo central */}
-        <circle cx="250" cy="250" r="20" fill="#0b1323" stroke="#ffb1c3" strokeWidth="2" />
-        <text x="250" y="255" textAnchor="middle" fill="#ffb1c3" fontFamily="Inter" fontSize="10" fontWeight="bold">
-          EARTH
-        </text>
-
         {/* Linhas de aspecto: ficam abaixo dos planetas e de seus rótulos */}
         {data?.aspectos && visiblePlanets > 3 && (
           <g style={{ opacity: visiblePlanets > 3 ? 0.6 : 0, transition: 'opacity 1s ease-out' }}>
@@ -218,6 +212,16 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
             })}
           </g>
         )}
+
+        {/* O núcleo fica acima das linhas para preservar a legibilidade no centro. */}
+        <g aria-label="Terra" role="img">
+          <title>Terra</title>
+          <circle cx="250" cy="250" r="22" fill="#0b1323" stroke="#ffb1c3" strokeWidth="2" />
+          <circle cx="250" cy="250" r="17" fill="#131c2b" stroke="#ffb1c3" strokeOpacity="0.25" strokeWidth="0.75" />
+          <text x="250" y="254" textAnchor="middle" fill="#ffb1c3" fontFamily="Inter" fontSize="9" fontWeight="bold" letterSpacing="0.5">
+            TERRA
+          </text>
+        </g>
 
         {/* Planetas */}
         {data?.planetas?.slice(0, visiblePlanets).map((planeta, index) => {

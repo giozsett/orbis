@@ -3,11 +3,11 @@ import { useMemo, useState } from 'react'
 import Layout from '../components/layout/Layout'
 import { CelestialError, CelestialLoading, TechnicalHeader } from '../components/map/CelestialPageState'
 import GlassCard from '../components/ui/GlassCard'
-import useMapaPrincipal from '../hooks/useMapaPrincipal'
+import useMapaSelecionado from '../hooks/useMapaSelecionado'
 import { visualPlaneta } from '../utils/mapVisuals'
 
 export default function PosicoesPlanetarias() {
-  const { mapa, erro } = useMapaPrincipal()
+  const { mapa, erro } = useMapaSelecionado()
   const [busca, setBusca] = useState('')
   const [movimento, setMovimento] = useState('todos')
   const planetas = useMemo(() => (mapa?.dados?.planetas || []).filter((planeta) => {
@@ -22,7 +22,7 @@ export default function PosicoesPlanetarias() {
   return (
     <Layout>
       <div className="min-h-screen p-6 md:p-12 xl:p-16">
-        <TechnicalHeader mapa={mapa} eyebrow="Dados planetários" titulo="Coordenadas do Mapa" icone="blur_on" descricao="Consulte longitude, signo, casa e movimento de cada corpo calculado no seu mapa principal." />
+        <TechnicalHeader mapa={mapa} eyebrow="Dados planetários" titulo="Coordenadas do Mapa" icone="blur_on" descricao="Consulte longitude, signo, casa e movimento de cada corpo calculado no mapa selecionado." />
 
         <div className="mb-6 grid gap-4 animate-fade-in-up md:grid-cols-[1fr_auto]" style={{ animationDelay: '100ms' }}>
           <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-surface-container-low px-4 py-3 focus-within:border-primary/40">

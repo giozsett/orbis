@@ -1,4 +1,6 @@
 from datetime import date, time
+import re
+import unicodedata
 
 from io import BytesIO
 
@@ -40,6 +42,20 @@ def _mapas_concluidos_do_usuario(usuario_id):
         MapaNatal.query.filter_by(usuario_id=usuario_id, status="concluido")
         .order_by(MapaNatal.criado_em.asc(), MapaNatal.id.asc())
     )
+
+
+def _mapa_concluido_do_usuario(mapa_id, usuario_id):
+    return MapaNatal.query.filter_by(
+        id=mapa_id,
+        usuario_id=usuario_id,
+        status="concluido",
+    ).first()
+
+
+def _nome_arquivo_pdf(nome):
+    base = unicodedata.normalize("NFKD", nome or "mapa").encode("ascii", "ignore").decode("ascii")
+    base = re.sub(r"[^a-zA-Z0-9]+", "-", base).strip("-").lower() or "mapa"
+    return f"orbis-{base}.pdf"
 
 
 @charts_bp.get("/novo")
@@ -139,11 +155,7 @@ def criar():
 def detalhe(mapa_id):
     if "usuario_id" not in session:
         return jsonify(erro="Faça login para acessar o mapa."), 401
-    mapa = MapaNatal.query.filter_by(
-        id=mapa_id,
-        usuario_id=session["usuario_id"],
-        status="concluido",
-    ).first()
+    mapa = _mapa_concluido_do_usuario(mapa_id, session["usuario_id"])
     if mapa is None:
         return jsonify(erro="Mapa não encontrado."), 404
     if request.accept_mimetypes.best == "application/json":
@@ -215,6 +227,19 @@ def asteroides():
         return jsonify(erro=str(erro)), 422
 
 
+@charts_bp.get("/<int:mapa_id>/asteroides")
+def asteroides_por_mapa(mapa_id):
+    if "usuario_id" not in session:
+        return jsonify(erro="Faça login para acessar os asteroides."), 401
+    mapa = _mapa_concluido_do_usuario(mapa_id, session["usuario_id"])
+    if mapa is None:
+        return jsonify(erro="Mapa não encontrado."), 404
+    try:
+        return jsonify(mapa={"id": mapa.id, "nome": mapa.nome}, asteroides=calcular_asteroides_mapa(mapa))
+    except AsteroideCalculoError as erro:
+        return jsonify(erro=str(erro)), 422
+
+
 @charts_bp.get("/principal/exportacao")
 def exportar_principal():
     if "usuario_id" not in session:
@@ -228,12 +253,34 @@ def exportar_principal():
         conteudo = gerar_relatorio_pdf(mapa)
     except RelatorioMuitoGrandeError as erro:
         return jsonify(erro=str(erro)), 413
-    nome = f"orbis-efemerides-mapa-{mapa.id}.pdf"
+    nome = _nome_arquivo_pdf(mapa.nome)
     return send_file(
         BytesIO(conteudo),
         mimetype="application/pdf",
         as_attachment=True,
         download_name=nome,
+        max_age=0,
+    )
+
+
+@charts_bp.get("/<int:mapa_id>/exportacao")
+def exportar_mapa(mapa_id):
+    if "usuario_id" not in session:
+        return jsonify(erro="Faça login para exportar seu mapa."), 401
+    if request.args.get("formato", "pdf").casefold() != "pdf":
+        return jsonify(erro="O formato disponível para exportação é PDF."), 400
+    mapa = _mapa_concluido_do_usuario(mapa_id, session["usuario_id"])
+    if mapa is None:
+        return jsonify(erro="Mapa não encontrado."), 404
+    try:
+        conteudo = gerar_relatorio_pdf(mapa)
+    except RelatorioMuitoGrandeError as erro:
+        return jsonify(erro=str(erro)), 413
+    return send_file(
+        BytesIO(conteudo),
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name=_nome_arquivo_pdf(mapa.nome),
         max_age=0,
     )
 
