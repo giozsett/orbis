@@ -1,3 +1,5 @@
+from datetime import date
+
 from flask import Blueprint, current_app, jsonify, request, session
 from pydantic import ValidationError
 
@@ -5,9 +7,12 @@ from backend.schemas.chat_schema import ChatMensagemSchema
 from backend.services.chat_service import (
     ChatError,
     ChatGeracaoError,
+    HistoricoDiaNaoEncontrado,
     LimitePerguntasExcedido,
     MapaPrincipalNaoEncontrado,
     enviar_mensagem as processar_mensagem,
+    listar_historico_chat,
+    obter_historico_dia,
     obter_estado_chat,
 )
 from backend.services.openrouter_service import (
@@ -62,3 +67,29 @@ def enviar_mensagem():
     except Exception:
         current_app.logger.exception("Falha inesperada no Chat Astral")
         return jsonify(erro="Não foi possível salvar a conversa."), 500
+
+
+@chat_bp.get("/historico")
+def listar_historico():
+    if "usuario_id" not in session:
+        return jsonify(erro="Faça login para acessar o histórico do Chat Astral."), 401
+    try:
+        cursor = date.fromisoformat(request.args["cursor"]) if request.args.get("cursor") else None
+        limite = int(request.args.get("limite", 20))
+        return jsonify(listar_historico_chat(session["usuario_id"], cursor=cursor, limite=limite))
+    except (ValueError, TypeError):
+        return jsonify(erro="Cursor ou limite de histórico inválido."), 400
+
+
+@chat_bp.get("/historico/<data_iso>")
+def historico_do_dia(data_iso):
+    if "usuario_id" not in session:
+        return jsonify(erro="Faça login para acessar o histórico do Chat Astral."), 401
+    try:
+        data_local = date.fromisoformat(data_iso)
+    except ValueError:
+        return jsonify(erro="Informe uma data válida no formato AAAA-MM-DD."), 400
+    try:
+        return jsonify(obter_historico_dia(session["usuario_id"], data_local))
+    except HistoricoDiaNaoEncontrado as erro:
+        return jsonify(erro=str(erro)), 404

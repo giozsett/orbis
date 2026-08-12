@@ -3,13 +3,17 @@ from datetime import date, datetime, time, timezone
 import pytest
 
 from backend.app.database import db
+from backend.app.schema_upgrade import aplicar_atualizacoes_aditivas
 from backend.models.chat_mensagem import ChatMensagem
+from backend.models.chat_dia import ChatDia
 from backend.models.mapa_natal import MapaNatal
 from backend.models.usuario import Usuario
 from backend.services.chat_service import (
     ChatGeracaoError,
     LimitePerguntasExcedido,
     enviar_mensagem,
+    listar_historico_chat,
+    obter_historico_dia,
     obter_estado_chat,
 )
 from backend.services.openrouter_service import OpenRouterResponseError
@@ -88,6 +92,10 @@ def test_agente_recebe_contexto_natal_e_persiste_conversa(app, monkeypatch):
 
     assert resultado["limite"]["restantes"] == 2
     assert [item.papel for item in salvas] == ["user", "assistant"]
+    with app.app_context():
+        dia = ChatDia.query.one()
+        assert dia.quantidade_perguntas == 1
+        assert all(item.chat_dia_id == dia.id for item in ChatMensagem.query.all())
     assert len(chamadas) == 1
     assert chamadas[0][1] == "google/gemma-4-26b-a4b-it:free"
     assert chamadas[0][2]["modelos_fallback"] == ("openrouter/free",)
@@ -112,6 +120,7 @@ def test_limita_tres_perguntas_em_janela_movel_de_24_horas(app, monkeypatch):
 
         assert ChatMensagem.query.filter_by(papel="user").count() == 3
         assert ChatMensagem.query.filter_by(papel="assistant").count() == 3
+        assert ChatDia.query.one().quantidade_perguntas == 3
 
     assert erro.value.reset_em.isoformat() == "2026-08-05T12:00:00+00:00"
 
@@ -129,4 +138,47 @@ def test_falha_do_modelo_nao_consume_pergunta(app, monkeypatch):
             enviar_mensagem(usuario_id, "Minha pergunta")
 
         assert ChatMensagem.query.count() == 0
+        assert ChatDia.query.count() == 0
         assert obter_estado_chat(usuario_id)["limite"]["restantes"] == 3
+
+
+def test_historico_lista_apenas_dias_com_perguntas(app, monkeypatch):
+    usuario_id = criar_usuario_com_mapa(app)
+    monkeypatch.setattr(
+        "backend.services.chat_service.completar",
+        lambda *_args, **_kwargs: "Resposta do histórico.",
+    )
+    primeiro_dia = datetime(2026, 8, 4, 12, tzinfo=timezone.utc)
+    segundo_dia = datetime(2026, 8, 7, 12, tzinfo=timezone.utc)
+
+    with app.app_context():
+        enviar_mensagem(usuario_id, "Pergunta do primeiro dia", agora=primeiro_dia)
+        enviar_mensagem(usuario_id, "Pergunta do segundo dia", agora=segundo_dia)
+        historico = listar_historico_chat(usuario_id)
+        conversa = obter_historico_dia(usuario_id, date(2026, 8, 4))
+
+    assert [item["data"] for item in historico["dias"]] == ["2026-08-07", "2026-08-04"]
+    assert all(item["quantidade_perguntas"] == 1 for item in historico["dias"])
+    assert historico["dias"][1]["primeira_pergunta"] == "Pergunta do primeiro dia"
+    assert [item["papel"] for item in conversa["mensagens"]] == ["user", "assistant"]
+
+
+def test_upgrade_vincula_mensagens_antigas_sem_apagar_conteudo(app):
+    usuario_id = criar_usuario_com_mapa(app)
+    criado_em = datetime(2026, 8, 9, 15, tzinfo=timezone.utc)
+    with app.app_context():
+        mapa_id = MapaNatal.query.filter_by(usuario_id=usuario_id).one().id
+        db.session.add_all([
+            ChatMensagem(usuario_id=usuario_id, mapa_id=mapa_id, papel="user", mensagem="Mensagem antiga", criado_em=criado_em),
+            ChatMensagem(usuario_id=usuario_id, mapa_id=mapa_id, papel="assistant", mensagem="Resposta antiga", criado_em=criado_em),
+        ])
+        db.session.commit()
+
+        aplicar_atualizacoes_aditivas()
+        dia = ChatDia.query.one()
+        mensagens = ChatMensagem.query.order_by(ChatMensagem.id).all()
+
+    assert dia.data_local.isoformat() == "2026-08-09"
+    assert dia.quantidade_perguntas == 1
+    assert [item.mensagem for item in mensagens] == ["Mensagem antiga", "Resposta antiga"]
+    assert all(item.chat_dia_id == dia.id for item in mensagens)

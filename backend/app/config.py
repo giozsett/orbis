@@ -25,6 +25,7 @@ class Config:
     OPENROUTER_APP_NAME = os.getenv("OPENROUTER_APP_NAME", "ORBIS")
     OPENROUTER_APP_URL = os.getenv("OPENROUTER_APP_URL", "")
     HOROSCOPO_TIMEZONE = os.getenv("HOROSCOPO_TIMEZONE", "America/Sao_Paulo")
+    CHAT_TIMEZONE = os.getenv("CHAT_TIMEZONE", "America/Sao_Paulo")
 
 
 class DevelopmentConfig(Config):

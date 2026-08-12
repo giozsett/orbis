@@ -24,7 +24,7 @@ def create_app(config_object=Config):
 
     db.init_app(app)
 
-    from backend.models import Usuario, MapaNatal, ChatMensagem, Interpretation
+    from backend.models import Usuario, MapaNatal, ChatMensagem, ChatDia, Interpretation
 
     with app.app_context():
         db.create_all()

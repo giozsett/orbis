@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 from agno.agent import Agent
 from agno.run.base import RunStatus
+from flask import current_app
 from backend.app.database import db
+from backend.models.chat_dia import ChatDia
 from backend.models.chat_mensagem import ChatMensagem
 from backend.models.mapa_natal import MapaNatal
 from backend.services.agno_openrouter_model import OpenRouterAgnoModel
@@ -20,6 +23,7 @@ JANELA_PERGUNTAS = timedelta(hours=24)
 MAXIMO_CARACTERES = 500
 MAXIMO_HISTORICO_MODELO = 6
 MAXIMO_HISTORICO_TELA = 20
+MAXIMO_DIAS_HISTORICO = 30
 
 
 class ChatError(RuntimeError):
@@ -40,11 +44,17 @@ class ChatGeracaoError(ChatError):
     """O agente não devolveu uma resposta utilizável."""
 
 
+class HistoricoDiaNaoEncontrado(ChatError):
+    """O usuário não possui conversa na data solicitada."""
+
+
 def obter_estado_chat(usuario_id: int, *, agora: datetime | None = None) -> dict:
     agora = _agora_utc(agora)
     mapa = buscar_mapa_principal(usuario_id)
     limite = _obter_limite(usuario_id, agora)
-    mensagens = _buscar_historico(usuario_id, mapa.id, MAXIMO_HISTORICO_TELA)
+    data_atual = _data_local(agora)
+    dia_atual = ChatDia.query.filter_by(usuario_id=usuario_id, data_local=data_atual).first()
+    mensagens = _buscar_historico_dia(dia_atual.id, MAXIMO_HISTORICO_TELA) if dia_atual else []
     resumo = _resumo_publico_mapa(mapa.dados or {})
 
     return {
@@ -56,6 +66,7 @@ def obter_estado_chat(usuario_id: int, *, agora: datetime | None = None) -> dict
         "saudacao": _saudacao(mapa.nome, resumo),
         "sugestoes": gerar_sugestoes(mapa.dados or {}),
         "mensagens": [_serializar_mensagem(item) for item in mensagens],
+        "dia_atual": _serializar_dia(dia_atual) if dia_atual else None,
         "limite": limite,
     }
 
@@ -79,9 +90,23 @@ def enviar_mensagem(
         raise LimitePerguntasExcedido(_data_iso_para_datetime(limite["reset_em"]))
 
     historico = _buscar_historico(usuario_id, mapa.id, MAXIMO_HISTORICO_MODELO)
+    data_local = _data_local(agora)
+    dia = ChatDia.query.filter_by(usuario_id=usuario_id, data_local=data_local).first()
+    if dia is None:
+        dia = ChatDia(
+            usuario_id=usuario_id,
+            mapa_id=mapa.id,
+            data_local=data_local,
+            quantidade_perguntas=0,
+            criado_em=agora,
+            atualizado_em=agora,
+        )
+        db.session.add(dia)
+        db.session.flush()
     pergunta = ChatMensagem(
         usuario_id=usuario_id,
         mapa_id=mapa.id,
+        chat_dia_id=dia.id,
         papel="user",
         mensagem=mensagem,
         criado_em=agora,
@@ -96,11 +121,14 @@ def enviar_mensagem(
         resposta = ChatMensagem(
             usuario_id=usuario_id,
             mapa_id=mapa.id,
+            chat_dia_id=dia.id,
             papel="assistant",
             mensagem=texto_resposta,
             criado_em=agora,
         )
         db.session.add(resposta)
+        dia.quantidade_perguntas += 1
+        dia.atualizado_em = agora
         db.session.commit()
     except Exception:
         db.session.rollback()
@@ -109,7 +137,49 @@ def enviar_mensagem(
     return {
         "mensagem_usuario": _serializar_mensagem(pergunta),
         "resposta": _serializar_mensagem(resposta),
+        "dia": _serializar_dia(dia),
         "limite": _obter_limite(usuario_id, agora),
+    }
+
+
+def listar_historico_chat(
+    usuario_id: int,
+    *,
+    cursor: date | None = None,
+    limite: int = 20,
+) -> dict:
+    limite = max(1, min(int(limite), MAXIMO_DIAS_HISTORICO))
+    consulta = ChatDia.query.filter(
+        ChatDia.usuario_id == usuario_id,
+        ChatDia.quantidade_perguntas > 0,
+    )
+    if cursor is not None:
+        consulta = consulta.filter(ChatDia.data_local < cursor)
+    encontrados = (
+        consulta.order_by(ChatDia.data_local.desc(), ChatDia.id.desc())
+        .limit(limite + 1)
+        .all()
+    )
+    tem_mais = len(encontrados) > limite
+    dias = encontrados[:limite]
+    return {
+        "dias": [_serializar_dia(item, incluir_resumo=True) for item in dias],
+        "proximo_cursor": dias[-1].data_local.isoformat() if tem_mais and dias else None,
+    }
+
+
+def obter_historico_dia(usuario_id: int, data_local: date) -> dict:
+    dia = ChatDia.query.filter_by(usuario_id=usuario_id, data_local=data_local).first()
+    if dia is None or dia.quantidade_perguntas <= 0:
+        raise HistoricoDiaNaoEncontrado("Nenhuma conversa foi encontrada nesta data.")
+    mensagens = (
+        ChatMensagem.query.filter_by(usuario_id=usuario_id, chat_dia_id=dia.id)
+        .order_by(ChatMensagem.criado_em.asc(), ChatMensagem.id.asc())
+        .all()
+    )
+    return {
+        "dia": _serializar_dia(dia),
+        "mensagens": [_serializar_mensagem(item) for item in mensagens],
     }
 
 
@@ -275,6 +345,16 @@ def _buscar_historico(usuario_id: int, mapa_id: int, limite: int) -> list[ChatMe
     return list(reversed(mensagens))
 
 
+def _buscar_historico_dia(chat_dia_id: int, limite: int) -> list[ChatMensagem]:
+    mensagens = (
+        ChatMensagem.query.filter_by(chat_dia_id=chat_dia_id)
+        .order_by(ChatMensagem.criado_em.desc(), ChatMensagem.id.desc())
+        .limit(limite)
+        .all()
+    )
+    return list(reversed(mensagens))
+
+
 def _resumo_publico_mapa(dados: dict) -> dict:
     planetas = {item.get("nome"): item for item in dados.get("planetas", [])}
     return {
@@ -303,8 +383,31 @@ def _serializar_mensagem(item: ChatMensagem) -> dict:
     }
 
 
+def _serializar_dia(item: ChatDia, *, incluir_resumo: bool = False) -> dict:
+    resposta = {
+        "id": item.id,
+        "data": item.data_local.isoformat(),
+        "quantidade_perguntas": item.quantidade_perguntas,
+        "criado_em": _como_utc(item.criado_em).isoformat(),
+        "atualizado_em": _como_utc(item.atualizado_em).isoformat(),
+    }
+    if incluir_resumo:
+        primeira = (
+            ChatMensagem.query.filter_by(chat_dia_id=item.id, papel="user")
+            .order_by(ChatMensagem.criado_em.asc(), ChatMensagem.id.asc())
+            .first()
+        )
+        resposta["primeira_pergunta"] = primeira.mensagem if primeira else ""
+    return resposta
+
+
 def _agora_utc(valor: datetime | None) -> datetime:
     return _como_utc(valor or datetime.now(timezone.utc))
+
+
+def _data_local(valor: datetime) -> date:
+    fuso = ZoneInfo(current_app.config.get("CHAT_TIMEZONE", "America/Sao_Paulo"))
+    return _como_utc(valor).astimezone(fuso).date()
 
 
 def _como_utc(valor: datetime) -> datetime:

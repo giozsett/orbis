@@ -9,6 +9,7 @@ class ChatMensagem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=True)
     mapa_id = db.Column(db.Integer, db.ForeignKey("mapas_natais.id"), nullable=True)
+    chat_dia_id = db.Column(db.Integer, db.ForeignKey("chat_dias.id"), nullable=True, index=True)
     papel = db.Column(
         db.String(10), nullable=False, default="user", index=True
     )
