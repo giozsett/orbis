@@ -15,6 +15,7 @@ COLUNAS_LOCALIZACAO = {
     "utc_offset_minutos": "INTEGER",
     "pais_codigo": "VARCHAR(2) DEFAULT 'BR'",
     "geoname_id": "VARCHAR(20)",
+    "arcano_pessoal_numero": "INTEGER",
 }
 
 

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import GlassPanel from '../ui/GlassPanel'
+import ArcanoCard from '../arcano/ArcanoCard'
 
 function formatarData(data) {
   if (!data) return 'Data não informada'
@@ -64,6 +65,8 @@ export default function MapSummaryCard({
           <dd className="mt-1 font-label text-xs text-tertiary">Asc. {resumo.ascendente_signo || '—'}</dd>
         </div>
       </dl>
+
+      <ArcanoCard arcano={mapa.arcano_pessoal} compacta />
 
       {mapa.principal && (
         <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-on-surface-variant">

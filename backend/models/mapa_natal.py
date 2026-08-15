@@ -20,6 +20,7 @@ class MapaNatal(db.Model):
     timezone_id = db.Column(db.String(64), nullable=True)
     utc_offset_minutos = db.Column(db.Integer, nullable=True)
     dados = db.Column(db.JSON, nullable=True)
+    arcano_pessoal_numero = db.Column(db.Integer, nullable=True)
     status = db.Column(
         db.String(20), nullable=False, default="pendente", index=True
     )

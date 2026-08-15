@@ -23,6 +23,7 @@ from reportlab.platypus import (
 )
 
 from backend.models.mapa_natal import MapaNatal
+from backend.services.arcano_pessoal_service import obter_arcano_pessoal
 
 
 TAMANHO_MAXIMO_PDF = 15 * 1024 * 1024
@@ -191,6 +192,34 @@ class MandalaVetorial(Flowable):
             self.canv.drawCentredString(x, y + 6.5, str(nome))
 
 
+class CartaArcanoVetorial(Flowable):
+    """Fallback de impressão independente de imagens externas."""
+
+    def __init__(self, arcano: dict, largura: float = 45 * mm):
+        super().__init__()
+        self.arcano = arcano
+        self.width = largura
+        self.height = largura * 1.64
+
+    def draw(self):
+        primaria, secundaria, fundo = self.arcano.get("cores", ["#d7c98d", "#58627f", "#101624"])
+        canvas = self.canv
+        canvas.setFillColor(colors.HexColor(fundo))
+        canvas.setStrokeColor(colors.HexColor(primaria))
+        canvas.setLineWidth(2)
+        canvas.roundRect(1, 1, self.width - 2, self.height - 2, 8, fill=1, stroke=1)
+        canvas.setStrokeColor(colors.HexColor(secundaria))
+        canvas.roundRect(7, 7, self.width - 14, self.height - 14, 5, fill=0, stroke=1)
+        canvas.setFillColor(colors.HexColor(primaria))
+        canvas.setFont(FONTE_NEGRITO, 13)
+        canvas.drawCentredString(self.width / 2, self.height - 22, str(self.arcano["numero"]))
+        canvas.setLineWidth(.6)
+        for raio in (18, 29, 40):
+            canvas.circle(self.width / 2, self.height * .55, raio, fill=0, stroke=1)
+        canvas.setFont(FONTE_NEGRITO, 9)
+        canvas.drawCentredString(self.width / 2, 22, self.arcano["nome"].upper())
+
+
 def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
     _registrar_fontes()
     memoria = BytesIO()
@@ -219,6 +248,7 @@ def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
         fontName=FONTE, fontSize=9.2, leading=13,
     )
     dados = mapa.dados or {}
+    arcano = obter_arcano_pessoal(mapa.data_nascimento, mapa.arcano_pessoal_numero)
     historia = [
         Paragraph("ORBIS", titulo),
         Paragraph("Relatório de Efemérides do Mapa Natal", subtitulo),
@@ -230,6 +260,25 @@ def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
             ["Casas", dados.get("sistema_casas", "Placidus")],
         ], larguras=[38 * mm, 125 * mm]),
         Spacer(1, 5 * mm),
+        Paragraph("Seu Arcano Pessoal", subtitulo),
+        Table([[
+            CartaArcanoVetorial(arcano),
+            [
+                Paragraph(f"<b>{arcano['numero']} · {escape(arcano['nome'])}</b>", corpo),
+                Spacer(1, 2 * mm),
+                Paragraph(escape(" · ".join(arcano["palavras_chave"])), corpo),
+                Spacer(1, 2 * mm),
+                Paragraph(escape(arcano["resumo"]), corpo),
+                Spacer(1, 2 * mm),
+                Paragraph("Leitura simbólica do tarot, complementar ao mapa natal.", corpo),
+            ],
+        ]], colWidths=[52 * mm, 108 * mm], style=TableStyle([
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("BOX", (0, 0), (-1, -1), .5, colors.HexColor(arcano["cores"][0])),
+            ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#fff6f8")),
+            ("PADDING", (0, 0), (-1, -1), 7),
+        ])),
+        Spacer(1, 6 * mm),
         MandalaVetorial(dados),
         PageBreak(),
         Paragraph("Posições planetárias", subtitulo),

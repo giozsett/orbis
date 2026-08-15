@@ -12,6 +12,7 @@ from backend.app.database import db
 from backend.app.frontend import servir_spa
 from backend.models.mapa_natal import MapaNatal
 from backend.services.mapa_natal_service import calcular_mapa_natal
+from backend.services.arcano_pessoal_service import calcular_arcano_pessoal, obter_arcano_pessoal
 from backend.services.asteroide_service import AsteroideCalculoError, calcular_asteroides_mapa
 from backend.services.interpretacao_base_service import enriquecer_dados_mapa
 from backend.services.interpretation_service import (
@@ -135,6 +136,7 @@ def criar():
             timezone_id=localizacao["timezone_id"],
             utc_offset_minutos=nascimento["utc_offset_minutos"],
             dados=resultado,
+            arcano_pessoal_numero=calcular_arcano_pessoal(dados.data_nascimento),
             status="concluido",
         )
         db.session.add(mapa)
@@ -305,6 +307,9 @@ def _serializar_mapa(mapa):
         "timezone_id": mapa.timezone_id,
         "utc_offset_minutos": mapa.utc_offset_minutos,
         "status": mapa.status,
+        "arcano_pessoal": obter_arcano_pessoal(
+            mapa.data_nascimento, mapa.arcano_pessoal_numero
+        ),
         "dados": enriquecer_dados_mapa(mapa.dados),
     }
 
@@ -324,6 +329,9 @@ def _serializar_resumo_mapa(mapa, principal_id):
         "status": mapa.status,
         "criado_em": mapa.criado_em.isoformat(),
         "principal": mapa.id == principal_id,
+        "arcano_pessoal": obter_arcano_pessoal(
+            mapa.data_nascimento, mapa.arcano_pessoal_numero
+        ),
         "resumo": {
             "sol_signo": sol.get("signo"),
             "sol_posicao": sol.get("posicao"),

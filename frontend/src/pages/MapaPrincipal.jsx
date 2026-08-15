@@ -4,6 +4,8 @@ import Layout from '../components/layout/Layout'
 import Mandala from '../components/mandala/Mandala'
 import PlanetCard from '../components/planet/PlanetCard'
 import GlassCard from '../components/ui/GlassCard'
+import ArcanoCard from '../components/arcano/ArcanoCard'
+import ArcanoDetalhes from '../components/arcano/ArcanoDetalhes'
 import { selecionarMapa } from '../hooks/useMapaSelecionado'
 
 const MOCK_DATA = {
@@ -106,6 +108,7 @@ export default function MapaPrincipal() {
   const [hoveredPlanet, setHoveredPlanet] = useState(null)
   const [mapa, setMapa] = useState(null)
   const [erro, setErro] = useState('')
+  const [arcanoAberto, setArcanoAberto] = useState(false)
   const { id } = useParams()
 
   useEffect(() => {
@@ -182,6 +185,10 @@ export default function MapaPrincipal() {
             ))}
           </section>
 
+          {mapa.arcano_pessoal && (
+            <ArcanoCard arcano={mapa.arcano_pessoal} onExplorar={() => setArcanoAberto(true)} />
+          )}
+
           {/* Área principal: Mandala & Lista */}
           <section className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
             {/* Mandala */}
@@ -230,6 +237,7 @@ export default function MapaPrincipal() {
             </div>
           </section>
         </div>
+        <ArcanoDetalhes arcano={mapa.arcano_pessoal} aberto={arcanoAberto} onFechar={() => setArcanoAberto(false)} />
       </div>
     </Layout>
   )
