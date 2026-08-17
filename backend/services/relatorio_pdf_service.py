@@ -193,7 +193,7 @@ class MandalaVetorial(Flowable):
 
 
 class CartaArcanoVetorial(Flowable):
-    """Fallback de impressão independente de imagens externas."""
+    """Carta de impressão vetorial independente de imagens externas."""
 
     def __init__(self, arcano: dict, largura: float = 45 * mm):
         super().__init__()
@@ -216,6 +216,13 @@ class CartaArcanoVetorial(Flowable):
         canvas.setLineWidth(.6)
         for raio in (18, 29, 40):
             canvas.circle(self.width / 2, self.height * .55, raio, fill=0, stroke=1)
+        canvas.setFillColor(colors.HexColor(primaria))
+        canvas.setFont(FONTE_SIGNOS, 38)
+        canvas.drawCentredString(
+            self.width / 2,
+            self.height * .55 - 13,
+            self.arcano.get("simbolo", "✦"),
+        )
         canvas.setFont(FONTE_NEGRITO, 9)
         canvas.drawCentredString(self.width / 2, 22, self.arcano["nome"].upper())
 

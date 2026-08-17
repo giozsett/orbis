@@ -16,4 +16,5 @@ node_modules/
 frontend/dist/
 
 123.txt
-/tests/
+!/tests/
+!/tests/*.py
