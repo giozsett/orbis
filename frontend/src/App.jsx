@@ -15,6 +15,7 @@ import Aspectos from './pages/Aspectos'
 import Casas from './pages/Casas'
 import Retrogrados from './pages/Retrogrados'
 import Asteroides from './pages/Asteroides'
+import HoroscoposMalucos from './pages/HoroscoposMalucos'
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/mapa/asteroides" element={<Asteroides />} />
         <Route path="/interpretacoes" element={<Interpretacoes />} />
         <Route path="/horoscopo" element={<Horoscopo />} />
+        <Route path="/horoscopos-malucos" element={<HoroscoposMalucos />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/carregando" element={<Carregando />} />
         <Route path="/perfil" element={<Perfil />} />

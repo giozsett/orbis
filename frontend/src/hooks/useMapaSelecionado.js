@@ -47,10 +47,14 @@ export function observarMapaSelecionado(callback) {
 
 export default function useMapaSelecionado() {
   const [mapaId, setMapaId] = useState(lerMapaSelecionado)
+  const [cor, setCor] = useState(lerCorMapaSelecionado)
   const [mapa, setMapa] = useState(null)
   const [erro, setErro] = useState('')
 
-  useEffect(() => observarMapaSelecionado(setMapaId), [])
+  useEffect(() => observarMapaSelecionado((id) => {
+    setMapaId(id)
+    setCor(lerCorMapaSelecionado())
+  }), [])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -69,5 +73,5 @@ export default function useMapaSelecionado() {
     return () => controller.abort()
   }, [mapaId])
 
-  return { mapa, mapaId, erro }
+  return { mapa, mapaId, cor, erro }
 }

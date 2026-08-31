@@ -1,13 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import LinuxTuxIcon from '../icons/LinuxTuxIcon'
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard' },
   { path: '/meus-mapas', label: 'Meus mapas' },
   { path: '/horoscopo', label: 'Horóscopo' },
+  { path: '/horoscopos-malucos', label: 'Horóscopos Malucos' },
   { path: '/chat', label: 'Chat Astral' },
   { path: '/interpretacoes', label: 'Interpretações' },
   { path: '/mapa', label: 'Mapa natal' },
+]
+
+const temasMalucos = [
+  { path: '/horoscopos-malucos', label: 'Distros Linux', icon: 'linux' },
 ]
 
 export default function TopNav() {
@@ -17,6 +23,8 @@ export default function TopNav() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const userMenuRef = useRef(null)
+
+  const isHoroscoposMalucosRota = location.pathname.startsWith('/horoscopos-malucos')
 
   useEffect(() => {
     const closeOnOutsideClick = (event) => {
@@ -135,6 +143,22 @@ export default function TopNav() {
         </div>
       </header>
 
+      {/* Submenu temático — somente em rotas /horoscopos-malucos */}
+      {isHoroscoposMalucosRota && (
+        <nav className="fixed top-16 left-0 right-0 z-40 hidden md:flex items-center gap-6 px-4 md:px-16 h-12 bg-surface-container-low/60 backdrop-blur-xl border-b border-white/5">
+          {temasMalucos.map((tema) => (
+            <Link
+              key={tema.path}
+              to={tema.path}
+              className="flex items-center gap-2 font-label text-xs lg:text-sm transition-colors duration-300 text-on-surface-variant hover:text-secondary min-h-[44px]"
+            >
+              <LinuxTuxIcon size={18} />
+              {tema.label}
+            </Link>
+          ))}
+        </nav>
+      )}
+
       {/* Menu mobile */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 md:hidden">
@@ -154,6 +178,22 @@ export default function TopNav() {
                 {item.label}
               </Link>
             ))}
+            {isHoroscoposMalucosRota && (
+              <div className="border-t border-white/5 pt-3 mt-1">
+                <p className="font-label text-[10px] uppercase tracking-widest text-outline px-3 mb-2">Temas</p>
+                {temasMalucos.map((tema) => (
+                  <Link
+                    key={tema.path}
+                    to={tema.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-3 font-label text-sm p-3 rounded-lg transition-colors duration-300 text-on-surface-variant hover:text-secondary hover:bg-white/5 min-h-[44px]"
+                  >
+                    <LinuxTuxIcon size={18} />
+                    {tema.label}
+                  </Link>
+                ))}
+              </div>
+            )}
           </nav>
         </div>
       )}
