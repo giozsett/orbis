@@ -1,4 +1,4 @@
-![CI](https://github.com/USUARIO/REPOSITORIO/actions/workflows/ci.yml/badge.svg)
+[![CI](https://github.com/giozsett/orbis/actions/workflows/ci.yml/badge.svg)](https://github.com/giozsett/orbis/actions/workflows/ci.yml)
 
 # ORBIS
 
