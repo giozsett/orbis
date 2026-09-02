@@ -1,3 +1,5 @@
+![CI](https://github.com/USUARIO/REPOSITORIO/actions/workflows/ci.yml/badge.svg)
+
 # ORBIS
 
 Aplicação Flask + React para cálculo de mapa natal, interpretações, horóscopo
