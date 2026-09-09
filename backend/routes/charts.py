@@ -81,12 +81,17 @@ def listar():
 
 @charts_bp.get("/principal")
 def principal():
+    quer_json = request.accept_mimetypes.best == "application/json"
     if "usuario_id" not in session:
+        if quer_json:
+            return jsonify(erro="Faça login para acessar seu mapa."), 401
         return redirect(url_for("auth.acesso"))
     mapa = _mapas_concluidos_do_usuario(session["usuario_id"]).first()
     if mapa is None:
+        if quer_json:
+            return jsonify(erro="Crie seu mapa principal primeiro.", codigo="mapa_principal_ausente"), 404
         return redirect(url_for("charts.novo"))
-    if request.accept_mimetypes.best == "application/json":
+    if quer_json:
         return jsonify(mapa=_serializar_mapa(mapa))
     return redirect("/mapa")
 
