@@ -1,16 +1,17 @@
 {
   "chat": [
     "google/gemma-4-26b-a4b-it:free",
+    "nex-agi/nex-n2.5-mini:free",
     "openrouter/free"
   ],
   "horoscopo": [
     "google/gemma-4-26b-a4b-it:free",
+    "nex-agi/nex-n2.5-mini:free",
     "openrouter/free"
   ],
   "interpretacoes": [
     "google/gemma-4-26b-a4b-it:free",
-    "inclusionai/ling-3.0-flash:free",
-    "openai/gpt-oss-20b:free",
+    "nex-agi/nex-n2.5-mini:free",
     "openrouter/free"
   ]
 }

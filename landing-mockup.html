@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<!--
+  MOCKUP INDEPENDENTE — landing page do ORBIS.
+  Arquivo autocontido (sem build, sem React, sem Flask). Abra direto no navegador
+  (duplo-clique) ou sirva com `python -m http.server` a partir da raiz do projeto.
+  O toggle "logado/deslogado" no canto superior direito existe só para pré-visualização
+  e não faz parte da implementação final.
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ORBIS · Landing (mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --primary:#ffb1c3;
+    --primary-container:#ff4b89;
+    --on-primary-container:#590026;
+    --secondary:#eab9ce;
+    --tertiary:#deb7ff;
+    --tertiary-container:#b86dfd;
+    --surface:#0b1323;
+    --surface-container:#18202f;
+    --surface-container-low:#131c2b;
+    --surface-container-lowest:#060e1d;
+    --on-surface:#dbe2f8;
+    --on-surface-variant:#e5bcc4;
+    --outline:#ac878f;
+    --outline-variant:#5c3f45;
+    --brass:#d9b06b;
+    --cream:#fffae2;
+    --on-cream:#0b1323;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--surface);
+    color:var(--on-surface);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+  }
+  .material-symbols-outlined{
+    font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+    line-height:1;
+    user-select:none;
+  }
+
+  /* ---------- fundo em degradê ---------- */
+  .bg-gradient{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background:
+      radial-gradient(1100px 750px at 8% -8%, var(--primary-container) 0%, rgba(255,75,137,0.55) 18%, rgba(184,109,253,0.35) 34%, rgba(11,19,35,0) 60%),
+      radial-gradient(700px 500px at 22% 18%, rgba(222,183,255,0.28) 0%, rgba(11,19,35,0) 55%),
+      var(--surface);
+  }
+  .bg-gradient::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(160deg, rgba(6,14,29,0) 30%, var(--surface-container-lowest) 92%);
+  }
+  .edge-accent{
+    position:fixed;
+    left:0;
+    bottom:0;
+    width:6px;
+    height:220px;
+    z-index:1;
+    background:linear-gradient(180deg, var(--primary-container), var(--tertiary-container));
+    opacity:.65;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:50;
+    height:64px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    padding:0 clamp(16px,4vw,64px);
+    background:rgba(11,19,35,.45);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    color:inherit;
+  }
+  .brand .material-symbols-outlined{color:var(--primary);font-size:22px;}
+  .brand span{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:-0.03em;
+    color:var(--secondary);
+  }
+
+  /* ---------- recorte cream no canto (contraste, referência) ---------- */
+  .cream-corner{
+    position:fixed;
+    top:0; right:0;
+    z-index:52;
+    display:flex;
+    align-items:flex-start;
+    justify-content:flex-end;
+    gap:12px;
+    width:clamp(230px,28vw,340px);
+    height:92px;
+    padding:14px clamp(16px,4vw,48px) 0 24px;
+    background:var(--cream);
+    border-radius:0 0 0 58px;
+    box-shadow:-22px 24px 46px rgba(0,0,0,.4);
+  }
+
+  .account-area{display:flex;align-items:center;gap:14px;}
+
+  .entrar-link{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-weight:600;
+    font-size:12px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--on-cream);
+    text-decoration:none;
+    padding:10px 18px;
+    border-radius:999px;
+    border:1.5px solid rgba(11,19,35,.25);
+    transition:all .25s;
+  }
+  .entrar-link .material-symbols-outlined{font-size:16px;}
+  .entrar-link:hover{border-color:var(--on-cream);background:rgba(11,19,35,.06);}
+
+  .user-menu{position:relative;}
+  .avatar-btn{
+    width:40px;height:40px;border-radius:999px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(11,19,35,.06);
+    border:1.5px solid rgba(11,19,35,.25);
+    color:var(--on-cream);
+    cursor:pointer;
+    transition:all .25s;
+  }
+  .avatar-btn:hover{border-color:var(--on-cream);}
+  .avatar-btn.open{
+    background:rgba(255,75,137,.12);
+    border-color:var(--primary-container);
+    color:var(--primary-container);
+    box-shadow:0 0 18px rgba(255,75,137,.18);
+  }
+  .dropdown{
+    position:absolute;
+    right:0; top:50px;
+    width:200px;
+    background:rgba(6,14,29,.95);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:14px;
+    padding:8px;
+    backdrop-filter:blur(18px);
+    box-shadow:0 20px 45px rgba(0,0,0,.45);
+    display:none;
+  }
+  .dropdown.show{display:block;animation:pop .15s ease-out;}
+  @keyframes pop{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+  .dropdown .heading{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--outline);
+    padding:8px 10px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+    margin-bottom:4px;
+  }
+  .dropdown a, .dropdown button{
+    display:flex;align-items:center;gap:10px;
+    width:100%;
+    padding:10px;
+    border-radius:10px;
+    border:none;background:none;cursor:pointer;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    color:var(--on-surface-variant);
+    text-decoration:none;
+    transition:background .2s,color .2s;
+  }
+  .dropdown a:hover{background:rgba(255,255,255,.05);color:var(--secondary);}
+  .dropdown button.logout{color:#ffb4ab;}
+  .dropdown button.logout:hover{background:rgba(255,180,171,.1);}
+
+  /* toggle de pré-visualização (não faz parte da versão final) */
+  .preview-toggle{
+    display:flex;align-items:center;gap:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--outline);
+    padding:6px 10px;
+    border:1px dashed rgba(172,135,143,.4);
+    border-radius:999px;
+  }
+  .preview-toggle button{
+    all:unset;cursor:pointer;
+    padding:4px 10px;
+    border-radius:999px;
+    color:var(--on-surface-variant);
+    transition:background .2s,color .2s;
+  }
+  .preview-toggle button.active{background:var(--primary);color:#1a1220;font-weight:600;}
+
+  /* ---------- dock lateral esquerdo (ícones do menu do orbis) ---------- */
+  .side-dock{
+    position:fixed;
+    left:22px; top:50%;
+    transform:translateY(-50%);
+    z-index:40;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .dock-icon{
+    position:relative;
+    width:44px;height:44px;
+    border-radius:999px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(19,28,43,.55);
+    border:1px solid rgba(255,255,255,.09);
+    color:var(--on-surface-variant);
+    backdrop-filter:blur(10px);
+    cursor:pointer;
+    transition:all .25s;
+  }
+  .dock-icon:hover{
+    color:var(--primary);
+    border-color:rgba(255,177,195,.45);
+    background:rgba(255,177,195,.1);
+    transform:translateX(4px);
+  }
+  .dock-icon .tip{
+    position:absolute;
+    left:56px;
+    top:50%;
+    transform:translateY(-50%) translateX(-6px);
+    background:rgba(6,14,29,.95);
+    border:1px solid rgba(255,255,255,.1);
+    padding:5px 10px;
+    border-radius:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    white-space:nowrap;
+    color:var(--on-surface-variant);
+    opacity:0;
+    pointer-events:none;
+    transition:all .2s;
+  }
+  .dock-icon:hover .tip{opacity:1;transform:translateY(-50%) translateX(0);}
+
+  /* ---------- hero ---------- */
+  main{
+    position:relative;
+    z-index:2;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding:96px clamp(24px,6vw,120px) 64px 104px;
+    gap:clamp(24px,5vw,72px);
+  }
+  .hero-copy{max-width:560px;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:.32em;
+    text-transform:uppercase;
+    color:var(--primary);
+    margin:0 0 22px;
+  }
+  .wordmark-frame{
+    position:relative;
+    display:inline-block;
+    padding:18px 34px;
+  }
+  .wordmark-frame::before, .wordmark-frame::after{
+    content:'';
+    position:absolute;
+    width:26px;height:26px;
+    border-color:var(--primary);
+    border-style:solid;
+  }
+  .wordmark-frame::before{top:0;left:0;border-width:2px 0 0 2px;}
+  .wordmark-frame::after{bottom:0;right:0;border-width:0 2px 2px 0;}
+  .wordmark{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:clamp(48px,9vw,88px);
+    line-height:.92;
+    letter-spacing:.06em;
+    margin:0;
+    color:var(--on-surface);
+    background:linear-gradient(180deg, var(--on-surface) 30%, var(--secondary) 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .tagline{
+    font-family:'JetBrains Mono',monospace;
+    font-style:italic;
+    font-size:14px;
+    letter-spacing:.08em;
+    color:var(--outline);
+    margin:22px 0 0 4px;
+  }
+  .lede{
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    line-height:1.7;
+    color:var(--on-surface-variant);
+    margin:26px 0 34px;
+    max-width:440px;
+  }
+  .cta{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:15px 30px;
+    border-radius:999px;
+    background:linear-gradient(120deg, var(--primary-container), var(--tertiary-container));
+    color:#fff;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    text-decoration:none;
+    box-shadow:0 12px 30px rgba(255,75,137,.28);
+    transition:transform .2s, box-shadow .2s;
+  }
+  .cta:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(255,75,137,.38);}
+
+  /* ---------- ilustração (globo / esfera armilar steampunk) ---------- */
+  .hero-art{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-width:0;
+  }
+  .hero-art svg{
+    width:min(100%, 620px);
+    height:auto;
+    opacity:.9;
+  }
+
+  .corner-tag{
+    position:fixed;
+    left:24px; bottom:20px;
+    z-index:30;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--outline);
+    background:rgba(19,28,43,.5);
+    border:1px solid rgba(255,255,255,.08);
+    padding:6px 14px;
+    border-radius:999px;
+    backdrop-filter:blur(8px);
+  }
+
+  @media (max-width:960px){
+    .side-dock{display:none;}
+    main{flex-direction:column;padding:120px 24px 48px;text-align:center;}
+    .hero-copy{max-width:100%;}
+    .wordmark-frame{padding:14px 22px;}
+    .lede{margin-left:auto;margin-right:auto;}
+  }
+  @media (max-width:520px){
+    header{gap:10px;padding:0 14px;}
+    .brand span{font-size:18px;}
+    .preview-toggle{font-size:9px;padding:5px 6px;gap:4px;}
+    .cream-corner{
+      width:auto;
+      height:72px;
+      border-radius:0 0 0 34px;
+      padding:12px 16px 0 18px;
+      gap:8px;
+    }
+    .entrar-link{padding:8px 12px;font-size:11px;}
+    .entrar-link span:not(.material-symbols-outlined){display:none;}
+    .avatar-btn{width:34px;height:34px;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="bg-gradient"></div>
+  <div class="edge-accent"></div>
+
+  <header>
+    <a href="#" class="brand">
+      <span class="material-symbols-outlined">auto_awesome</span>
+      <span>ORBIS</span>
+    </a>
+
+    <div class="preview-toggle" title="Só existe neste mockup, para alternar o preview">
+      Preview:
+      <button id="btn-deslogado" class="active" onclick="setLogged(false)">deslogado</button>
+      <button id="btn-logado" onclick="setLogged(true)">logado</button>
+    </div>
+  </header>
+
+  <!-- recorte cream no canto — contraste pedido a partir da referência -->
+  <div class="cream-corner">
+    <a id="entrar-link" href="#" class="entrar-link">
+      <span class="material-symbols-outlined">login</span>
+      <span>Entrar</span>
+    </a>
+
+    <div id="user-menu" class="user-menu" style="display:none;">
+      <button id="avatar-btn" class="avatar-btn" onclick="toggleDropdown()" aria-haspopup="menu">
+        <span class="material-symbols-outlined">person</span>
+      </button>
+      <div id="dropdown" class="dropdown">
+        <div class="heading">Sua conta</div>
+        <a href="#"><span class="material-symbols-outlined" style="font-size:20px;">account_circle</span>Meu Perfil</a>
+        <button class="logout"><span class="material-symbols-outlined" style="font-size:20px;">logout</span>Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- dock lateral esquerdo — ícones do menu do orbis, só ícone -->
+  <nav class="side-dock">
+    <div class="dock-icon"><span class="material-symbols-outlined">blur_on</span><span class="tip">Dados planetários</span></div>
+    <div class="dock-icon"><span class="material-symbols-outlined">grid_4x4</span><span class="tip">Grade de aspectos</span></div>
+    <div class="dock-icon"><span class="material-symbols-outlined">home_pin</span><span class="tip">Casas</span></div>
+    <div class="dock-icon"><span class="material-symbols-outlined">settings_backup_restore</span><span class="tip">Retrógrados</span></div>
+    <div class="dock-icon"><span class="material-symbols-outlined">star</span><span class="tip">Asteroides</span></div>
+  </nav>
+
+  <main>
+    <div class="hero-copy">
+      <p class="eyebrow">Mapa natal · observatório celeste</p>
+      <div class="wordmark-frame">
+        <h1 class="wordmark">ORBIS</h1>
+      </div>
+      <p class="tagline">o mapa do céu no instante em que você nasceu</p>
+      <p class="lede">Calcule seu mapa natal, explore interpretações planetárias e acompanhe trânsitos do dia — tudo em um observatório pessoal, guiado pelas posições exatas do céu.</p>
+      <a href="#" class="cta">
+        Iniciar minha jornada
+        <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
+      </a>
+    </div>
+
+    <div class="hero-art">
+      <svg id="armillary" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- núcleo: globo terrestre com meridianos, paralelos e continentes em lineart -->
+        <g stroke="rgba(255,177,195,0.55)" stroke-width="1.1">
+          <circle cx="300" cy="300" r="118" />
+          <!-- paralelos (latitude) -->
+          <ellipse cx="300" cy="255" rx="82" ry="16" opacity=".8" />
+          <ellipse cx="300" cy="300" rx="118" ry="26" />
+          <ellipse cx="300" cy="345" rx="82" ry="16" opacity=".8" />
+          <!-- meridianos (longitude) -->
+          <ellipse cx="300" cy="300" rx="42" ry="118" />
+          <ellipse cx="300" cy="300" rx="118" ry="118" opacity=".9" />
+        </g>
+        <!-- continentes: silhuetas simplificadas, apenas contorno -->
+        <g stroke="rgba(219,226,248,0.75)" stroke-width="1.3" stroke-linejoin="round" fill="none">
+          <path d="M 260 232 C 250 224 236 226 230 236 C 222 244 224 254 232 258 C 226 266 230 276 240 278 C 238 288 246 296 256 292 C 262 300 274 300 278 290 C 288 292 296 284 292 274 C 300 270 300 258 292 252 C 296 242 288 232 278 234 C 274 226 264 224 260 232 Z" />
+          <path d="M 322 268 C 316 278 318 292 326 300 C 322 312 328 326 338 330 C 336 342 344 352 354 348 C 360 356 372 354 374 344 C 382 340 384 328 378 320 C 384 310 380 296 370 292 C 372 280 364 270 354 272 C 350 264 338 260 332 266 C 328 262 322 262 322 268 Z" />
+          <path d="M 246 330 C 240 338 242 348 250 352 C 248 360 254 368 262 366 C 266 372 276 370 278 362 C 284 360 286 350 280 344 C 282 336 276 328 268 330 C 264 324 252 324 246 330 Z" />
+        </g>
+        <!-- eixo de rotação do globo -->
+        <line x1="300" y1="176" x2="300" y2="424" stroke="rgba(217,176,107,0.55)" stroke-width="1.6" stroke-dasharray="1 5" />
+
+        <!-- anéis da esfera armilar -->
+        <g fill="none">
+          <ellipse cx="300" cy="300" rx="230" ry="230" stroke="rgba(222,183,255,0.5)" stroke-width="1.4" />
+          <ellipse cx="300" cy="300" rx="230" ry="90" stroke="rgba(184,109,253,0.55)" stroke-width="1.6" transform="rotate(-18 300 300)" />
+          <ellipse cx="300" cy="300" rx="230" ry="90" stroke="rgba(255,75,137,0.5)" stroke-width="1.6" transform="rotate(35 300 300)" />
+          <ellipse cx="300" cy="300" rx="180" ry="180" stroke="rgba(229,188,196,0.35)" stroke-width="1" stroke-dasharray="2 6" />
+        </g>
+
+        <!-- aro externo dentado (engrenagem do observatório) -->
+        <circle cx="300" cy="300" r="255" stroke="rgba(217,176,107,0.55)" stroke-width="1.4" fill="none" />
+        <g id="gear-teeth" stroke="rgba(217,176,107,0.6)" stroke-width="2"></g>
+
+        <!-- marcações de grau no anel maior -->
+        <g id="tick-marks" stroke="rgba(222,183,255,0.45)" stroke-width="1"></g>
+
+        <!-- base / tripé do observatório -->
+        <g stroke="rgba(197,145,158,0.5)" stroke-width="1.4">
+          <line x1="300" y1="555" x2="215" y2="600" />
+          <line x1="300" y1="555" x2="385" y2="600" />
+          <line x1="300" y1="555" x2="300" y2="600" />
+          <ellipse cx="300" cy="556" rx="26" ry="9" />
+        </g>
+
+        <!-- ponteiro / luneta -->
+        <line x1="300" y1="300" x2="470" y2="150" stroke="rgba(255,177,195,0.6)" stroke-width="2" />
+        <circle cx="470" cy="150" r="8" stroke="rgba(255,177,195,0.7)" stroke-width="1.6" />
+
+        <!-- estrelas soltas -->
+        <g fill="rgba(219,226,248,0.7)">
+          <circle cx="90" cy="120" r="2" />
+          <circle cx="130" cy="80" r="1.4" />
+          <circle cx="520" cy="410" r="2" />
+          <circle cx="70" cy="440" r="1.6" />
+          <circle cx="540" cy="90" r="1.4" />
+        </g>
+      </svg>
+    </div>
+  </main>
+
+  <div class="corner-tag">ORBIS · mapa natal</div>
+
+  <script>
+    // gera os "dentes" da engrenagem externa e as marcações de grau — feito em JS
+    // pra não precisar escrever ~50 coordenadas repetidas no SVG à mão.
+    (function drawObservatoryRings(){
+      const cx = 300, cy = 300;
+      const teethGroup = document.getElementById('gear-teeth');
+      const teeth = 36;
+      const rOuter = 255, rInner = 244;
+      for (let i = 0; i < teeth; i++) {
+        const angle = (i / teeth) * Math.PI * 2;
+        if (i % 3 !== 0) continue; // dente sim, dente não fica mais leve visualmente
+        const x1 = cx + rInner * Math.cos(angle);
+        const y1 = cy + rInner * Math.sin(angle);
+        const x2 = cx + (rOuter + 10) * Math.cos(angle);
+        const y2 = cy + (rOuter + 10) * Math.sin(angle);
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+        teethGroup.appendChild(line);
+      }
+
+      const tickGroup = document.getElementById('tick-marks');
+      const ticks = 72;
+      const rTickOuter = 230, rTickInner = 220;
+      for (let i = 0; i < ticks; i++) {
+        const angle = (i / ticks) * Math.PI * 2;
+        const x1 = cx + rTickInner * Math.cos(angle);
+        const y1 = cy + rTickInner * Math.sin(angle);
+        const x2 = cx + rTickOuter * Math.cos(angle);
+        const y2 = cy + rTickOuter * Math.sin(angle);
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+        tickGroup.appendChild(line);
+      }
+    })();
+
+    // ---- estado de preview (logado/deslogado) — só existe neste mockup ----
+    function setLogged(logged){
+      document.getElementById('entrar-link').style.display = logged ? 'none' : 'inline-block';
+      document.getElementById('user-menu').style.display = logged ? 'block' : 'none';
+      document.getElementById('btn-logado').classList.toggle('active', logged);
+      document.getElementById('btn-deslogado').classList.toggle('active', !logged);
+      document.getElementById('dropdown').classList.remove('show');
+      document.getElementById('avatar-btn').classList.remove('open');
+    }
+    function toggleDropdown(){
+      document.getElementById('dropdown').classList.toggle('show');
+      document.getElementById('avatar-btn').classList.toggle('open');
+    }
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('user-menu');
+      if (menu.style.display !== 'none' && !menu.contains(e.target)) {
+        document.getElementById('dropdown').classList.remove('show');
+        document.getElementById('avatar-btn').classList.remove('open');
+      }
+    });
+  </script>
+
+</body>
+</html>

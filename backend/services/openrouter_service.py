@@ -54,7 +54,7 @@ def completar(
     modelos = list(dict.fromkeys([
         modelo,
         *(modelos_fallback or []),
-    ]))[:3]
+    ]))
     payload: dict[str, Any] = {
         "messages": mensagens,
         "temperature": temperatura,
