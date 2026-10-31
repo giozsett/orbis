@@ -1,5 +1,6 @@
 """Relatório vetorial e compacto do mapa natal principal."""
 
+from datetime import date
 from io import BytesIO
 from math import cos, pi, radians, sin
 from pathlib import Path
@@ -24,7 +25,8 @@ from reportlab.platypus import (
 )
 
 from backend.models.mapa_natal import MapaNatal
-from backend.services.arcano_pessoal_service import obter_arcano_pessoal
+from backend.services.arcano_pessoal_service import carregar_catalogo_arcanos, obter_arcanos
+from backend.services.matriz_destino_service import calcular_matriz_destino
 
 
 TAMANHO_MAXIMO_PDF = 15 * 1024 * 1024
@@ -462,6 +464,133 @@ class CartaArcanoVetorial(Flowable):
         canvas.drawCentredString(self.width / 2, 22, self.arcano["nome"].upper())
 
 
+# Mesma geometria da matriz web (viewBox de 548 unidades, R = 182)
+MATRIZ_ANGULOS = {"A": 180, "F": 135, "B": 90, "G": 45, "C": 0, "H": -45, "D": -90, "I": -135}
+MATRIZ_RETOS = ("A", "B", "C", "D")
+MATRIZ_DIAGONAIS = ("F", "G", "H", "I")
+MATRIZ_CORES = {
+    "A": "#c9a7ff", "B": "#c9a7ff", "A1": "#9c8cff", "B1": "#9c8cff", "A2": "#87b8ff", "B2": "#87b8ff",
+    "A3": "#87dfb0", "B3": "#87dfb0", "E": "#ffd16a", "C2": "#ffad6a", "D2": "#ffad6a",
+    "C1": "#ff8a74", "D1": "#ff8a74", "C": "#ff6a7d", "D": "#ff6a7d",
+    "X": ROSA, "dinheiro": "#f2c7a5", "amor": "#ff897d",
+}
+MATRIZ_COR_DIAGONAL = "#e5bcc4"
+
+
+class MatrizDestinoVetorial(Flowable):
+    """Octagrama da Matriz do Destino com a linha das idades no anel externo."""
+
+    def __init__(self, matriz: dict, tamanho: float = 176 * mm):
+        super().__init__()
+        self.matriz = matriz
+        self.width = tamanho
+        self.height = tamanho
+
+    def draw(self):
+        _registrar_fontes()
+        canvas = self.canv
+        lado = self.width
+        c = lado / 2
+        u = lado / 548
+        R = 182
+
+        def pos(angulo, r):
+            return c + r * u * cos(radians(angulo)), c + r * u * sin(radians(angulo))
+
+        canvas.saveState()
+        caminho = canvas.beginPath()
+        caminho.roundRect(0, 0, lado, lado, 16)
+        canvas.clipPath(caminho, stroke=0, fill=0)
+        canvas.setFillColor(colors.HexColor(NOITE))
+        canvas.rect(0, 0, lado, lado, fill=1, stroke=0)
+        canvas.radialGradient(
+            lado * 0.06, lado * 0.96, lado * 0.75,
+            [colors.HexColor("#5b1f4c"), colors.HexColor("#2a1a3d"), colors.HexColor(NOITE)],
+            positions=[0, 0.35, 1], extend=False,
+        )
+        canvas.restoreState()
+
+        canvas.setFillColor(colors.HexColor(NOITE_PROFUNDA))
+        canvas.circle(c, c, (R + 46) * u, fill=1, stroke=0)
+        canvas.setStrokeColor(_misturar("#d9b06b", NOITE_PROFUNDA, 0.4))
+        canvas.setLineWidth(0.6)
+        canvas.setDash(1, 4)
+        canvas.circle(c, c, (R + 46) * u, fill=0, stroke=1)
+        canvas.setDash()
+        canvas.setStrokeColor(_misturar(ROSA, NOITE_PROFUNDA, 0.25))
+        canvas.circle(c, c, (R + 32) * u, fill=0, stroke=1)
+
+        def poligono(ids, cor, opacidade, espessura):
+            caminho = canvas.beginPath()
+            pontos = [pos(MATRIZ_ANGULOS[v], R) for v in ids]
+            caminho.moveTo(*pontos[0])
+            for ponto in pontos[1:]:
+                caminho.lineTo(*ponto)
+            caminho.close()
+            canvas.setStrokeColor(_misturar(cor, NOITE_PROFUNDA, opacidade))
+            canvas.setLineWidth(espessura)
+            canvas.drawPath(caminho, stroke=1, fill=0)
+
+        poligono(MATRIZ_RETOS, ROSA, 0.6, 1.1)
+        poligono(MATRIZ_DIAGONAIS, MATRIZ_COR_DIAGONAL, 0.45, 0.9)
+        canvas.setStrokeColor(_misturar("#dbe2f8", NOITE_PROFUNDA, 0.22))
+        canvas.setLineWidth(0.6)
+        for v in (*MATRIZ_RETOS, *MATRIZ_DIAGONAIS):
+            canvas.line(*pos(MATRIZ_ANGULOS[v], R), c, c)
+
+        c2 = pos(MATRIZ_ANGULOS["C"], R * 0.6)
+        d2 = pos(MATRIZ_ANGULOS["D"], R * 0.6)
+        canvas.setStrokeColor(_misturar("#ff897d", NOITE_PROFUNDA, 0.65))
+        canvas.setDash(3, 2)
+        canvas.line(*c2, *d2)
+        canvas.setDash()
+
+        # Linha do tempo: 0 a 80 anos no sentido horário a partir da esquerda
+        for item in self.matriz["idades"]:
+            angulo = MATRIZ_ANGULOS["A"] - item["idade"] * 4.5
+            if item["vertice"]:
+                canvas.setStrokeColor(_misturar(ROSA, NOITE_PROFUNDA, 0.55))
+                canvas.setLineWidth(0.7)
+                canvas.line(*pos(angulo, R + 22), *pos(angulo, R + 44))
+                _texto_central(canvas, *pos(angulo, R + 58), f"{item['idade']} anos", FONTE_NEGRITO, 10 * u * 1.05, ROSA)
+                continue
+            x, y = pos(angulo, R + 32)
+            canvas.setFillColor(colors.HexColor(NOITE_PROFUNDA))
+            canvas.setStrokeColor(_misturar("#dbe2f8", NOITE_PROFUNDA, 0.3))
+            canvas.setLineWidth(0.5)
+            canvas.circle(x, y, 8 * u, fill=1, stroke=1)
+            _texto_central(canvas, x, y, str(item["arcano"]), FONTE_NEGRITO, 8 * u, _misturar("#dbe2f8", NOITE_PROFUNDA, 0.85))
+
+        pontos = []
+        for v in (*MATRIZ_RETOS, *MATRIZ_DIAGONAIS):
+            pontos += [
+                (v, pos(MATRIZ_ANGULOS[v], R), 21 if v in MATRIZ_RETOS else 18),
+                (f"{v}1", pos(MATRIZ_ANGULOS[v], R * 0.79), 13),
+                (f"{v}2", pos(MATRIZ_ANGULOS[v], R * 0.6), 13),
+            ]
+        pontos += [("A3", pos(MATRIZ_ANGULOS["A"], R * 0.41), 12), ("B3", pos(MATRIZ_ANGULOS["B"], R * 0.41), 12)]
+        x = ((c2[0] + d2[0]) / 2, (c2[1] + d2[1]) / 2)
+        pontos += [
+            ("X", x, 11),
+            ("dinheiro", ((x[0] + c2[0]) / 2, (x[1] + c2[1]) / 2), 11),
+            ("amor", ((x[0] + d2[0]) / 2, (x[1] + d2[1]) / 2), 11),
+            ("E", (c, c), 27),
+        ]
+        valores = self.matriz["pontos"]
+        for id_, (px, py), raio in pontos:
+            cor = MATRIZ_CORES.get(id_) or (MATRIZ_COR_DIAGONAL if id_[0] in MATRIZ_DIAGONAIS else ROSA)
+            canvas.setFillColor(colors.HexColor(NOITE_PROFUNDA))
+            canvas.setStrokeColor(colors.HexColor(cor))
+            canvas.setLineWidth(1)
+            canvas.circle(px, py, raio * u, fill=1, stroke=1)
+            if id_ == "E":
+                canvas.setStrokeColor(_misturar(cor, NOITE_PROFUNDA, 0.35))
+                canvas.setLineWidth(0.6)
+                canvas.circle(px, py, (raio - 5) * u, fill=0, stroke=1)
+            tamanho = 15 if raio >= 18 else 11 if raio >= 13 else 9.5
+            _texto_central(canvas, px, py, str(valores[id_]), FONTE_NEGRITO, tamanho * u, cor)
+
+
 def _estilos() -> dict[str, ParagraphStyle]:
     base = ParagraphStyle("OrbisCorpo", fontName=FONTE, fontSize=9.4, leading=14, textColor=colors.HexColor(TINTA))
     return {
@@ -562,10 +691,10 @@ def _ficha_tecnica(mapa: MapaNatal, dados: dict, estilos: dict, largura: float) 
     return tabela
 
 
-def _bloco_arcano(arcano: dict, estilos: dict, largura: float) -> Table:
+def _bloco_arcano(arcano: dict, estilos: dict, largura: float, rotulo: str = "Arcano pessoal", nota: str | None = None) -> Table:
     palavras = " · ".join(arcano["palavras_chave"]).upper()
     texto = [
-        Paragraph("ARCANO PESSOAL", estilos["eyebrow"]),
+        Paragraph(escape(rotulo.upper()), estilos["eyebrow"]),
         Spacer(1, 1.5 * mm),
         Paragraph(f"{arcano['numero']} · {escape(arcano['nome'])}", estilos["card_titulo"]),
         Spacer(1, 2 * mm),
@@ -573,6 +702,8 @@ def _bloco_arcano(arcano: dict, estilos: dict, largura: float) -> Table:
         Spacer(1, 3 * mm),
         Paragraph(escape(arcano["resumo"]), estilos["corpo"]),
     ]
+    if nota:
+        texto += [Spacer(1, 2 * mm), Paragraph(escape(nota), estilos["suave"])]
     tabela = Table([[CartaArcanoVetorial(arcano, 38 * mm), texto]], colWidths=[46 * mm, largura - 46 * mm])
     tabela.setStyle(TableStyle([
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
@@ -584,7 +715,103 @@ def _bloco_arcano(arcano: dict, estilos: dict, largura: float) -> Table:
     return tabela
 
 
-def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
+def _capitulo_tarot(mapa: MapaNatal, estilos: dict, largura: float, ano: int) -> list:
+    """Arcanos pessoal, complementar e anual seguidos da Matriz do Destino."""
+    arcanos = obter_arcanos(mapa.data_nascimento, ano)
+    matriz = calcular_matriz_destino(mapa.data_nascimento)
+    catalogo = carregar_catalogo_arcanos()
+    pessoal, complementar, anual = arcanos["pessoal"], arcanos["complementar"], arcanos["anual"]
+    nascimento = mapa.data_nascimento.strftime("%d/%m/%Y")
+
+    def negrito(texto):
+        return f'<font name="{FONTE_NEGRITO}">{texto}</font>'
+
+    def nome(numero):
+        return f"{negrito(numero)} · {escape(catalogo[numero]['nome'])}"
+
+    if complementar:
+        bloco_complementar = _bloco_arcano(
+            complementar, estilos, largura, "Arcano complementar",
+            f"Soma dos dígitos do arcano pessoal ({pessoal['numero']}).",
+        )
+    else:
+        bloco_complementar = Paragraph(
+            f"{negrito('Arcano complementar.')} O arcano pessoal tem um só dígito ({pessoal['numero']}), "
+            f"então não se desdobra em um complementar: a energia de {escape(pessoal['nome'])} aparece inteira.",
+            estilos["corpo"],
+        )
+
+    proposito, canais = matriz["proposito"], matriz["canais"]
+    linhas_proposito = [
+        ["Leitura", "Componentes", "Arcano"],
+        ["Propósito pessoal · até 40 anos", f"Céu {proposito['ceu']} · Terra {proposito['terra']}", nome(proposito["pessoal"])],
+        ["Propósito social · 40 a 60 anos", f"Masculina {proposito['masculina']} · Feminina {proposito['feminina']}", nome(proposito["social"])],
+        ["Propósito espiritual · após 60 anos", f"Pessoal {proposito['pessoal']} + social {proposito['social']}", nome(proposito["espiritual"])],
+        ["Zona de conforto", "Centro da matriz", nome(matriz["pontos"]["E"])],
+        ["Canal do dinheiro", f"Entrada {canais['dinheiro']['ponto']} · equilíbrio {canais['dinheiro']['cruzamento']}", nome(canais["dinheiro"]["canal"])],
+        ["Canal do amor", f"Entrada {canais['amor']['entrada']} · equilíbrio {canais['amor']['cruzamento']}", nome(canais["amor"]["canal"])],
+        ["Cauda cármica", " · ".join(str(n) for n in canais["cauda_carmica"]), nome(canais["cauda_carmica"][0])],
+    ]
+
+    linhas_chakras = [["Chakra", "Físico", "Energia", "Emoções"]] + [
+        [f'<font color="{_hex(_no_papel(ch["cor"]))}">●</font> {ch["nome"]} · {ch["descricao"]}', ch["fisico"], ch["energia"], ch["emocoes"]]
+        for ch in matriz["chakras"]
+    ]
+    total = matriz["chakras_total"]
+    linhas_chakras.append([negrito("Total"), *(negrito(total[chave]) for chave in ("fisico", "energia", "emocoes"))])
+
+    decadas = []
+    for item in matriz["idades"]:
+        if item["vertice"]:
+            decadas.append([f"{item['idade']}–{item['idade'] + 10} anos", []])
+        idade = f"{item['idade']:g}".replace(".", ",")
+        decadas[-1][1].append(f"{negrito(item['arcano'])} <font size='7' color='{TINTA_SUAVE}'>({idade})</font>")
+    linhas_idades = [["Período", "Arcanos (idade)"]] + [[periodo, "  ".join(itens)] for periodo, itens in decadas]
+
+    return [
+        PageBreak(),
+        *_secao("Tarot", "Seus arcanos", estilos),
+        Paragraph(
+            "Leitura simbólica dos Arcanos Maiores a partir da data de nascimento, complementar e "
+            "independente do cálculo astrológico.",
+            estilos["suave"],
+        ),
+        Spacer(1, 4 * mm),
+        _bloco_arcano(pessoal, estilos, largura, "Arcano pessoal", f"Soma de dia, mês e ano de nascimento ({nascimento}), reduzida até 22."),
+        Spacer(1, 4 * mm),
+        bloco_complementar,
+        Spacer(1, 4 * mm),
+        _bloco_arcano(
+            anual, estilos, largura, f"Arcano anual · {ano}",
+            f"Dia e mês de nascimento somados a {ano}, reduzidos até 22. Vale de aniversário a aniversário.",
+        ),
+        PageBreak(),
+        *_secao("Tarot", "Matriz do destino", estilos),
+        Paragraph(
+            "O quadrado pessoal (dia, mês, ano e carma) cruza o quadrado ancestral; o centro é a zona de conforto. "
+            "O anel externo é a linha do tempo, de 0 a 80 anos no sentido horário a partir da esquerda, "
+            "e a linha tracejada liga os canais de dinheiro e de amor.",
+            estilos["suave"],
+        ),
+        Spacer(1, 4 * mm),
+        MatrizDestinoVetorial(matriz, largura),
+        PageBreak(),
+        *_secao("Matriz do destino", "Propósitos e canais", estilos),
+        _tabela(linhas_proposito, larguras=[58 * mm, 58 * mm, largura - 116 * mm]),
+        Spacer(1, 8 * mm),
+        KeepTogether([
+            *_secao("Matriz do destino", "Mapa da saúde", estilos),
+            _tabela(linhas_chakras, larguras=[largura - 66 * mm, 22 * mm, 22 * mm, 22 * mm]),
+        ]),
+        Spacer(1, 8 * mm),
+        KeepTogether([
+            *_secao("Matriz do destino", "Linha do tempo", estilos),
+            _tabela(linhas_idades, larguras=[28 * mm, largura - 28 * mm]),
+        ]),
+    ]
+
+
+def gerar_relatorio_pdf(mapa: MapaNatal, ano: int | None = None) -> bytes:
     _registrar_fontes()
     memoria = BytesIO()
     margem = 17 * mm
@@ -605,7 +832,6 @@ def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
     )
     estilos = _estilos()
     dados = mapa.dados or {}
-    arcano = obter_arcano_pessoal(mapa.data_nascimento, mapa.arcano_pessoal_numero)
     nascimento = f"{mapa.data_nascimento.strftime('%d/%m/%Y')} · {mapa.horario_nascimento.strftime('%H:%M')} · {mapa.local_nascimento}"
 
     def capa(canvas, doc):
@@ -683,8 +909,6 @@ def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
         Spacer(1, 8 * mm),
         *_secao("Ficha técnica", "Dados do nascimento", estilos),
         _ficha_tecnica(mapa, dados, estilos, largura),
-        Spacer(1, 8 * mm),
-        KeepTogether([*_secao("Tarot", "Seu arcano pessoal", estilos), _bloco_arcano(arcano, estilos, largura)]),
         PageBreak(),
         *_secao("Mandala natal", "O céu no instante do nascimento", estilos),
         Paragraph(
@@ -761,11 +985,12 @@ def gerar_relatorio_pdf(mapa: MapaNatal) -> bytes:
         ))
     else:
         historia.append(Paragraph("Nenhum aspecto foi registrado para este mapa.", estilos["corpo"]))
+    historia += _capitulo_tarot(mapa, estilos, largura, ano or date.today().year)
     historia += [
         Spacer(1, 8 * mm),
         Paragraph(
             "Documento gerado pelo ORBIS a partir das efemérides suíças (Swiss Ephemeris). "
-            "As leituras astrológicas são conteúdo simbólico para reflexão e entretenimento e não "
+            "As leituras astrológicas e de tarot são conteúdo simbólico para reflexão e entretenimento e não "
             "substituem orientação médica, jurídica, financeira ou psicológica.",
             estilos["suave"],
         ),

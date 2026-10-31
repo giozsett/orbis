@@ -15,3 +15,11 @@ describe('ArcanoCard', () => {
     expect(renderToStaticMarkup(<ArcanoCard arcano={null} />)).toBe('')
   })
 })
+
+describe('ArcanoCard com rótulo', () => {
+  it('usa o rótulo informado e omite o botão sem ação', () => {
+    const html = renderToStaticMarkup(<ArcanoCard arcano={{ ...arcano, numero: 15, nome: 'O Diabo' }} rotulo="Arcano anual · 2026" />)
+    expect(html).toContain('Arcano anual · 2026')
+    expect(html).not.toContain('<button')
+  })
+})

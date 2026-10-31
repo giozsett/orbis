@@ -4,6 +4,7 @@ import Layout from '../components/layout/Layout'
 import { CelestialError, CelestialLoading, TechnicalHeader } from '../components/map/CelestialPageState'
 import BottomSheet from '../components/ui/BottomSheet'
 import GlassCard from '../components/ui/GlassCard'
+import Glifo from '../components/ui/Glifo'
 import useMapaSelecionado from '../hooks/useMapaSelecionado'
 import { ASPECT_VISUALS } from '../utils/mapVisuals'
 
@@ -27,7 +28,7 @@ export default function Aspectos() {
 
   const detalhe = selecionado && (() => {
     const visual = ASPECT_VISUALS[selecionado.tipo] || { symbol: '·', color: '#ffb1c3' }
-    return <div><span className="text-6xl" style={{ color: visual.color }}>{visual.symbol}</span><p className="mt-5 font-label text-xs uppercase tracking-widest text-outline">Aspecto selecionado</p><h2 className="mt-2 font-headline text-2xl capitalize">{selecionado.tipo}</h2><p className="mt-4 text-on-surface-variant">{selecionado.planeta1.nome} e {selecionado.planeta2.nome}</p><div className="mt-5 rounded-xl border border-white/10 bg-white/[.03] p-4"><span className="font-label text-xs text-outline">Orbe</span><p className="font-headline text-2xl" style={{ color: visual.color }}>{Number(selecionado.orbe).toFixed(2)}°</p></div></div>
+    return <div><Glifo simbolo={visual.symbol} className="text-6xl" style={{ color: visual.color }} /><p className="mt-5 font-label text-xs uppercase tracking-widest text-outline">Aspecto selecionado</p><h2 className="mt-2 font-headline text-2xl capitalize">{selecionado.tipo}</h2><p className="mt-4 text-on-surface-variant">{selecionado.planeta1.nome} e {selecionado.planeta2.nome}</p><div className="mt-5 rounded-xl border border-white/10 bg-white/[.03] p-4"><span className="font-label text-xs text-outline">Orbe</span><p className="font-headline text-2xl" style={{ color: visual.color }}>{Number(selecionado.orbe).toFixed(2)}°</p></div></div>
   })()
 
   return (
@@ -49,7 +50,7 @@ export default function Aspectos() {
               return (
                 <li key={`${aspecto.planeta1.nome}-${aspecto.planeta2.nome}`} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(index, 12) * 40}ms` }}>
                   <button type="button" onClick={() => escolher(aspecto)} className="glass-card flex min-h-[60px] w-full items-center gap-3 rounded-2xl px-4 py-3 text-left active:bg-white/10">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-xl" style={{ color: visual.color, borderColor: `${visual.color}55` }}>{visual.symbol}</span>
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-xl" style={{ color: visual.color, borderColor: `${visual.color}55` }}><Glifo simbolo={visual.symbol} /></span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-[15px] text-on-surface">{aspecto.planeta1.nome} <span className="text-outline">·</span> {aspecto.planeta2.nome}</span>
                       <span className="font-label text-[11px] capitalize" style={{ color: visual.color }}>{aspecto.tipo}</span>
@@ -76,7 +77,7 @@ export default function Aspectos() {
                         const visual = aspecto && ASPECT_VISUALS[aspecto.tipo]
                         return (
                           <td key={coluna}>
-                            <button disabled={!aspecto || i === j} onClick={() => escolher(aspecto)} title={aspecto ? `${aspecto.tipo} · orbe ${aspecto.orbe}°` : ''} className={`flex h-9 w-9 items-center justify-center rounded-lg border text-base md:h-10 md:w-10 md:text-lg transition-all ${i === j ? 'border-primary/15 bg-primary/10' : aspecto ? 'hover:scale-110 hover:bg-white/10' : 'border-white/[.035] text-white/10'}`} style={aspecto ? { borderColor: `${visual.color}55`, color: visual.color } : undefined}>{i === j ? '·' : visual?.symbol || ''}</button>
+                            <button disabled={!aspecto || i === j} onClick={() => escolher(aspecto)} title={aspecto ? `${aspecto.tipo} · orbe ${aspecto.orbe}°` : ''} className={`flex h-9 w-9 items-center justify-center rounded-lg border text-base md:h-10 md:w-10 md:text-lg transition-all ${i === j ? 'border-primary/15 bg-primary/10' : aspecto ? 'hover:scale-110 hover:bg-white/10' : 'border-white/[.035] text-white/10'}`} style={aspecto ? { borderColor: `${visual.color}55`, color: visual.color } : undefined}>{i === j ? '·' : visual ? <Glifo simbolo={visual.symbol} /> : ''}</button>
                           </td>
                         )
                       })}
@@ -92,7 +93,7 @@ export default function Aspectos() {
           </GlassCard>
         </div>
         <BottomSheet aberto={detalheMobile && !!selecionado} onFechar={() => setDetalheMobile(false)} titulo="Aspecto">{detalhe}</BottomSheet>
-        <div className="mt-6 flex flex-wrap gap-2 md:gap-3">{Object.entries(ASPECT_VISUALS).map(([nome, visual]) => <span key={nome} className="rounded-full border px-3 py-1 font-label text-xs capitalize" style={{ color: visual.color, borderColor: `${visual.color}44` }}>{visual.symbol} {nome}</span>)}</div>
+        <div className="mt-6 flex flex-wrap gap-2 md:gap-3">{Object.entries(ASPECT_VISUALS).map(([nome, visual]) => <span key={nome} className="rounded-full border px-3 py-1 font-label text-xs capitalize" style={{ color: visual.color, borderColor: `${visual.color}44` }}><Glifo simbolo={visual.symbol} className="mr-1" />{nome}</span>)}</div>
       </div>
     </Layout>
   )

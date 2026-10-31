@@ -1,44 +1,5 @@
 import { useState } from 'react'
-
-// Força a apresentação em texto (sem emoji) dos glifos astrológicos
-const TXT = '︎'
-
-const ELEMENTOS = {
-  fogo: '#ff8fa8',
-  terra: '#d9b06b',
-  ar: '#deb7ff',
-  agua: '#9cc4ff',
-}
-
-const SIGNOS = [
-  { nome: 'Áries', simbolo: '♈', elemento: 'fogo' },
-  { nome: 'Touro', simbolo: '♉', elemento: 'terra' },
-  { nome: 'Gêmeos', simbolo: '♊', elemento: 'ar' },
-  { nome: 'Câncer', simbolo: '♋', elemento: 'agua' },
-  { nome: 'Leão', simbolo: '♌', elemento: 'fogo' },
-  { nome: 'Virgem', simbolo: '♍', elemento: 'terra' },
-  { nome: 'Libra', simbolo: '♎', elemento: 'ar' },
-  { nome: 'Escorpião', simbolo: '♏', elemento: 'agua' },
-  { nome: 'Sagitário', simbolo: '♐', elemento: 'fogo' },
-  { nome: 'Capricórnio', simbolo: '♑', elemento: 'terra' },
-  { nome: 'Aquário', simbolo: '♒', elemento: 'ar' },
-  { nome: 'Peixes', simbolo: '♓', elemento: 'agua' },
-]
-
-// Mesma paleta do PDF: tons claros o bastante para ler sobre o fundo escuro
-const PLANETAS = {
-  Sol: { simbolo: '☉', cor: '#ffd16a' },
-  Lua: { simbolo: '☽', cor: '#d9c5ff' },
-  Mercúrio: { simbolo: '☿', cor: '#9cd7ee' },
-  Vênus: { simbolo: '♀', cor: '#ff9ec1' },
-  Marte: { simbolo: '♂', cor: '#ff897d' },
-  Júpiter: { simbolo: '♃', cor: '#c997ff' },
-  Saturno: { simbolo: '♄', cor: '#d3b99d' },
-  Urano: { simbolo: '♅', cor: '#87dfd8' },
-  Netuno: { simbolo: '♆', cor: '#76b9ff' },
-  Plutão: { simbolo: '♇', cor: '#e3a8c6' },
-  'Nodo Norte': { simbolo: '☊', cor: '#f1d6aa' },
-}
+import { ELEMENTOS, FONTE_GLIFOS, PLANETAS, SIGNOS, TXT } from '../../utils/glifos'
 
 const ASPECT_COLORS = {
   'conjunção': '#ffd16a',
@@ -48,7 +9,6 @@ const ASPECT_COLORS = {
   'oposição': '#ff897d',
 }
 
-const FONTE_GLIFOS = "'Noto Sans Symbols 2', 'Segoe UI Symbol', 'DejaVu Sans', sans-serif"
 const FONTE_TEXTO = "'Space Grotesk', 'Inter', sans-serif"
 
 // Geometria da roda (viewBox com margem para os rótulos dos eixos)

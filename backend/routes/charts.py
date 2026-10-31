@@ -1,4 +1,4 @@
-from datetime import date, time
+from datetime import date, datetime, time
 import re
 import unicodedata
 
@@ -12,7 +12,8 @@ from backend.app.database import db
 from backend.app.frontend import servir_spa
 from backend.models.mapa_natal import MapaNatal
 from backend.services.mapa_natal_service import calcular_mapa_natal
-from backend.services.arcano_pessoal_service import calcular_arcano_pessoal, obter_arcano_pessoal
+from backend.services.arcano_pessoal_service import calcular_arcano_pessoal, obter_arcano, obter_arcano_pessoal, obter_arcanos
+from backend.services.matriz_destino_service import calcular_matriz_destino
 from backend.services.asteroide_service import AsteroideCalculoError, calcular_asteroides_mapa
 from backend.services.interpretacao_base_service import enriquecer_dados_mapa
 from backend.services.interpretation_service import (
@@ -245,6 +246,39 @@ def asteroides_por_mapa(mapa_id):
         return jsonify(mapa={"id": mapa.id, "nome": mapa.nome}, asteroides=calcular_asteroides_mapa(mapa))
     except AsteroideCalculoError as erro:
         return jsonify(erro=str(erro)), 422
+
+
+@charts_bp.get("/principal/tarot")
+def tarot():
+    if "usuario_id" not in session:
+        return jsonify(erro="Faça login para acessar seus arcanos."), 401
+    mapa = _mapas_concluidos_do_usuario(session["usuario_id"]).first()
+    if mapa is None:
+        return jsonify(erro="Crie seu mapa principal primeiro.", codigo="mapa_principal_ausente"), 404
+    return _resposta_tarot(mapa)
+
+
+@charts_bp.get("/<int:mapa_id>/tarot")
+def tarot_por_mapa(mapa_id):
+    if "usuario_id" not in session:
+        return jsonify(erro="Faça login para acessar seus arcanos."), 401
+    mapa = _mapa_concluido_do_usuario(mapa_id, session["usuario_id"])
+    if mapa is None:
+        return jsonify(erro="Mapa não encontrado."), 404
+    return _resposta_tarot(mapa)
+
+
+def _resposta_tarot(mapa):
+    ano_atual = datetime.now().year
+    ano = request.args.get("ano", type=int) or ano_atual
+    if not 1900 <= ano <= ano_atual + 100:
+        return jsonify(erro="Informe um ano válido."), 400
+    return jsonify(
+        mapa={"id": mapa.id, "nome": mapa.nome, "data_nascimento": mapa.data_nascimento.isoformat()},
+        arcanos=obter_arcanos(mapa.data_nascimento, ano),
+        matriz=calcular_matriz_destino(mapa.data_nascimento),
+        catalogo={numero: obter_arcano(numero) for numero in range(1, 23)},
+    )
 
 
 @charts_bp.get("/principal/exportacao")

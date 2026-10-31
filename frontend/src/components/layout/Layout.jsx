@@ -6,7 +6,7 @@ import BottomNav from './BottomNav'
 import MapaSheet from './MapaSheet'
 import FundoOrbis from '../ui/FundoOrbis'
 import { useLocation } from 'react-router-dom'
-import { ehRotaMapa } from './navItems'
+import { ehRotaMapa, ehRotaTarot } from './navItems'
 
 export default function Layout({ children, showSidebar = true, showFooter = true }) {
   const location = useLocation()
@@ -15,7 +15,7 @@ export default function Layout({ children, showSidebar = true, showFooter = true
   const [mapaAberto, setMapaAberto] = useState(false)
   const abrirMapa = useCallback(() => setMapaAberto(true), [])
   const fecharMapa = useCallback(() => setMapaAberto(false), [])
-  const mostrarChip = showSidebar && ehRotaMapa(location.pathname)
+  const mostrarChip = showSidebar && (ehRotaMapa(location.pathname) || ehRotaTarot(location.pathname))
 
   return (
     <div className="relative min-h-dvh text-on-background">

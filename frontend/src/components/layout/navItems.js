@@ -22,7 +22,19 @@ export const horoscopoGroup = {
   ],
 }
 
-export const navGroups = [mapaGroup, horoscopoGroup]
+export const ehRotaTarot = (path) => path === '/arcanos' || path === '/matriz-do-destino'
+
+export const tarotGroup = {
+  id: 'tarot',
+  label: 'Tarot',
+  match: ehRotaTarot,
+  items: [
+    { path: '/arcanos', label: 'Arcanos', icon: 'style' },
+    { path: '/matriz-do-destino', label: 'Matriz do destino', icon: 'pentagon' },
+  ],
+}
+
+export const navGroups = [mapaGroup, tarotGroup, horoscopoGroup]
 
 export const temasMalucos = [
   { path: '/horoscopos-malucos', label: 'Distros Linux', icon: 'linux' },
@@ -51,12 +63,14 @@ export const abasMobile = [
 export const itensMais = [
   { path: '/meus-mapas', label: 'Meus mapas', icon: 'folder_supervised' },
   { path: '/interpretacoes', label: 'Interpretações', icon: 'auto_stories' },
+  { path: '/arcanos', label: 'Arcanos', icon: 'style' },
+  { path: '/matriz-do-destino', label: 'Matriz do destino', icon: 'pentagon' },
   { path: '/horoscopos-malucos', label: 'Horóscopos malucos', icon: 'psychology' },
   { path: '/criar-mapa', label: 'Criar novo mapa', icon: 'add_circle' },
   { path: '/perfil', label: 'Meu perfil', icon: 'account_circle' },
 ]
 
-export const ehRotaMais = (path) => ['/meus-mapas', '/interpretacoes', '/perfil'].includes(path)
+export const ehRotaMais = (path) => ['/meus-mapas', '/interpretacoes', '/perfil'].includes(path) || ehRotaTarot(path)
 
 export async function encerrarSessao() {
   try {

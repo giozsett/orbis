@@ -9,6 +9,7 @@ DIST_FRONTEND = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 ROTAS_SPA = {
     "/login", "/dashboard", "/criar-mapa", "/meus-mapas", "/mapa",
     "/interpretacoes", "/horoscopo", "/horoscopos-malucos", "/chat", "/carregando", "/perfil",
+    "/arcanos", "/matriz-do-destino",
 }
 
 

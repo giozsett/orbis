@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Layout from '../components/layout/Layout'
 import Mandala from '../components/mandala/Mandala'
 import PlanetCard from '../components/planet/PlanetCard'
@@ -7,7 +7,6 @@ import GlassCard from '../components/ui/GlassCard'
 import TituloMoldurado from '../components/ui/TituloMoldurado'
 import { CelestialError, CelestialLoading } from '../components/map/CelestialPageState'
 import ArcanoCard from '../components/arcano/ArcanoCard'
-import ArcanoDetalhes from '../components/arcano/ArcanoDetalhes'
 import { selecionarMapa } from '../hooks/useMapaSelecionado'
 
 // Mesmas cores e traços usados na mandala: [aspecto, cor, tracejado]
@@ -119,7 +118,6 @@ export default function MapaPrincipal() {
   const [hoveredPlanet, setHoveredPlanet] = useState(null)
   const [mapa, setMapa] = useState(null)
   const [erro, setErro] = useState('')
-  const [arcanoAberto, setArcanoAberto] = useState(false)
   const { id } = useParams()
 
   useEffect(() => {
@@ -206,7 +204,10 @@ export default function MapaPrincipal() {
           </section>
 
           {mapa.arcano_pessoal && (
-            <ArcanoCard arcano={mapa.arcano_pessoal} onExplorar={() => setArcanoAberto(true)} />
+            <Link to="/arcanos" className="group flex items-center gap-3 motion-safe:animate-orbis-rise sm:max-w-md" style={{ animationDelay: '950ms' }}>
+              <div className="min-w-0 flex-1 [&>.arcano-mini]:mt-0"><ArcanoCard arcano={mapa.arcano_pessoal} compacta /></div>
+              <span className="material-symbols-outlined text-outline transition-transform group-hover:translate-x-1">arrow_forward</span>
+            </Link>
           )}
 
           {/* Área principal: Mandala & Lista */}
@@ -277,7 +278,6 @@ export default function MapaPrincipal() {
             </div>
           </section>
         </div>
-        <ArcanoDetalhes arcano={mapa.arcano_pessoal} aberto={arcanoAberto} onFechar={() => setArcanoAberto(false)} />
       </div>
     </Layout>
   )

@@ -1,3 +1,5 @@
+import Glifo from '../ui/Glifo'
+
 export default function ZodiacSign({ signo, isActive = false, onClick }) {
   return (
     <button
@@ -16,7 +18,7 @@ export default function ZodiacSign({ signo, isActive = false, onClick }) {
           '--zodiac-color': isActive ? 'rgba(255, 177, 195, 0.6)' : 'rgba(255, 177, 195, 0.3)',
         }}
       >
-        {signo.simbolo}
+        <Glifo simbolo={signo.simbolo} />
       </div>
       <span className={`font-label text-xs transition-colors duration-300 ${
         isActive ? 'text-primary' : 'text-outline group-hover:text-on-surface'
