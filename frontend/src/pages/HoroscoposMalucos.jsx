@@ -33,8 +33,8 @@ export default function HoroscoposMalucos() {
   if (!signoSolar || !resultado) {
     return (
       <Layout showFooter={false}>
-        <div className="relative flex min-h-[calc(100vh-64px)] items-center justify-center p-8">
-          <GlassCard className="max-w-lg animate-scale-in p-10 text-center">
+        <div className="relative flex min-h-[calc(100dvh-8rem)] lg:min-h-[calc(100dvh-64px)] items-center justify-center p-5 md:p-8">
+          <GlassCard className="max-w-lg animate-scale-in p-7 text-center md:p-10">
             <span className="material-symbols-outlined text-5xl text-outline">question_mark</span>
             <h1 className="mt-4 font-headline text-2xl">Signo solar não encontrado</h1>
             <p className="mt-3 text-on-surface-variant">
@@ -48,21 +48,21 @@ export default function HoroscoposMalucos() {
 
   return (
     <Layout showFooter={false}>
-      <div className="p-6 md:p-16 min-h-screen">
+      <div className="p-4 xs:p-5 md:p-16">
         <div className="fixed top-1/4 left-1/4 w-[300px] h-[300px] blur-[120px] rounded-full pointer-events-none" style={{ background: `${cor}08` }} />
         <div className="fixed bottom-1/4 right-1/4 w-[300px] h-[300px] blur-[120px] rounded-full pointer-events-none" style={{ background: `${cor}05` }} />
 
-        <div className="max-w-7xl mx-auto space-y-12 relative z-10">
+        <div className="max-w-7xl mx-auto space-y-6 md:space-y-12 relative z-10">
 
           {/* Hero temático */}
-          <header className="relative overflow-hidden rounded-2xl border border-white/10 bg-surface-container-low/60 p-7 md:p-10 animate-fade-in-up" style={{ borderColor: `${cor}25` }}>
+          <header className="relative overflow-hidden rounded-2xl border border-white/10 bg-surface-container-low/60 p-5 md:p-10 animate-fade-in-up" style={{ borderColor: `${cor}25` }}>
             <div className="absolute -right-12 -top-12 h-48 w-48 animate-pulse-soft rounded-full blur-3xl" style={{ background: `${cor}15` }} />
             <div className="absolute right-7 top-7 animate-float-slow opacity-10">
               <LinuxTuxIcon size={80} />
             </div>
             <div className="relative z-10">
               <p className="font-label text-xs uppercase tracking-[0.22em]" style={{ color: cor }}>Dia do Horóscopo Maluco · {mapa.nome}</p>
-              <h1 className="mt-3 font-headline text-4xl text-on-surface md:text-5xl">
+              <h1 className="mt-3 font-headline text-3xl text-on-surface md:text-5xl">
                 Qual distro do Linux você seria?
               </h1>
               <p className="mt-4 max-w-3xl leading-relaxed text-on-surface-variant">
@@ -74,7 +74,7 @@ export default function HoroscoposMalucos() {
           {/* Carta de descoberta */}
           <GlassCard
             magnetic
-            className="p-8 md:p-12 relative overflow-hidden group animate-fade-in-up delay-100"
+            className="p-5 md:p-12 relative overflow-hidden group animate-fade-in-up delay-100"
             style={{ borderColor: `${cor}30` }}
           >
             <div className="absolute -right-16 -top-16 opacity-5 group-hover:scale-110 transition-transform duration-500">
@@ -88,11 +88,11 @@ export default function HoroscoposMalucos() {
                 </div>
                 <div>
                   <p className="font-label text-xs uppercase tracking-[0.2em]" style={{ color: cor }}>{resultado.familia}</p>
-                  <h2 className="font-headline text-4xl md:text-5xl" style={{ color: cor }}>{resultado.distro}</h2>
+                  <h2 className="font-headline text-3xl md:text-5xl break-words" style={{ color: cor }}>{resultado.distro}</h2>
                 </div>
               </div>
 
-              <p className="text-lg text-on-surface-variant leading-relaxed max-w-3xl">
+              <p className="text-base md:text-lg text-on-surface-variant leading-relaxed max-w-3xl">
                 {resultado.descricao}
               </p>
 
@@ -111,7 +111,7 @@ export default function HoroscoposMalucos() {
           </GlassCard>
 
           {/* Por que essa distro? */}
-          <GlassCard className="p-6 md:p-8 animate-fade-in-up delay-200" style={{ borderColor: `${cor}20` }}>
+          <GlassCard className="p-5 md:p-8 animate-fade-in-up delay-200" style={{ borderColor: `${cor}20` }}>
             <div className="flex gap-4 items-start">
               <div className="p-3 rounded-full shrink-0" style={{ background: `${cor}15` }}>
                 <span className="material-symbols-outlined" style={{ color: cor }}>psychology</span>

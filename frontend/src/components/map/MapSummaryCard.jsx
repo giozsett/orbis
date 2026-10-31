@@ -21,16 +21,16 @@ export default function MapSummaryCard({
 
   return (
     <GlassPanel
-      className={`p-6 flex h-full flex-col border transition-all duration-500 ${
+      className={`p-5 md:p-6 flex h-full flex-col border transition-all duration-500 ${
         removendo
           ? 'pointer-events-none -translate-y-3 scale-95 border-error/20 opacity-0 blur-sm'
-          : 'hover:-translate-y-1 hover:border-primary/30'
+          : 'lg:hover:-translate-y-1 hover:border-primary/30'
       } ${
         destaque ? 'border-primary/30 shadow-[0_0_30px_rgba(255,177,195,0.08)]' : 'border-white/5'
       }`}
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-4">
+      <div className="flex items-start justify-between gap-3 md:gap-4">
+        <div className="flex min-w-0 items-center gap-3 md:gap-4">
           <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border ${
             mapa.principal
               ? 'border-primary/30 bg-primary/10 text-primary'
@@ -53,7 +53,7 @@ export default function MapSummaryCard({
         </span>
       </div>
 
-      <dl className="mt-6 grid grid-cols-2 gap-3">
+      <dl className="mt-5 grid grid-cols-2 gap-2 md:mt-6 md:gap-3">
         <div className="rounded-lg border border-white/5 bg-surface-container-low/70 p-3">
           <dt className="font-label text-[10px] uppercase tracking-widest text-outline">Nascimento</dt>
           <dd className="mt-2 text-sm text-on-surface">{formatarData(mapa.data_nascimento)}</dd>
@@ -85,7 +85,7 @@ export default function MapSummaryCard({
                   type="button"
                   onClick={() => setConfirmandoExclusao(false)}
                   disabled={excluindo}
-                  className="rounded-full px-3 py-2 font-label text-[10px] uppercase tracking-wider text-outline transition-colors hover:bg-white/5 hover:text-on-surface disabled:opacity-40"
+                  className="min-h-[40px] rounded-full px-3 py-2 font-label text-[10px] uppercase tracking-wider text-outline transition-colors hover:bg-white/5 hover:text-on-surface disabled:opacity-40"
                 >
                   Cancelar
                 </button>
@@ -93,7 +93,7 @@ export default function MapSummaryCard({
                   type="button"
                   onClick={() => onDelete(mapa.id)}
                   disabled={excluindo}
-                  className="flex items-center gap-2 rounded-full bg-error/15 px-3 py-2 font-label text-[10px] uppercase tracking-wider text-error transition-all hover:bg-error/25 disabled:cursor-wait disabled:opacity-60"
+                  className="flex min-h-[40px] items-center gap-2 rounded-full bg-error/15 px-3 py-2 font-label text-[10px] uppercase tracking-wider text-error transition-all hover:bg-error/25 disabled:cursor-wait disabled:opacity-60"
                 >
                   <span className={`material-symbols-outlined text-base ${excluindo ? 'animate-spin' : ''}`}>
                     {excluindo ? 'progress_activity' : 'delete_forever'}
@@ -107,7 +107,7 @@ export default function MapSummaryCard({
                 onClick={() => setConfirmandoExclusao(true)}
                 aria-label={`Excluir ${titulo}`}
                 title="Excluir mapa"
-                className="group/delete flex h-9 w-9 items-center justify-center rounded-full border border-error/20 text-error/70 transition-all duration-300 hover:rotate-6 hover:scale-110 hover:border-error/40 hover:bg-error/10 hover:text-error hover:shadow-[0_0_18px_rgba(255,180,171,0.12)]"
+                className="group/delete flex h-11 w-11 items-center md:h-9 md:w-9 justify-center rounded-full border border-error/20 text-error/70 transition-all duration-300 hover:rotate-6 hover:scale-110 hover:border-error/40 hover:bg-error/10 hover:text-error hover:shadow-[0_0_18px_rgba(255,180,171,0.12)]"
               >
                 <span className="material-symbols-outlined text-lg transition-transform group-hover/delete:-translate-y-0.5">delete</span>
               </button>
@@ -116,7 +116,7 @@ export default function MapSummaryCard({
 
           <Link
             to={`/mapa/${mapa.id}`}
-            className="flex items-center gap-2 rounded-full border border-secondary/30 px-4 py-2 font-label text-xs text-secondary transition-colors hover:bg-secondary/10"
+            className="flex min-h-[44px] items-center gap-2 rounded-full border border-secondary/30 px-4 py-2 font-label text-xs md:min-h-0 text-secondary transition-colors hover:bg-secondary/10"
           >
             Abrir mapa
             <span className="material-symbols-outlined text-base">arrow_forward</span>

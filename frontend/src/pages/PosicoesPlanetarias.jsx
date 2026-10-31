@@ -21,7 +21,7 @@ export default function PosicoesPlanetarias() {
 
   return (
     <Layout>
-      <div className="min-h-screen p-6 md:p-12 xl:p-16">
+      <div className="p-4 xs:p-5 md:p-12 xl:p-16">
         <TechnicalHeader mapa={mapa} eyebrow="Dados planetários" titulo="Coordenadas do Mapa" icone="blur_on" descricao="Consulte longitude, signo, casa e movimento de cada corpo calculado no mapa selecionado." />
 
         <div className="mb-6 grid gap-4 animate-fade-in-up md:grid-cols-[1fr_auto]" style={{ animationDelay: '100ms' }}>
@@ -29,14 +29,37 @@ export default function PosicoesPlanetarias() {
             <span className="material-symbols-outlined text-outline">search</span>
             <input value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Buscar planeta ou signo" className="w-full bg-transparent text-sm outline-none placeholder:text-outline" />
           </label>
-          <div className="flex gap-2">
+          <div className="grid grid-cols-3 gap-2 md:flex">
             {[['todos', 'Todos'], ['diretos', 'Diretos'], ['retrogrados', 'Retrógrados']].map(([id, label]) => (
-              <button key={id} onClick={() => setMovimento(id)} className={`rounded-full border px-4 py-2 font-label text-xs transition-all ${movimento === id ? 'border-primary/40 bg-primary/15 text-primary' : 'border-white/10 text-outline hover:text-secondary'}`}>{label}</button>
+              <button key={id} onClick={() => setMovimento(id)} aria-pressed={movimento === id} className={`min-h-[44px] rounded-full border px-3 py-2 font-label text-xs transition-all md:px-4 ${movimento === id ? 'border-primary/40 bg-primary/15 text-primary' : 'border-white/10 text-outline hover:text-secondary'}`}>{label}</button>
             ))}
           </div>
         </div>
 
-        <GlassCard className="overflow-hidden animate-fade-in-up" style={{ animationDelay: '180ms' }}>
+        {/* Mobile: um card por corpo celeste no lugar da tabela larga */}
+        <ul className="space-y-3 md:hidden">
+          {planetas.map((planeta, index) => {
+            const visual = visualPlaneta(planeta.nome)
+            return (
+              <li key={planeta.nome} className="glass-card animate-fade-in-up rounded-2xl p-4" style={{ animationDelay: `${index * 45}ms` }}>
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-2xl" style={{ color: visual.color }}>{visual.icon}</span>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-headline text-lg leading-tight">{planeta.nome}</p>
+                    <p className="text-sm text-on-surface-variant">{planeta.signo} · <span className="font-label text-secondary">Casa {planeta.casa}</span></p>
+                  </div>
+                  <span className={`shrink-0 rounded-full px-2.5 py-1 font-label text-[10px] ${planeta.retrogrado ? 'bg-error/10 text-error' : 'bg-primary/10 text-primary'}`}>{planeta.retrogrado ? 'Retrógrado' : 'Direto'}</span>
+                </div>
+                <div className="mt-3 flex justify-between rounded-xl border border-white/5 bg-white/[.025] px-3 py-2 font-label text-xs">
+                  <span><span className="text-outline">Posição </span>{planeta.posicao}</span>
+                  <span className="text-outline">{Number(planeta.grau).toFixed(4)}°</span>
+                </div>
+              </li>
+            )
+          })}
+        </ul>
+
+        <GlassCard className="hidden overflow-hidden animate-fade-in-up md:block" style={{ animationDelay: '180ms' }}>
           <div className="custom-scrollbar overflow-x-auto">
             <table className="w-full min-w-[760px] text-left">
               <thead className="border-b border-white/10 bg-surface-container-high/70 font-label text-[10px] uppercase tracking-widest text-outline">

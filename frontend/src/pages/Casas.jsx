@@ -12,13 +12,13 @@ export default function Casas() {
 
   return (
     <Layout>
-      <div className="min-h-screen p-6 md:p-12 xl:p-16">
+      <div className="p-4 xs:p-5 md:p-12 xl:p-16">
         <TechnicalHeader mapa={mapa} eyebrow="Houses" titulo="As Doze Casas" icone="home_pin" descricao="Explore as áreas de experiência do mapa, suas cúspides e os planetas posicionados em cada setor." />
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 md:gap-5 md:grid-cols-2 xl:grid-cols-3">
           {mapa.dados.casas.map((casa, index) => {
             const planetas = mapa.dados.planetas.filter((planeta) => planeta.casa === casa.numero)
             return (
-              <GlassCard key={casa.numero} magnetic className="group relative overflow-hidden p-6 animate-fade-in-up" style={{ animationDelay: `${index * 65}ms` }}>
+              <GlassCard key={casa.numero} magnetic className="group relative overflow-hidden p-5 animate-fade-in-up md:p-6" style={{ animationDelay: `${index * 65}ms` }}>
                 <span className="absolute -right-2 -top-6 font-headline text-8xl text-primary/[.045] transition-transform group-hover:scale-110">{casa.numero}</span>
                 <div className="relative z-10 flex items-start justify-between"><div><p className="font-label text-xs uppercase tracking-widest text-primary">Casa {casa.numero}</p><h2 className="mt-2 font-headline text-xl">{TEMAS[index]}</h2></div><span className="material-symbols-outlined text-3xl text-secondary">home_work</span></div>
                 <div className="relative z-10 mt-6 grid grid-cols-2 gap-3 rounded-xl border border-white/5 bg-white/[.025] p-4"><div><p className="font-label text-[10px] uppercase text-outline">Cúspide</p><p className="mt-1 text-sm text-secondary">{casa.signo}</p></div><div><p className="font-label text-[10px] uppercase text-outline">Posição</p><p className="mt-1 font-label text-sm">{casa.posicao}</p></div></div>

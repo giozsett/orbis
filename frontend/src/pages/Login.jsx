@@ -248,11 +248,11 @@ export default function Login() {
           className="inline-flex items-center gap-2 rounded-full border-[1.5px] border-on-cream/25 px-3 py-2 font-label text-[11px] font-semibold uppercase tracking-[0.08em] text-on-cream transition-all hover:border-on-cream hover:bg-on-cream/[0.06] sm:px-[18px] sm:py-2.5 sm:text-xs"
         >
           <span key={mostrandoCadastro ? 'login' : 'cadastro'} className="material-symbols-outlined text-base motion-safe:animate-orbis-swap">{mostrandoCadastro ? 'login' : 'person_add'}</span>
-          <span className="hidden sm:inline">{mostrandoCadastro ? 'Entrar' : 'Criar conta'}</span>
+          <span>{mostrandoCadastro ? 'Entrar' : 'Criar conta'}</span>
         </button>
       </div>
 
-      <main className="relative z-[2] flex min-h-dvh flex-col items-center gap-10 px-6 pb-16 pt-28 lg:flex-row lg:gap-[clamp(24px,5vw,72px)] lg:py-24 lg:pl-[clamp(24px,8vw,140px)] lg:pr-[clamp(24px,6vw,120px)]">
+      <main className="relative z-[2] flex min-h-dvh flex-col items-center gap-8 px-4 pb-12 pt-24 xs:px-5 sm:gap-10 sm:px-6 sm:pb-16 sm:pt-28 lg:flex-row lg:gap-[clamp(24px,5vw,72px)] lg:py-24 lg:pl-[clamp(24px,8vw,140px)] lg:pr-[clamp(24px,6vw,120px)]">
         {/* Texto do hero */}
         <div className="max-w-[560px] text-center lg:text-left">
           <p className="mb-5 font-label text-[11px] uppercase tracking-[0.32em] text-primary motion-safe:animate-orbis-rise sm:text-xs" style={{ animationDelay: '150ms' }}>Mapa natal · observatório celeste</p>
@@ -275,7 +275,7 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="relative w-full max-w-[460px] rounded-[28px] border border-white/10 bg-surface-container-lowest/75 p-6 shadow-[0_30px_80px_rgba(0,0,0,0.45),inset_0_1px_rgba(255,255,255,0.05)] backdrop-blur-xl motion-safe:animate-orbis-card-in sm:p-8">
+          <div className="relative w-full max-w-[460px] rounded-[24px] border border-white/10 bg-surface-container-lowest/75 p-5 shadow-[0_30px_80px_rgba(0,0,0,0.45),inset_0_1px_rgba(255,255,255,0.05)] backdrop-blur-xl motion-safe:animate-orbis-card-in xs:p-6 sm:p-8">
             {erro && (
               <div key={erro} className="mb-6 flex items-center gap-3 rounded-2xl border border-error/30 bg-error-container/20 p-4 motion-safe:animate-orbis-shake">
                 <span className="material-symbols-outlined text-error">error</span>

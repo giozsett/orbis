@@ -1,85 +1,21 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { corDoMapa, lerCorMapaSelecionado, lerMapaSelecionado, observarMapaSelecionado, salvarCorMapaSelecionado, selecionarMapa } from '../../hooks/useMapaSelecionado'
-
-const menuItems = [
-  { icon: 'blur_on', label: 'Dados planetários', path: '/mapa/posicoes' },
-  { icon: 'grid_4x4', label: 'Grade de aspectos', path: '/mapa/aspectos' },
-  { icon: 'home_pin', label: 'Casas', path: '/mapa/casas' },
-  { icon: 'settings_backup_restore', label: 'Retrógrados', path: '/mapa/retrogrados' },
-  { icon: 'star', label: 'Asteroides', path: '/mapa/asteroides' },
-]
-
-function nomeArquivo(nome) {
-  const seguro = (nome || 'mapa').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-  return `orbis-${seguro || 'mapa'}.pdf`
-}
+import { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import useSidebarMapa from '../../hooks/useSidebarMapa'
+import { corDoMapa } from '../../hooks/useMapaSelecionado'
+import { detalhesMapa } from './navItems'
 
 export default function Sidebar() {
   const location = useLocation()
-  const navigate = useNavigate()
-  const [mapas, setMapas] = useState([])
-  const [mapaId, setMapaId] = useState(lerMapaSelecionado)
-  const [corPersistida, setCorPersistida] = useState(lerCorMapaSelecionado)
+  const { mapas, selecionado, cor, escolherMapa: selecionar, exportarPdf, exportando, erroExportacao } = useSidebarMapa()
   const [menuAberto, setMenuAberto] = useState(location.pathname === '/meus-mapas')
-  const [exportando, setExportando] = useState(false)
-  const [erroExportacao, setErroExportacao] = useState('')
-
-  useEffect(() => observarMapaSelecionado(setMapaId), [])
-  useEffect(() => {
-    fetch('/mapas', { credentials: 'include', headers: { Accept: 'application/json' } })
-      .then(async response => {
-        if (!response.ok) return { mapas: [] }
-        return response.json()
-      })
-      .then(({ mapas: recebidos = [] }) => {
-        setMapas(recebidos)
-        const salvo = lerMapaSelecionado()
-        const valido = recebidos.some(mapa => mapa.id === salvo)
-        if (!valido && recebidos[0]) selecionarMapa(recebidos[0].id, corDoMapa(0))
-      })
-      .catch(() => setMapas([]))
-  }, [])
-
-  const selecionado = useMemo(() => mapas.find(mapa => mapa.id === mapaId) || mapas[0], [mapas, mapaId])
-  const indiceSelecionado = Math.max(0, mapas.findIndex(mapa => mapa.id === selecionado?.id))
-  const cor = selecionado ? corDoMapa(indiceSelecionado) : corPersistida
-
-  useEffect(() => {
-    if (!selecionado) return
-    const novaCor = corDoMapa(indiceSelecionado)
-    setCorPersistida(novaCor)
-    salvarCorMapaSelecionado(novaCor)
-  }, [indiceSelecionado, selecionado])
 
   const escolherMapa = (mapa) => {
-    const novaCor = corDoMapa(Math.max(0, mapas.findIndex(item => item.id === mapa.id)))
-    setCorPersistida(novaCor)
-    selecionarMapa(mapa.id, novaCor)
+    selecionar(mapa)
     setMenuAberto(false)
-    if (/^\/mapa\/\d+$/.test(location.pathname) || location.pathname === '/mapa') navigate(`/mapa/${mapa.id}`)
-  }
-
-  const exportarPdf = async () => {
-    if (exportando || !selecionado) return
-    setExportando(true); setErroExportacao('')
-    try {
-      const response = await fetch(`/mapas/${selecionado.id}/exportacao?formato=pdf`, { credentials: 'include' })
-      const tipo = response.headers.get('content-type') || ''
-      if (!response.ok || !tipo.includes('application/pdf')) {
-        const payload = await response.json().catch(() => ({}))
-        throw new Error(payload.erro || 'Não foi possível gerar o PDF.')
-      }
-      const arquivo = await response.blob()
-      if (arquivo.size > 15 * 1024 * 1024) throw new Error('O relatório excedeu o limite de 15 MB.')
-      const url = URL.createObjectURL(arquivo)
-      const link = Object.assign(document.createElement('a'), { href: url, download: nomeArquivo(selecionado.nome) })
-      document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url)
-    } catch (error) { setErroExportacao(error.message) } finally { setExportando(false) }
   }
 
   return (
-    <aside className="fixed left-0 top-16 z-40 hidden h-[calc(100vh-64px)] w-80 flex-col border-r border-white/[0.08] bg-surface/45 p-6 backdrop-blur-[18px] motion-safe:animate-orbis-rise lg:flex" style={{ '--map-accent': cor }}>
+    <aside className="fixed left-0 top-16 z-40 hidden h-[calc(100dvh-64px)] w-80 flex-col border-r border-white/[0.08] bg-surface/45 p-6 backdrop-blur-[18px] motion-safe:animate-orbis-rise lg:flex" style={{ '--map-accent': cor }}>
       {/* faixa de destaque da borda, a mesma da tela de login, colada à sidebar */}
       <div className="pointer-events-none absolute bottom-0 left-0 h-[220px] w-1.5 origin-bottom bg-gradient-to-b from-primary-container to-tertiary-container opacity-[.65] motion-safe:animate-orbis-edge" />
       <div className="mb-5">
@@ -102,7 +38,7 @@ export default function Sidebar() {
       </div>}
 
       <nav className="custom-scrollbar flex flex-grow flex-col gap-2 overflow-y-auto pr-1">
-        {menuItems.map(item => <Link key={item.label} to={item.path} className={`group flex items-center gap-4 rounded-lg p-3 text-left transition-all duration-300 ${location.pathname === item.path ? 'bg-white/[.07]' : 'text-on-surface-variant hover:bg-white/5'}`} style={location.pathname === item.path ? { color: cor } : undefined}><span className="material-symbols-outlined transition-transform group-hover:scale-110">{item.icon}</span><span className="font-label text-sm uppercase">{item.label}</span></Link>)}
+        {detalhesMapa.map(item => <Link key={item.label} to={item.path} className={`group flex items-center gap-4 rounded-lg p-3 text-left transition-all duration-300 ${location.pathname === item.path ? 'bg-white/[.07]' : 'text-on-surface-variant hover:bg-white/5'}`} style={location.pathname === item.path ? { color: cor } : undefined}><span className="material-symbols-outlined transition-transform group-hover:scale-110">{item.icon}</span><span className="font-label text-sm uppercase">{item.label}</span></Link>)}
       </nav>
 
       {erroExportacao && <p className="mb-2 rounded-lg border border-error/20 bg-error/10 p-2 text-center text-xs text-error">{erroExportacao}</p>}

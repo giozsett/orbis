@@ -70,6 +70,9 @@ export default function Chat() {
     return payload
   }
 
+  // garante que a tab bar volte se a página sair com o teclado aberto
+  useEffect(() => () => document.body.classList.remove('teclado-aberto'), [])
+
   useEffect(() => {
     const carregar = async () => {
       try {
@@ -184,7 +187,7 @@ export default function Chat() {
   if (carregando) {
     return (
       <Layout showFooter={false}>
-        <div className="flex min-h-[calc(100vh-64px)] items-center justify-center">
+        <div className="flex min-h-[calc(100dvh-8rem)] lg:min-h-[calc(100dvh-64px)] items-center justify-center">
           <span className="material-symbols-outlined animate-spin text-5xl text-primary">progress_activity</span>
         </div>
       </Layout>
@@ -194,7 +197,7 @@ export default function Chat() {
   if (dados?.codigo === 'mapa_principal_ausente') {
     return (
       <Layout showFooter={false}>
-        <div className="flex min-h-[calc(100vh-64px)] items-center justify-center p-8">
+        <div className="flex min-h-[calc(100dvh-8rem)] lg:min-h-[calc(100dvh-64px)] items-center justify-center p-8">
           <GlassPanel className="max-w-xl p-10 text-center">
             <span className="material-symbols-outlined text-6xl text-secondary">orbit</span>
             <h1 className="mt-5 font-headline text-3xl">Seu mapa principal vem primeiro</h1>
@@ -216,7 +219,7 @@ export default function Chat() {
 
   return (
     <Layout showFooter={false}>
-      <div className="relative flex h-[calc(100vh-64px)] flex-col overflow-hidden">
+      <div className="chat-altura relative flex flex-col overflow-hidden">
         {historicoAberto && <>
           <button type="button" aria-label="Fechar histórico" onClick={() => setHistoricoAberto(false)} className="absolute inset-0 z-20 bg-surface/70 backdrop-blur-sm" />
           <aside className="absolute inset-y-0 left-0 z-30 flex w-[min(88vw,360px)] flex-col border-r border-primary/15 bg-surface-container-low/95 p-5 shadow-2xl backdrop-blur-xl animate-slide-in-left" aria-label="Histórico do Chat Astral">
@@ -234,13 +237,13 @@ export default function Chat() {
             </div>
           </aside>
         </>}
-        <div className="flex items-center justify-between gap-4 border-b border-white/5 bg-surface/20 p-4 backdrop-blur-md">
-          <div className="flex min-w-0 items-center gap-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-surface-container">
+        <div className="flex items-center justify-between gap-3 border-b border-white/5 bg-surface/20 px-4 py-3 backdrop-blur-md md:gap-4 md:p-4">
+          <div className="flex min-w-0 items-center gap-3 md:gap-4">
+            <div className="hidden h-10 w-10 shrink-0 xs:flex items-center justify-center rounded-full border border-primary/30 bg-surface-container">
               <span className="material-symbols-outlined text-primary">auto_awesome</span>
             </div>
             <div className="min-w-0">
-              <h2 className="truncate font-headline text-xl">Assistente Orbis</h2>
+              <h2 className="truncate font-headline text-lg md:text-xl">Assistente Orbis</h2>
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-green-500" />
                 <span className="truncate font-label text-xs text-outline">Mapa principal · {dados?.mapa?.nome}</span>
@@ -249,11 +252,12 @@ export default function Chat() {
           </div>
 
           <div className="flex shrink-0 items-center gap-2">
-            <button type="button" onClick={abrirHistorico} className="flex h-10 items-center gap-2 rounded-lg border border-white/10 px-3 font-label text-xs text-on-surface-variant transition-colors hover:border-primary/30 hover:text-primary"><span className="material-symbols-outlined text-lg">history</span><span className="hidden sm:inline">Histórico</span></button>
-            <div className={`rounded-lg border px-3 py-2 text-right ${limiteAtingido ? 'border-error/30 bg-error/10' : 'border-primary/20 bg-primary/10'}`}>
-              <p className="font-label text-[10px] uppercase text-outline">Perguntas em 24h</p>
+            <button type="button" onClick={abrirHistorico} aria-label="Abrir histórico" className="flex h-11 min-w-[44px] items-center justify-center gap-2 rounded-lg border border-white/10 px-3 font-label text-xs text-on-surface-variant transition-colors hover:border-primary/30 hover:text-primary"><span className="material-symbols-outlined text-lg">history</span><span className="hidden sm:inline">Histórico</span></button>
+            <div className={`rounded-lg border px-2.5 py-1.5 text-right md:px-3 md:py-2 ${limiteAtingido ? 'border-error/30 bg-error/10' : 'border-primary/20 bg-primary/10'}`} title="Perguntas restantes em 24h">
+              <p className="font-label text-[9px] uppercase text-outline md:text-[10px]"><span className="sm:hidden">Em 24h</span><span className="hidden sm:inline">Perguntas em 24h</span></p>
               <p className={`font-label text-sm ${limiteAtingido ? 'text-error' : 'text-primary'}`}>
-                {dados?.limite?.restantes} de {dados?.limite?.total} restantes
+                <span className="sm:hidden">{dados?.limite?.restantes}/{dados?.limite?.total}</span>
+                <span className="hidden sm:inline">{dados?.limite?.restantes} de {dados?.limite?.total} restantes</span>
               </p>
             </div>
             <div className="hidden gap-2 xl:flex">
@@ -272,12 +276,12 @@ export default function Chat() {
 
         {visualizandoHistorico && <div className="flex items-center justify-center gap-3 border-b border-tertiary/20 bg-tertiary/10 px-4 py-2 text-xs text-tertiary"><span>Visualizando a conversa de {formatarDataHistorico(diaVisualizado)}.</span><button type="button" onClick={voltarParaHoje} disabled={carregandoDia} className="font-label underline underline-offset-2 disabled:opacity-50">Voltar para hoje</button></div>}
 
-        <div className="custom-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto p-4 lg:p-6">
+        <div className="custom-scrollbar flex flex-1 flex-col gap-3 overflow-y-auto overscroll-contain p-4 md:gap-4 lg:p-6">
           {messages.map((message) => {
             const isUser = message.papel === 'user'
             return (
-              <div key={message.id} className={`flex max-w-[85%] flex-col gap-1 lg:max-w-[70%] ${isUser ? 'self-end items-end' : ''}`}>
-                <div className={`rounded-2xl p-4 ${
+              <div key={message.id} className={`flex max-w-[88%] flex-col gap-1 lg:max-w-[70%] ${isUser ? 'self-end items-end' : ''}`}>
+                <div className={`rounded-2xl px-4 py-3 md:p-4 ${
                   isUser
                     ? 'rounded-tr-none bg-gradient-to-br from-primary-container to-on-primary text-white'
                     : 'rounded-tl-none border-t border-white/10 bg-surface-container-highest/50'
@@ -304,19 +308,19 @@ export default function Chat() {
 
         {erro && <div className="mx-4 mb-3 rounded-lg border border-error/30 bg-error/10 px-4 py-3 text-sm text-error lg:mx-6">{erro}</div>}
 
-        <div className="no-scrollbar overflow-x-auto px-4 pb-4 lg:px-6">
-          <div className="mb-2 flex items-center justify-between">
+        <div className="no-scrollbar overflow-x-auto px-4 pb-3 md:pb-4 lg:px-6">
+          <div className="mb-2 flex items-center justify-between gap-3">
             <p className="font-label text-[10px] uppercase tracking-widest text-outline">Perguntas personalizadas para seu mapa</p>
-            <p className="font-label text-[10px] text-outline">Selecionar não consome sua cota</p>
+            <p className="hidden font-label text-[10px] text-outline sm:block">Selecionar não consome sua cota</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex snap-x gap-2 md:gap-3">
             {dados?.sugestoes?.map((sugestao) => (
               <button
                 key={sugestao.pergunta}
                 type="button"
                 disabled={limiteAtingido || isLoading || visualizandoHistorico}
                 onClick={() => setInput(sugestao.pergunta)}
-                className="group min-w-[270px] max-w-[320px] rounded-xl border border-outline/20 bg-white/[.025] p-3 text-left transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[.05] disabled:cursor-not-allowed disabled:opacity-40"
+                className="group min-w-[230px] max-w-[280px] snap-start rounded-xl border border-outline/20 bg-white/[.025] p-2.5 text-left md:min-w-[270px] md:max-w-[320px] md:p-3 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[.05] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <span className="mb-1 flex items-center gap-2 font-label text-[10px] uppercase tracking-wider text-primary">
                   <span className="material-symbols-outlined text-base">{sugestao.icone}</span>
@@ -328,7 +332,7 @@ export default function Chat() {
           </div>
         </div>
 
-        <div className="border-t border-white/5 bg-surface-container-low/80 p-4 backdrop-blur-xl lg:px-6">
+        <div className="border-t border-white/5 bg-surface-container-low/80 px-3 py-3 backdrop-blur-xl md:p-4 lg:px-6">
           <div className="relative">
             <input
               type="text"
@@ -337,14 +341,17 @@ export default function Chat() {
               disabled={limiteAtingido || isLoading || visualizandoHistorico}
               onChange={(event) => setInput(event.target.value)}
               onKeyDown={(event) => event.key === 'Enter' && sendMessage()}
+              onFocus={() => document.body.classList.add('teclado-aberto')}
+              onBlur={() => document.body.classList.remove('teclado-aberto')}
+              enterKeyHint="send"
               placeholder={visualizandoHistorico ? 'Volte para hoje para enviar uma pergunta' : limiteAtingido ? 'Limite de perguntas atingido' : 'Pergunte sobre seu mapa natal...'}
-              className="w-full rounded-xl border border-outline/20 bg-surface-container-highest px-6 py-4 pr-14 text-sm transition-all focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-xl border border-outline/20 bg-surface-container-highest px-4 py-3.5 pr-14 text-sm md:px-6 md:py-4 transition-all focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
             />
             <button
               type="button"
               onClick={sendMessage}
               disabled={!input.trim() || isLoading || limiteAtingido || visualizandoHistorico}
-              className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-orbis-cta text-white shadow-[0_8px_20px_rgba(255,75,137,0.28)] transition-all hover:shadow-[0_12px_28px_rgba(255,75,137,0.4)] disabled:opacity-50"
+              className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 md:right-3 md:h-10 md:w-10 items-center justify-center rounded-full bg-orbis-cta text-white shadow-[0_8px_20px_rgba(255,75,137,0.28)] transition-all hover:shadow-[0_12px_28px_rgba(255,75,137,0.4)] disabled:opacity-50"
               aria-label="Enviar pergunta"
             >
               <span className="material-symbols-outlined">send</span>

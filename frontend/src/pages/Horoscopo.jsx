@@ -126,7 +126,7 @@ export default function Horoscopo() {
   if (carregando) {
     return (
       <Layout>
-        <div className="flex min-h-screen items-center justify-center p-8">
+        <div className="flex min-h-[calc(100dvh-8rem)] items-center justify-center p-6 md:p-8 lg:min-h-[calc(100dvh-64px)]">
           <div className="text-center">
             <span className="material-symbols-outlined animate-spin text-5xl text-primary">progress_activity</span>
             <p className="mt-4 font-label text-sm uppercase tracking-widest text-outline">Consultando seu ciclo astral</p>
@@ -139,7 +139,7 @@ export default function Horoscopo() {
   if (dados?.codigo === 'mapa_principal_ausente') {
     return (
       <Layout>
-        <div className="flex min-h-screen items-center justify-center p-8">
+        <div className="flex min-h-[calc(100dvh-8rem)] items-center justify-center p-6 md:p-8 lg:min-h-[calc(100dvh-64px)]">
           <GlassPanel className="max-w-xl p-10 text-center">
             <span className="material-symbols-outlined text-6xl text-secondary">orbit</span>
             <h1 className="mt-5 font-headline text-3xl">Seu mapa principal vem primeiro</h1>
@@ -159,17 +159,17 @@ export default function Horoscopo() {
 
   return (
     <Layout>
-      <div className="min-h-screen p-6 md:p-16">
-        <header className="mb-8 flex animate-fade-in-up flex-col gap-6 border-b border-white/5 pb-7 md:flex-row md:items-end md:justify-between">
+      <div className="p-4 xs:p-5 md:p-16">
+        <header className="mb-6 flex animate-fade-in-up flex-col gap-4 border-b border-white/5 pb-6 md:mb-8 md:gap-6 md:pb-7 md:flex-row md:items-end md:justify-between">
           <div className="space-y-2">
             <span className="font-label text-xs uppercase tracking-[0.2em] text-tertiary">Mapa principal · {dados?.mapa?.nome}</span>
-            <h1 className="font-headline text-4xl text-on-surface md:text-5xl">Horóscopo do Seu Mapa</h1>
-            <p className="max-w-2xl text-on-surface-variant">
+            <h1 className="font-headline text-3xl text-on-surface md:text-5xl">Horóscopo do Seu Mapa</h1>
+            <p className="max-w-2xl text-sm text-on-surface-variant md:text-base">
               Tendências simbólicas construídas a partir do seu mapa natal e dos trânsitos reais de cada ciclo.
             </p>
           </div>
           {periodo && (
-            <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-surface-container-high px-5 py-3">
+            <div className="flex items-center gap-4 self-start rounded-xl border border-white/10 bg-surface-container-high px-4 py-2.5 md:self-auto md:px-5 md:py-3">
               <span className="material-symbols-outlined text-secondary">calendar_today</span>
               <div className="text-right">
                 <p className="font-label text-[10px] uppercase text-outline">Período atual</p>
@@ -179,13 +179,14 @@ export default function Horoscopo() {
           )}
         </header>
 
-        <nav className="mb-8 grid grid-cols-2 gap-3 md:flex" aria-label="Periodicidade do horóscopo">
+        <nav className="no-scrollbar -mx-4 mb-6 flex gap-2 overflow-x-auto px-4 xs:-mx-5 xs:px-5 md:mx-0 md:mb-8 md:gap-3 md:px-0" aria-label="Periodicidade do horóscopo">
           {PERIODOS.map((item) => (
             <button
               key={item.id}
               type="button"
               onClick={() => selecionarPeriodo(item.id)}
-              className={`flex items-center justify-center gap-2 rounded-full border px-5 py-3 font-label text-sm transition-all ${
+              aria-pressed={periodoAtivo === item.id}
+              className={`flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-full border px-4 py-2.5 font-label text-sm transition-all md:px-5 md:py-3 ${
                 periodoAtivo === item.id
                   ? 'border-primary/50 bg-primary/15 text-primary shadow-[0_0_18px_rgba(255,0,122,.12)]'
                   : 'border-white/10 bg-white/[.03] text-on-surface-variant hover:border-secondary/30 hover:text-secondary'
@@ -207,15 +208,15 @@ export default function Horoscopo() {
         )}
 
         {estaGerando && !horoscopo ? (
-          <GlassPanel className="flex min-h-[380px] flex-col items-center justify-center p-10 text-center animate-pulse">
+          <GlassPanel className="flex min-h-[300px] flex-col items-center justify-center p-6 text-center animate-pulse md:min-h-[380px] md:p-10">
             <span className="material-symbols-outlined animate-spin text-6xl text-primary">progress_activity</span>
             <h2 className="mt-5 font-headline text-2xl">Interpretando seu ciclo</h2>
             <p className="mt-2 max-w-md text-on-surface-variant">Cruzando os trânsitos do período com as posições do seu mapa principal.</p>
           </GlassPanel>
         ) : horoscopo ? (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
-            <GlassCard magnetic className="flex animate-fade-in-up flex-col gap-6 rounded-2xl p-7 md:col-span-8 md:flex-row">
-              <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-[radial-gradient(circle_at_center,rgba(255,177,195,.18),rgba(24,20,35,.7)_65%)] md:w-1/3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-6">
+            <GlassCard magnetic className="flex animate-fade-in-up flex-col gap-5 rounded-2xl p-5 md:col-span-8 md:flex-row md:gap-6 md:p-7">
+              <div className="relative flex h-28 w-full items-center justify-center overflow-hidden rounded-xl md:aspect-square md:h-auto bg-[radial-gradient(circle_at_center,rgba(255,177,195,.18),rgba(24,20,35,.7)_65%)] md:w-1/3">
                 <div className="absolute h-32 w-32 animate-pulse rounded-full border border-secondary/30" />
                 <div className="absolute h-48 w-48 rounded-full border border-primary/10" />
                 <span className="material-symbols-outlined text-[76px] text-primary/60">auto_awesome</span>
@@ -238,7 +239,7 @@ export default function Horoscopo() {
               </div>
             </GlassCard>
 
-            <GlassCard magnetic className="space-y-6 rounded-2xl p-6 md:col-span-4">
+            <GlassCard magnetic className="space-y-5 rounded-2xl p-5 md:col-span-4 md:space-y-6 md:p-6">
               <h3 className="font-label text-sm uppercase tracking-widest text-outline">Medidores do ciclo</h3>
               {horoscopo.areas.map((area) => {
                 const visual = AREAS[area.nome] || AREAS['Bem-estar']
@@ -273,7 +274,7 @@ export default function Horoscopo() {
                 <GlassCard
                   key={area.nome}
                   magnetic
-                  className="group rounded-2xl p-6 transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 md:col-span-4"
+                  className="group rounded-2xl p-5 transition-all duration-500 md:p-6 lg:hover:-translate-y-1 hover:border-primary/30 md:col-span-4"
                   style={{ animationDelay: `${150 + index * 100}ms` }}
                 >
                   <div className="mb-5 flex items-start justify-between">
@@ -283,7 +284,7 @@ export default function Horoscopo() {
                     <span className="rounded bg-surface-container-highest px-2 py-1 font-label text-[10px] uppercase text-outline">{tendencia}</span>
                   </div>
                   <h3 className="mb-3 font-headline text-xl">{area.nome}</h3>
-                  <p className="min-h-20 text-sm leading-relaxed text-on-surface-variant">{area.texto}</p>
+                  <p className="text-sm leading-relaxed md:min-h-20 text-on-surface-variant">{area.texto}</p>
                   <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-4">
                     <span className="font-label text-xs text-tertiary">Energia simbólica: {area.energia}%</span>
                     <span className={`material-symbols-outlined ${tendencia === 'baixa' ? 'text-error' : tendencia === 'alta' ? 'text-primary' : 'text-outline'}`}>
@@ -294,7 +295,7 @@ export default function Horoscopo() {
               )
             })}
 
-            <GlassCard magnetic className="rounded-2xl p-6 md:col-span-12">
+            <GlassCard magnetic className="rounded-2xl p-5 md:col-span-12 md:p-6">
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="font-label text-xs uppercase tracking-widest text-outline">Destaque astral considerado</p>
@@ -307,7 +308,7 @@ export default function Horoscopo() {
             </GlassCard>
           </div>
         ) : (
-          <GlassPanel className="p-10 text-center">
+          <GlassPanel className="p-6 text-center md:p-10">
             <p className="text-on-surface-variant">Este ciclo ainda não foi interpretado.</p>
             <Button className="mx-auto mt-5" onClick={() => gerarPeriodo(periodoAtivo)}>Gerar horóscopo</Button>
           </GlassPanel>

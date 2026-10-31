@@ -341,6 +341,17 @@ body {
   animation: user-menu-in 180ms ease-out forwards;
 }
 
+/* Folha inferior do mobile */
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.animate-sheet-up {
+  animation: sheet-up 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: transform 0.2s ease-out;
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
@@ -407,7 +418,7 @@ body {
   .animate-fade-in, .animate-fade-in-up, .animate-slide-in-right, .animate-slide-in-left, .animate-scale-in,
   .animate-float, .animate-float-slow, .animate-rotate-slow, .animate-rotate-reverse, .animate-pulse-glow,
   .animate-pulse-soft, .animate-glow-breathe, .animate-star-flicker, .animate-twinkle, .animate-spin-slow,
-  .animate-planet-pulse, .animate-zodiac-glow { animation: none; }
+  .animate-planet-pulse, .animate-zodiac-glow, .animate-sheet-up { animation: none; }
 }
 
 /* ========== STAGGER DELAYS ========== */
@@ -495,4 +506,58 @@ html::-webkit-scrollbar-thumb {
 
 html::-webkit-scrollbar-thumb:hover {
   background: var(--color-outline);
+}
+
+/* ---- Mobile ---- */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+/* iOS dá zoom em campos com fonte menor que 16px */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+@layer utilities {
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+  .pt-safe { padding-top: env(safe-area-inset-top); }
+  /* espaço da tab bar inferior (64px) + área segura do iPhone */
+  .pb-tabbar { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }
+  .bottom-tabbar { bottom: calc(4rem + env(safe-area-inset-bottom)); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+}
+
+/* Com o teclado virtual aberto (ex.: Chat), a tab bar sai da frente do campo */
+body.teclado-aberto .orbis-bottom-nav {
+  display: none;
+}
+
+/* Chat ocupa a tela toda entre a barra superior e a tab bar */
+.chat-altura {
+  height: calc(100dvh - 8rem - env(safe-area-inset-bottom));
+}
+
+body.teclado-aberto .chat-altura {
+  height: calc(100dvh - 4rem);
+}
+
+body.teclado-aberto .pb-tabbar {
+  padding-bottom: 0;
+}
+
+@media (min-width: 1024px) {
+  .chat-altura,
+  body.teclado-aberto .chat-altura {
+    height: calc(100dvh - 4rem);
+  }
 }

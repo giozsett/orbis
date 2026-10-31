@@ -4,12 +4,20 @@ import Layout from '../components/layout/Layout'
 import Mandala from '../components/mandala/Mandala'
 import PlanetCard from '../components/planet/PlanetCard'
 import GlassCard from '../components/ui/GlassCard'
-import EsferaArmilar from '../components/ui/EsferaArmilar'
 import TituloMoldurado from '../components/ui/TituloMoldurado'
 import { CelestialError, CelestialLoading } from '../components/map/CelestialPageState'
 import ArcanoCard from '../components/arcano/ArcanoCard'
 import ArcanoDetalhes from '../components/arcano/ArcanoDetalhes'
 import { selecionarMapa } from '../hooks/useMapaSelecionado'
+
+// Mesmas cores e traços usados na mandala: [aspecto, cor, tracejado]
+const LEGENDA_ASPECTOS = [
+  ['conjunção', '#ffd16a', false],
+  ['sextil', '#9cc4ff', false],
+  ['trígono', '#87dfd8', false],
+  ['quadratura', '#ff4b89', true],
+  ['oposição', '#ff897d', true],
+]
 
 const MOCK_DATA = {
   planetas: [
@@ -154,8 +162,8 @@ export default function MapaPrincipal() {
 
   return (
     <Layout>
-      <div className="p-6 md:p-16 min-h-screen">
-        <div className="max-w-7xl mx-auto space-y-12 relative z-10">
+      <div className="p-4 xs:p-5 md:p-16">
+        <div className="max-w-7xl mx-auto space-y-8 md:space-y-12 relative z-10">
           {/* Cabeçalho no mesmo ritmo do hero do login */}
           <header>
             <p className="mb-5 font-label text-[11px] uppercase tracking-[0.32em] text-primary motion-safe:animate-orbis-rise sm:text-xs" style={{ animationDelay: '150ms' }}>
@@ -168,12 +176,12 @@ export default function MapaPrincipal() {
           </header>
 
           {/* Hero Cards: Sol, Lua, Ascendente */}
-          <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <section className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 xs:-mx-5 xs:px-5 md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0">
             {heroCards.map((card, index) => (
               <GlassCard
                 key={card.titulo}
                 magnetic
-                className="p-6 relative overflow-hidden group motion-safe:animate-orbis-rise"
+                className="relative w-[80%] shrink-0 snap-center overflow-hidden p-5 group motion-safe:animate-orbis-rise xs:w-[76%] md:w-auto md:p-6"
                 style={{ animationDelay: `${560 + index * 130}ms` }}
               >
                 <div
@@ -202,15 +210,11 @@ export default function MapaPrincipal() {
           )}
 
           {/* Área principal: Mandala & Lista */}
-          <section className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
-            {/* Mandala sobre a esfera armilar, como o card de autenticação no login */}
-            <div className="xl:col-span-7 relative flex justify-center items-center py-6">
-              <div className="pointer-events-none absolute left-1/2 top-1/2 w-[min(125%,760px)] -translate-x-1/2 -translate-y-1/2 opacity-20">
-                <div className="motion-safe:animate-orbis-float">
-                  <EsferaArmilar animada className="w-full motion-safe:animate-orbis-sphere-in" />
-                </div>
-              </div>
-              <div className="relative w-full max-w-[600px] aspect-square">
+          <section className="grid grid-cols-1 xl:grid-cols-12 gap-6 md:gap-8 items-start">
+            {/* Mandala sobre um halo suave (sem ilustração atrás, para não disputar com as posições) */}
+            <div className="xl:col-span-7 relative flex flex-col justify-center items-center gap-4 py-2 md:gap-5 md:py-6">
+              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[80%] w-[80%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-tertiary-container/10 blur-[90px] motion-safe:animate-orbis-twinkle" />
+              <div className="relative w-full max-w-[640px] aspect-square">
                 {/* key reinicia a coreografia de entrada ao trocar de mapa */}
                 <Mandala
                   key={mapa.id}
@@ -222,10 +226,20 @@ export default function MapaPrincipal() {
               </div>
               <p
                 key={hoveredPlanet?.nome || 'dica'}
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.08] bg-surface-container-low/50 px-3.5 py-1.5 font-label text-[10px] uppercase tracking-[0.18em] text-outline backdrop-blur-sm motion-safe:animate-orbis-swap"
+                className="relative rounded-full border border-white/[0.08] bg-surface-container-low/50 px-3.5 py-1.5 text-center font-label text-[10px] uppercase tracking-[0.18em] text-outline backdrop-blur-sm motion-safe:animate-orbis-swap"
               >
-                {hoveredPlanet ? `${hoveredPlanet.nome} · ${hoveredPlanet.signo} · ${hoveredPlanet.posicao}` : 'passe o cursor sobre um planeta'}
+                {hoveredPlanet
+                  ? `${hoveredPlanet.nome} · ${hoveredPlanet.signo} ${hoveredPlanet.posicao}${hoveredPlanet.casa ? ` · Casa ${hoveredPlanet.casa}` : ''}${hoveredPlanet.retrogrado ? ' · retrógrado' : ''}`
+                  : <><span className="[@media(hover:none)]:hidden">passe o cursor sobre um planeta</span><span className="hidden [@media(hover:none)]:inline">toque em um planeta</span></>}
               </p>
+              <ul className="relative flex flex-wrap justify-center gap-x-4 gap-y-2 font-label text-[10px] uppercase tracking-[0.14em] text-outline" aria-label="Legenda dos aspectos">
+                {LEGENDA_ASPECTOS.map(([tipo, cor, tracejado]) => (
+                  <li key={tipo} className="flex items-center gap-1.5">
+                    <svg width="18" height="4" aria-hidden="true"><line x1="0" y1="2" x2="18" y2="2" stroke={cor} strokeWidth="2" strokeDasharray={tracejado ? '4 3' : undefined} /></svg>
+                    {tipo}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* Lista de planetas */}

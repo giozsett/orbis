@@ -49,19 +49,19 @@ export default function Interpretacoes() {
 
   return (
     <Layout>
-      <div className="p-6 md:p-16 min-h-screen">
-        <header className="mb-12 max-w-4xl animate-fade-in-up">
+      <div className="p-4 xs:p-5 md:p-16">
+        <header className="mb-8 max-w-4xl animate-fade-in-up md:mb-12">
           <div className="flex items-center gap-3 mb-4">
-            <span className="h-px w-12 bg-primary" />
+            <span className="h-px w-8 shrink-0 bg-primary md:w-12" />
             <span className="font-label text-xs text-primary uppercase tracking-[0.2em]">Mapa principal · {mapa.nome}</span>
           </div>
-          <h1 className="font-headline text-4xl md:text-5xl text-on-surface mb-4">Posições Planetárias</h1>
-          <p className="text-lg text-on-surface-variant/80 max-w-2xl">
+          <h1 className="font-headline text-3xl md:text-5xl text-on-surface mb-4">Posições Planetárias</h1>
+          <p className="text-base md:text-lg text-on-surface-variant/80 max-w-2xl">
             Interpretações das posições calculadas para {mapa.local_nascimento}, usando o mesmo mapa natal exibido na mandala principal.
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
           {interpretacoes.map((planeta, index) => {
             const visualBase = PLANETAS_VISUAIS[planeta.planeta] || { icon: 'blur_on', color: '#ffb1c3' }
             const visual = { ...visualBase, color: planeta.cor || visualBase.color }
@@ -69,7 +69,7 @@ export default function Interpretacoes() {
               <GlassCard
                 key={planeta.id || planeta.planeta}
                 magnetic
-                className="p-6 flex flex-col gap-6 relative overflow-hidden group animate-fade-in-up"
+                className="p-5 md:p-6 flex flex-col gap-5 md:gap-6 relative overflow-hidden group animate-fade-in-up"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -95,7 +95,7 @@ export default function Interpretacoes() {
                   <p className="text-sm text-on-surface-variant leading-relaxed">{planeta.interpretacao}</p>
                 </div>
 
-                <div className="mt-auto pt-6 border-t border-white/5 grid grid-cols-3 gap-4">
+                <div className="mt-auto pt-5 md:pt-6 border-t border-white/5 grid grid-cols-3 gap-3 md:gap-4">
                   <div className="flex flex-col">
                     <span className="font-label text-xs text-outline">Elemento</span>
                     <span className="font-label text-sm" style={{ color: visual.color }}>{planeta.elemento || '—'}</span>
@@ -113,10 +113,10 @@ export default function Interpretacoes() {
             )
           })}
 
-          <div className="col-span-1 md:col-span-2 xl:col-span-3 h-64 glass-panel rounded-xl flex items-center justify-center relative overflow-hidden">
+          <div className="col-span-1 md:col-span-2 xl:col-span-3 h-40 md:h-64 px-6 glass-panel rounded-xl flex items-center justify-center relative overflow-hidden">
             <div className="relative z-10 text-center">
               <p className="font-label text-xs text-primary uppercase tracking-[0.4em] mb-2">Sistema de casas</p>
-              <p className="font-headline text-2xl text-on-surface">Interpretação integrada e personalizada</p>
+              <p className="font-headline text-xl md:text-2xl text-on-surface">Interpretação integrada e personalizada</p>
             </div>
           </div>
         </div>

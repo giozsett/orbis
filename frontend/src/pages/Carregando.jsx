@@ -18,7 +18,7 @@ export default function Carregando() {
     <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden">
       <FundoOrbis />
 
-      <main className="relative z-[2] flex flex-col items-center justify-center p-8">
+      <main className="relative z-[2] flex flex-col items-center justify-center p-6 sm:p-8">
         <MandalaLoading />
 
         <div className="mt-10 flex max-w-lg flex-col items-center text-center">
@@ -33,7 +33,7 @@ export default function Carregando() {
           </div>
         </div>
 
-        <div className="absolute bottom-8 flex gap-4">
+        <div className="absolute bottom-[calc(2rem+env(safe-area-inset-bottom))] flex flex-wrap justify-center gap-2 px-4 sm:gap-4">
           {[['blur_on', 'DATA_STREAM_SYNC'], ['public', 'EPOCH_2024.4']].map(([icone, rotulo], i) => (
             <div key={rotulo} className="flex items-center gap-2 rounded-full border border-white/[0.08] bg-surface-container-low/50 px-3.5 py-1.5 font-label text-[10px] uppercase tracking-[0.18em] text-outline backdrop-blur-sm motion-safe:animate-orbis-rise" style={{ animationDelay: `${700 + i * 150}ms` }}>
               <span className="material-symbols-outlined text-sm">{icone}</span>

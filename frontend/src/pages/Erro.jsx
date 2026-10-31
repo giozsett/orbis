@@ -3,7 +3,7 @@ import FundoOrbis from '../components/ui/FundoOrbis'
 
 export default function Erro() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-24 pb-28">
+    <div className="min-h-dvh flex flex-col items-center justify-center relative overflow-hidden pt-24 pb-12 md:pb-28">
       <FundoOrbis />
 
       {/* Header */}
@@ -26,7 +26,7 @@ export default function Erro() {
       {/* Conteúdo */}
       <main className="relative z-10 w-full max-w-4xl px-4 md:px-16 text-center flex flex-col items-center">
         {/* Ilustração de erro */}
-        <div className="relative w-64 h-64 mb-8 group motion-safe:animate-orbis-sphere-in">
+        <div className="relative w-48 h-48 mb-6 md:w-64 md:h-64 md:mb-8 group motion-safe:animate-orbis-sphere-in">
           {/* Eclipse central */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-32 h-32 bg-surface-container-lowest rounded-full relative z-20 border border-white/10 overflow-hidden"
@@ -53,7 +53,7 @@ export default function Erro() {
             Erro 404 · fluxo interrompido
           </p>
           <h1 className="bg-orbis-wordmark bg-[length:250%_100%] bg-clip-text font-headline text-4xl md:text-5xl font-bold leading-tight text-transparent motion-safe:[animation:orbis-rise_0.9s_cubic-bezier(0.22,1,0.36,1)_280ms_both,orbis-shimmer_7s_ease-in-out_1.2s_infinite]">Interferência Cósmica</h1>
-          <p className="text-lg text-on-surface-variant/80 motion-safe:animate-orbis-rise" style={{ animationDelay: '430ms' }}>
+          <p className="text-base md:text-lg text-on-surface-variant/80 motion-safe:animate-orbis-rise" style={{ animationDelay: '430ms' }}>
             Os sensores do observatório detectaram um <span className="text-primary">alinhamento inválido</span> para as coordenadas fornecidas. A transmissão de dados foi pausada para evitar corrupção sistêmica.
           </p>
         </div>
@@ -90,7 +90,7 @@ export default function Erro() {
       </main>
 
       {/* Sidebar fantasma */}
-      <aside className="hidden lg:flex fixed left-0 top-16 h-[calc(100vh-64px)] z-40 p-6 flex-col w-80 bg-surface-container-low/20 backdrop-blur-sm border-r border-white/5 opacity-50 pointer-events-none">
+      <aside className="hidden lg:flex fixed left-0 top-16 h-[calc(100dvh-64px)] z-40 p-6 flex-col w-80 bg-surface-container-low/20 backdrop-blur-sm border-r border-white/5 opacity-50 pointer-events-none">
         <div className="mb-12">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-full bg-surface-container-highest" />
@@ -108,7 +108,7 @@ export default function Erro() {
       </aside>
 
       {/* Footer */}
-      <footer className="fixed bottom-0 z-20 w-full py-4 px-4 md:px-16 flex justify-between items-center bg-surface/45 backdrop-blur-[18px] border-t border-white/[0.08]">
+      <footer className="fixed bottom-0 z-20 hidden w-full py-4 px-4 md:px-16 md:flex justify-between items-center bg-surface/45 backdrop-blur-[18px] border-t border-white/[0.08]">
         <div className="font-label text-xs text-outline">© 2024 Orbis Astronomical Observatory</div>
         <div className="flex gap-4">
           <span className="text-sm text-outline hover:text-primary transition-colors cursor-pointer">Data Sources</span>

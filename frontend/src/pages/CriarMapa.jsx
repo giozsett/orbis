@@ -137,10 +137,10 @@ export default function CriarMapa() {
 
   return (
     <Layout showSidebar={false} showFooter={false}>
-      <div className="min-h-screen flex items-center justify-center px-4 pb-12 pt-20">
+      <div className="flex items-start justify-center px-4 pb-8 pt-6 md:min-h-dvh md:items-center md:pb-12 md:pt-20">
         <div className="w-full max-w-2xl">
           {/* Indicador de etapas */}
-          <div className="flex justify-between items-center mb-12 px-2">
+          <div className="flex justify-between items-center mb-6 px-2 md:mb-12">
             <div className="flex items-center gap-4 w-full">
               {[1, 2, 3].map((s) => (
                 <div key={s} className="contents">
@@ -163,20 +163,20 @@ export default function CriarMapa() {
             </div>
           </div>
 
-          <div className="glass-panel rounded-xl p-8 md:p-12 relative overflow-hidden">
+          <div className="glass-panel rounded-2xl p-5 xs:p-6 md:rounded-xl md:p-12 relative overflow-hidden">
             <form onSubmit={handleSubmit}>
               {/* Etapa 1: Dados temporais */}
               {step === 1 && (
                 <div className="animate-fade-in">
-                  <div className="mb-8">
+                  <div className="mb-6 md:mb-8">
                     <span className="text-primary font-label uppercase tracking-widest block mb-2">Fase 01</span>
-                    <h1 className="font-headline text-4xl md:text-5xl text-on-surface mb-4">Origem Temporal</h1>
-                    <p className="text-on-surface-variant text-lg">
+                    <h1 className="font-headline text-3xl md:text-5xl text-on-surface mb-3 md:mb-4">Origem Temporal</h1>
+                    <p className="text-on-surface-variant md:text-lg">
                       Para alinhar as constelações, precisamos saber exatamente quando sua jornada começou.
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
                     <div className="space-y-2 md:col-span-2">
                       <label className="font-label text-sm text-secondary block" htmlFor="nome-mapa">Nome do mapa <span className="text-outline">(opcional)</span></label>
                       <div className="relative">
@@ -230,12 +230,12 @@ export default function CriarMapa() {
                     </div>
                   </div>
 
-                  <div className="mt-12 flex justify-end">
+                  <div className="mt-8 flex justify-end md:mt-12">
                     <button
                       type="button"
                       onClick={() => setStep(2)}
                       disabled={!isStepValid(1)}
-                      className="bg-primary-container text-on-primary-container px-8 py-4 rounded-full font-label flex items-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(255,0,122,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full justify-center bg-primary-container text-on-primary-container px-8 py-4 rounded-full font-label flex items-center gap-2 transition-all md:w-auto hover:shadow-[0_0_20px_rgba(255,0,122,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Continuar
                       <span className="material-symbols-outlined">arrow_forward</span>
@@ -247,10 +247,10 @@ export default function CriarMapa() {
               {/* Etapa 2: Localização */}
               {step === 2 && (
                 <div className="animate-fade-in">
-                  <div className="mb-8">
+                  <div className="mb-6 md:mb-8">
                     <span className="text-primary font-label uppercase tracking-widest block mb-2">Fase 02</span>
-                    <h1 className="font-headline text-4xl md:text-5xl text-on-surface mb-4">Ponto de Observação</h1>
-                    <p className="text-on-surface-variant text-lg">
+                    <h1 className="font-headline text-3xl md:text-5xl text-on-surface mb-3 md:mb-4">Ponto de Observação</h1>
+                    <p className="text-on-surface-variant md:text-lg">
                       O céu muda dependendo de onde você está na Terra. Informe sua localização.
                     </p>
                   </div>
@@ -332,11 +332,11 @@ export default function CriarMapa() {
                     </div>
                   </div>
 
-                  <div className="mt-12 flex justify-between">
+                  <div className="mt-8 flex flex-col-reverse gap-2 md:mt-12 md:flex-row md:justify-between">
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="text-on-surface-variant hover:text-on-surface px-6 py-4 rounded-full font-label flex items-center gap-2 transition-colors"
+                      className="text-on-surface-variant hover:text-on-surface px-6 py-4 rounded-full font-label flex items-center justify-center gap-2 transition-colors"
                     >
                       <span className="material-symbols-outlined">arrow_back</span>
                       Voltar
@@ -345,7 +345,7 @@ export default function CriarMapa() {
                       type="button"
                       onClick={() => setStep(3)}
                       disabled={!isStepValid(2)}
-                      className="bg-primary-container text-on-primary-container px-8 py-4 rounded-full font-label flex items-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(255,0,122,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full justify-center bg-primary-container text-on-primary-container px-8 py-4 rounded-full font-label flex items-center gap-2 transition-all md:w-auto hover:shadow-[0_0_20px_rgba(255,0,122,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Revisar Dados
                       <span className="material-symbols-outlined">check_circle</span>
@@ -357,38 +357,38 @@ export default function CriarMapa() {
               {/* Etapa 3: Revisão */}
               {step === 3 && (
                 <div className="animate-fade-in">
-                  <div className="mb-8">
+                  <div className="mb-6 md:mb-8">
                     <span className="text-primary font-label uppercase tracking-widest block mb-2">Finalização</span>
-                    <h1 className="font-headline text-4xl md:text-5xl text-on-surface mb-4">Sincronizar Astros</h1>
-                    <p className="text-on-surface-variant text-lg">
+                    <h1 className="font-headline text-3xl md:text-5xl text-on-surface mb-3 md:mb-4">Sincronizar Astros</h1>
+                    <p className="text-on-surface-variant md:text-lg">
                       Tudo pronto para processar seu mapa natal. Confirme as coordenadas celestiais abaixo.
                     </p>
                   </div>
 
-                  <div className="space-y-4 bg-white/5 p-6 rounded-xl border border-white/5">
-                    <div className="flex justify-between items-center py-2 border-b border-white/5">
+                  <div className="space-y-3 bg-white/5 p-4 md:space-y-4 md:p-6 rounded-xl border border-white/5">
+                    <div className="flex justify-between items-center gap-4 py-2 border-b border-white/5">
                       <span className="text-outline font-label text-xs">NOME DO MAPA</span>
                       <span className="text-secondary font-label text-sm">{formData.nome || 'Meu mapa natal'}</span>
                     </div>
-                    <div className="flex justify-between items-center py-2 border-b border-white/5">
+                    <div className="flex justify-between items-center gap-4 py-2 border-b border-white/5">
                       <span className="text-outline font-label text-xs">HORÁRIO</span>
                       <span className="text-secondary font-label text-sm">{formData.horario_nascimento || '--:--'}</span>
                     </div>
-                    <div className="flex justify-between items-center py-2 border-b border-white/5">
+                    <div className="flex justify-between items-center gap-4 py-2 border-b border-white/5">
                       <span className="text-outline font-label text-xs">DATA</span>
                       <span className="text-secondary font-label text-sm">{formData.data_nascimento || '--/--/----'}</span>
                     </div>
-                    <div className="flex justify-between items-center py-2">
+                    <div className="flex justify-between items-center gap-4 py-2">
                       <span className="text-outline font-label text-xs">LOCALIZAÇÃO</span>
-                      <span className="text-secondary font-label text-sm">{formData.local_nascimento || 'Não definida'}</span>
+                      <span className="text-right text-secondary font-label text-sm">{formData.local_nascimento || 'Não definida'}</span>
                     </div>
                   </div>
 
-                  <div className="mt-12 space-y-4">
+                  <div className="mt-8 space-y-4 md:mt-12">
                     {erroEnvio && <p className="text-sm text-error text-center" role="alert">{erroEnvio}</p>}
                     <button
                       type="submit"
-                      className="group relative w-full overflow-hidden bg-orbis-cta text-white py-5 rounded-full font-headline flex items-center justify-center gap-4 transition-all uppercase tracking-widest text-lg shadow-[0_12px_30px_rgba(255,75,137,0.28)] hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(255,75,137,0.38)] active:scale-[0.98]"
+                      className="group relative w-full overflow-hidden bg-orbis-cta text-white py-4 md:py-5 rounded-full font-headline flex items-center justify-center gap-3 md:gap-4 transition-all uppercase tracking-wider md:tracking-widest text-base md:text-lg shadow-[0_12px_30px_rgba(255,75,137,0.28)] hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(255,75,137,0.38)] active:scale-[0.98]"
                     >
                       {/* brilho que atravessa o botão no hover */}
                       <span className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -translate-x-full -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[350%]" />
@@ -415,8 +415,8 @@ export default function CriarMapa() {
           </div>
 
           {/* Ancoragem visual */}
-          <div className="mt-16 text-center">
-            <div className="inline-flex items-center gap-6 px-8 py-4 rounded-full bg-surface-container-low/40 border border-white/5">
+          <div className="mt-8 text-center md:mt-16">
+            <div className="inline-flex items-center gap-4 px-5 py-3 md:gap-6 md:px-8 md:py-4 rounded-full bg-surface-container-low/40 border border-white/5">
               <div className="flex -space-x-3">
                 <div className="w-10 h-10 rounded-full border-2 border-background bg-secondary flex items-center justify-center text-on-secondary font-bold text-xs">
                   +4k

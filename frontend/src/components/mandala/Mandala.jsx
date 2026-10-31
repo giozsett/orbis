@@ -1,83 +1,152 @@
 import { useState } from 'react'
 
+// Força a apresentação em texto (sem emoji) dos glifos astrológicos
+const TXT = '︎'
+
+const ELEMENTOS = {
+  fogo: '#ff8fa8',
+  terra: '#d9b06b',
+  ar: '#deb7ff',
+  agua: '#9cc4ff',
+}
+
 const SIGNOS = [
-  { nome: 'Áries', simbolo: '♈︎', grau: 0, cor: '#ffb1c3' },
-  { nome: 'Touro', simbolo: '♉︎', grau: 30, cor: '#eab9ce' },
-  { nome: 'Gêmeos', simbolo: '♊︎', grau: 60, cor: '#deb7ff' },
-  { nome: 'Câncer', simbolo: '♋︎', grau: 90, cor: '#ac878f' },
-  { nome: 'Leão', simbolo: '♌︎', grau: 120, cor: '#ffb1c3' },
-  { nome: 'Virgem', simbolo: '♍︎', grau: 150, cor: '#eab9ce' },
-  { nome: 'Libra', simbolo: '♎︎', grau: 180, cor: '#deb7ff' },
-  { nome: 'Escorpião', simbolo: '♏︎', grau: 210, cor: '#ac878f' },
-  { nome: 'Sagitário', simbolo: '♐︎', grau: 240, cor: '#ffb1c3' },
-  { nome: 'Capricórnio', simbolo: '♑︎', grau: 270, cor: '#eab9ce' },
-  { nome: 'Aquário', simbolo: '♒︎', grau: 300, cor: '#deb7ff' },
-  { nome: 'Peixes', simbolo: '♓︎', grau: 330, cor: '#ac878f' },
+  { nome: 'Áries', simbolo: '♈', elemento: 'fogo' },
+  { nome: 'Touro', simbolo: '♉', elemento: 'terra' },
+  { nome: 'Gêmeos', simbolo: '♊', elemento: 'ar' },
+  { nome: 'Câncer', simbolo: '♋', elemento: 'agua' },
+  { nome: 'Leão', simbolo: '♌', elemento: 'fogo' },
+  { nome: 'Virgem', simbolo: '♍', elemento: 'terra' },
+  { nome: 'Libra', simbolo: '♎', elemento: 'ar' },
+  { nome: 'Escorpião', simbolo: '♏', elemento: 'agua' },
+  { nome: 'Sagitário', simbolo: '♐', elemento: 'fogo' },
+  { nome: 'Capricórnio', simbolo: '♑', elemento: 'terra' },
+  { nome: 'Aquário', simbolo: '♒', elemento: 'ar' },
+  { nome: 'Peixes', simbolo: '♓', elemento: 'agua' },
 ]
 
-const PLANET_COLORS = {
-  Sol: '#ffb1c3',
-  Lua: '#eab9ce',
-  Mercúrio: '#deb7ff',
-  Vênus: '#ff4b89',
-  Marte: '#ffb4ab',
-  Júpiter: '#b86dfd',
-  Saturno: '#ac878f',
-  Urano: '#5c3f45',
-  Netuno: '#633e4f',
-  Plutão: '#93000a',
+// Mesma paleta do PDF: tons claros o bastante para ler sobre o fundo escuro
+const PLANETAS = {
+  Sol: { simbolo: '☉', cor: '#ffd16a' },
+  Lua: { simbolo: '☽', cor: '#d9c5ff' },
+  Mercúrio: { simbolo: '☿', cor: '#9cd7ee' },
+  Vênus: { simbolo: '♀', cor: '#ff9ec1' },
+  Marte: { simbolo: '♂', cor: '#ff897d' },
+  Júpiter: { simbolo: '♃', cor: '#c997ff' },
+  Saturno: { simbolo: '♄', cor: '#d3b99d' },
+  Urano: { simbolo: '♅', cor: '#87dfd8' },
+  Netuno: { simbolo: '♆', cor: '#76b9ff' },
+  Plutão: { simbolo: '♇', cor: '#e3a8c6' },
+  'Nodo Norte': { simbolo: '☊', cor: '#f1d6aa' },
 }
 
 const ASPECT_COLORS = {
-  'conjunção': '#ffb1c3',
-  'sextil': '#deb7ff',
-  'quadratura': '#ffb4ab',
-  'trígono': '#eab9ce',
-  'oposição': '#ff4b89',
+  'conjunção': '#ffd16a',
+  'sextil': '#9cc4ff',
+  'quadratura': '#ff4b89',
+  'trígono': '#87dfd8',
+  'oposição': '#ff897d',
 }
 
-const getPlanetPosition = (grau, raio = 180) => {
-  const rad = ((grau - 90) * Math.PI) / 180
-  return { x: 250 + raio * Math.cos(rad), y: 250 + raio * Math.sin(rad) }
+const FONTE_GLIFOS = "'Noto Sans Symbols 2', 'Segoe UI Symbol', 'DejaVu Sans', sans-serif"
+const FONTE_TEXTO = "'Space Grotesk', 'Inter', sans-serif"
+
+// Geometria da roda (viewBox com margem para os rótulos dos eixos)
+const C = 250
+const R = 232
+const RAIO = {
+  zodiacoExterno: R,
+  zodiacoInterno: R * 0.84,
+  glifoSigno: R * 0.92,
+  planetaTraco: R * 0.8,
+  planetaGlifo: R * 0.725,
+  planetaGrau: R * 0.625,
+  casasExterno: R * 0.565,
+  casasNumero: R * 0.5,
+  casasInterno: R * 0.435,
+}
+// Separação mínima, em graus, entre glifos vizinhos no anel dos planetas
+const SEPARACAO_MINIMA = 9
+
+// Afasta glifos muito próximos mantendo a ordem zodiacal; a posição exata
+// continua marcada pelo traço que liga o glifo à régua de graus.
+export function espalharPosicoes(graus, minimo = SEPARACAO_MINIMA) {
+  const n = graus.length
+  if (n < 2 || n * minimo >= 360) return [...graus]
+  const ordem = graus.map((grau, indice) => ({ indice, grau: ((grau % 360) + 360) % 360 })).sort((a, b) => a.grau - b.grau)
+  const pos = ordem.map((item) => item.grau)
+  for (let passada = 0; passada < 120; passada++) {
+    let moveu = false
+    for (let i = 0; i < n; i++) {
+      const j = (i + 1) % n
+      const vao = j === 0 ? pos[0] + 360 - pos[n - 1] : pos[j] - pos[i]
+      if (vao < minimo - 0.01) {
+        const ajuste = (minimo - vao) / 2
+        pos[i] -= ajuste
+        pos[j] += ajuste
+        moveu = true
+      }
+    }
+    if (!moveu) break
+  }
+  const resultado = new Array(n)
+  ordem.forEach((item, k) => { resultado[item.indice] = pos[k] })
+  return resultado
 }
 
-// Régua de graus do aro externo, no mesmo estilo das marcações da esfera armilar
-const MARCACOES = Array.from({ length: 72 }, (_, i) => {
-  const grau = i * 5
-  const p1 = getPlanetPosition(grau, 234)
-  const p2 = getPlanetPosition(grau, i % 6 === 0 ? 244 : 239)
-  return [p1.x, p1.y, p2.x, p2.y]
-})
-
-const ESTRELAS = [
-  [34, 52, 1.6, '0s'],
-  [470, 38, 1.2, '1.1s'],
-  [462, 468, 1.6, '0.6s'],
-  [28, 440, 1.2, '1.9s'],
-]
+function grauEMinutos(planeta) {
+  const valor = Number(planeta.grau_signo ?? (planeta.grau % 30))
+  const graus = Math.floor(valor)
+  const minutos = Math.floor((valor - graus) * 60)
+  return [`${graus}°`, `${String(minutos).padStart(2, '0')}′`]
+}
 
 // A abertura segue a coreografia da tela de login (mesma curva de easing):
-// a mandala entra girando, os aros são desenhados, as casas se abrem, os signos
-// e os planetas surgem em sequência e os aspectos são traçados por último.
-// Os traços usam pathLength=1, então o desenho funciona para qualquer raio.
+// a roda entra girando, os aros são desenhados, signos, casas e planetas
+// surgem em sequência e os aspectos aparecem por último.
 // Tudo fica sob motion-safe: com movimento reduzido, o mapa aparece pronto.
 const DESENHAR = 'motion-safe:animate-orbis-draw'
 const SURGIR = 'motion-safe:animate-orbis-pop [transform-box:fill-box] origin-center'
 const REVELAR = 'motion-safe:animate-orbis-fade-in'
-const PIVO = 'origin-[250px_250px]'
 
-const INICIO_SIGNOS = 1100
-const INICIO_PLANETAS = 1900
+const INICIO_SIGNOS = 700
+const INICIO_CASAS = 1300
+const INICIO_PLANETAS = 1700
+
+const temHover = () => window.matchMedia?.('(hover: hover)').matches ?? true
 
 export default function Mandala({ data, onPlanetHover, onPlanetClick, animated = true }) {
   const [planetaAtivo, setPlanetaAtivo] = useState(null)
 
-  // Sem `animated`, nenhuma classe/atraso é aplicado e o mapa já nasce completo
   const anima = (classe, atraso = 0) => (animated ? { className: classe, style: { animationDelay: `${atraso}ms` } } : {})
-  const gira = (classe) => (animated ? `${PIVO} ${classe}` : undefined)
+
+  // Ascendente à esquerda e zodíaco no sentido anti-horário, como na roda tradicional
+  const ascendente = Number(data?.ascendente?.grau ?? 0)
+  const angulo = (grau) => ((180 + grau - ascendente) * Math.PI) / 180
+  const ponto = (grau, raio) => ({ x: C + raio * Math.cos(angulo(grau)), y: C - raio * Math.sin(angulo(grau)) })
+
+  const setor = (inicio, fim, externo, interno) => {
+    const a = ponto(inicio, externo)
+    const b = ponto(fim, externo)
+    const c = ponto(fim, interno)
+    const d = ponto(inicio, interno)
+    return `M${a.x} ${a.y} A${externo} ${externo} 0 0 0 ${b.x} ${b.y} L${c.x} ${c.y} A${interno} ${interno} 0 0 1 ${d.x} ${d.y} Z`
+  }
 
   const planetas = data?.planetas || []
-  const inicioAspectos = INICIO_PLANETAS + planetas.length * 110 + 200
+  const posicoesExibidas = espalharPosicoes(planetas.map((planeta) => Number(planeta.grau)))
+  const inicioAspectos = INICIO_PLANETAS + planetas.length * 90 + 200
+
+  const cuspides = (data?.casas || []).slice(0, 12).map((casa) => Number(casa.grau))
+  const casas = cuspides.length === 12
+    ? cuspides.map((grau, i) => ({ numero: i + 1, grau, meio: grau + (((cuspides[(i + 1) % 12] - grau) % 360) + 360) % 360 / 2 }))
+    : []
+  const eixos = [
+    { rotulo: 'ASC', grau: ascendente, ativo: Boolean(data?.ascendente) },
+    { rotulo: 'DSC', grau: ascendente + 180, ativo: Boolean(data?.ascendente) },
+    { rotulo: 'MC', grau: Number(data?.meio_do_ceu?.grau), ativo: Boolean(data?.meio_do_ceu) },
+    { rotulo: 'IC', grau: Number(data?.meio_do_ceu?.grau) + 180, ativo: Boolean(data?.meio_do_ceu) },
+  ].filter((eixo) => eixo.ativo)
 
   const destacar = (planeta) => {
     setPlanetaAtivo(planeta?.nome || null)
@@ -88,169 +157,208 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
     <div className="mandala-container relative">
       <svg
         className={`h-full w-full drop-shadow-[0_0_24px_rgba(255,75,137,0.12)] ${animated ? 'motion-safe:animate-orbis-sphere-in' : ''}`}
-        viewBox="0 0 500 500"
+        viewBox="-24 -24 548 548"
+        role="img"
+        aria-label="Mandala do mapa natal"
       >
         <defs>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-          <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ff4b89" stopOpacity="0.35" />
-            <stop offset="55%" stopColor="#b86dfd" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#b86dfd" stopOpacity="0" />
+          <radialGradient id="mandalaMiolo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ff4b89" stopOpacity="0.16" />
+            <stop offset="70%" stopColor="#b86dfd" stopOpacity="0.05" />
+            <stop offset="100%" stopColor="#060e1d" stopOpacity="0" />
           </radialGradient>
         </defs>
 
-        {/* Glow central que "respira" */}
-        <circle cx="250" cy="250" r="90" fill="url(#centerGlow)" className={animated ? 'motion-safe:animate-orbis-twinkle' : undefined} />
+        {/* Fundo da roda */}
+        <circle cx={C} cy={C} r={R} fill="#060e1d" fillOpacity="0.72" />
+        <circle cx={C} cy={C} r={RAIO.casasInterno} fill="url(#mandalaMiolo)" className={animated ? 'motion-safe:animate-orbis-twinkle' : undefined} />
 
-        {/* Estrelas soltas */}
-        <g fill="rgba(219,226,248,0.7)">
-          {ESTRELAS.map(([cx, cy, r, atraso]) => (
-            <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} className={animated ? 'motion-safe:animate-orbis-twinkle' : undefined} style={animated ? { animationDelay: atraso } : undefined} />
-          ))}
+        {/* Aro decorativo externo, o único elemento que gira */}
+        <g {...anima(REVELAR, 900)}>
+          <circle
+            cx={C} cy={C} r={R + 9} fill="none" stroke="#d9b06b" strokeOpacity="0.28" strokeWidth="0.8" strokeDasharray="1 7"
+            className={animated ? 'origin-[250px_250px] motion-safe:animate-orbis-spin-slow' : undefined}
+          />
         </g>
 
-        {/* Régua de graus girando devagar, como o aro dentado da esfera */}
-        <g {...anima(REVELAR, 700)}>
-          <g stroke="rgba(217,176,107,0.45)" strokeWidth="1" className={gira('motion-safe:animate-orbis-spin-slow')}>
-            {MARCACOES.map(([x1, y1, x2, y2], i) => <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} />)}
-          </g>
-        </g>
+        {/* Faixa zodiacal: setores com o tom do elemento de cada signo */}
+        {SIGNOS.map((signo, index) => {
+          const cor = ELEMENTOS[signo.elemento]
+          const meio = ponto(index * 30 + 15, RAIO.glifoSigno)
+          return (
+            <g key={signo.nome} role="img" aria-label={signo.nome}>
+              <title>{signo.nome}</title>
+              <path d={setor(index * 30, index * 30 + 30, RAIO.zodiacoExterno, RAIO.zodiacoInterno)} fill={cor} fillOpacity={index % 2 ? 0.06 : 0.11} {...anima(REVELAR, INICIO_SIGNOS + index * 40)} />
+              <g {...anima(SURGIR, INICIO_SIGNOS + index * 60)}>
+                <text
+                  x={meio.x} y={meio.y}
+                  textAnchor="middle" dominantBaseline="central"
+                  fill={cor} fontFamily={FONTE_GLIFOS} fontSize="19" fontWeight="600"
+                  aria-hidden="true"
+                >
+                  {signo.simbolo + TXT}
+                </text>
+              </g>
+            </g>
+          )
+        })}
 
-        {/* Aros desenhados em sequência */}
-        <circle cx="250" cy="250" r="230" fill="none" stroke="#ffb1c3" strokeWidth="0.8" opacity="0.4" pathLength="1" strokeDasharray="1" transform="rotate(-90 250 250)" {...anima(DESENHAR, 200)} />
-        <circle cx="250" cy="250" r="190" fill="none" stroke="#deb7ff" strokeWidth="0.6" opacity="0.5" pathLength="1" strokeDasharray="1" transform="rotate(-90 250 250)" {...anima(DESENHAR, 400)} />
-        <g {...anima(REVELAR, 600)}>
-          <circle cx="250" cy="250" r="140" fill="none" stroke="#ffb1c3" strokeWidth="1" opacity="0.6" strokeDasharray="4 8" className={gira('motion-safe:animate-orbis-spin-rev')} />
+        {/* Divisões entre signos e régua de graus na borda interna da faixa */}
+        <g stroke="#dbe2f8" strokeOpacity="0.28">
+          {Array.from({ length: 12 }, (_, i) => {
+            const a = ponto(i * 30, RAIO.zodiacoInterno)
+            const b = ponto(i * 30, RAIO.zodiacoExterno)
+            return <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} strokeWidth="0.8" pathLength="1" strokeDasharray="1" {...anima(DESENHAR, 500 + i * 30)} />
+          })}
         </g>
-
-        {/* Divisões de casa abrindo a partir do centro */}
-        <g stroke="#5c3f45" strokeWidth="0.6">
-          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angulo, i) => {
-            const p1 = getPlanetPosition(angulo, 100)
-            const p2 = getPlanetPosition(angulo, 230)
-            return <line key={angulo} x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} pathLength="1" strokeDasharray="1" {...anima(DESENHAR, 850 + i * 40)} />
+        <g stroke="#dbe2f8" {...anima(REVELAR, 600)}>
+          {Array.from({ length: 72 }, (_, i) => {
+            const grau = i * 5
+            const comprimento = i % 2 === 0 ? 7 : 4
+            const a = ponto(grau, RAIO.zodiacoInterno)
+            const b = ponto(grau, RAIO.zodiacoInterno - comprimento)
+            return <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} strokeWidth="0.6" strokeOpacity={i % 2 === 0 ? 0.4 : 0.22} />
           })}
         </g>
 
-        {/* Signos do zodíaco */}
-        {SIGNOS.map((signo, index) => {
-          const pos = getPlanetPosition(signo.grau + 15, 210)
+        {/* Aros */}
+        {[RAIO.zodiacoExterno, RAIO.zodiacoInterno, RAIO.casasExterno, RAIO.casasInterno].map((raio, i) => (
+          <circle key={raio} cx={C} cy={C} r={raio} fill="none" stroke="#ffb1c3" strokeOpacity={i < 2 ? 0.5 : 0.3} strokeWidth={i === 0 ? 1.2 : 0.8} pathLength="1" strokeDasharray="1" transform={`rotate(-90 ${C} ${C})`} {...anima(DESENHAR, 150 + i * 150)} />
+        ))}
+
+        {/* Cúspides das casas: discretas no anel dos planetas para não competir com eles */}
+        {casas.map((casa, i) => {
+          const a = ponto(casa.grau, RAIO.casasInterno)
+          const b = ponto(casa.grau, RAIO.casasExterno)
+          const c = ponto(casa.grau, RAIO.zodiacoInterno - 8)
+          const numero = ponto(casa.meio, RAIO.casasNumero)
           return (
-            <g key={signo.nome} role="img" aria-label={signo.nome} {...anima(SURGIR, INICIO_SIGNOS + index * 70)}>
-              <title>{signo.nome}</title>
-              <circle cx={pos.x} cy={pos.y} r="16" fill="#060e1d" fillOpacity="0.96" stroke={signo.cor} strokeWidth="1.25" />
-              <text
-                x={pos.x} y={pos.y}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fill={signo.cor}
-                fontFamily="'Noto Sans Symbols 2', 'Segoe UI Symbol', 'DejaVu Sans', sans-serif"
-                fontSize="18"
-                fontWeight="600"
-                aria-hidden="true"
-              >
-                {signo.simbolo}
+            <g key={casa.numero}>
+              <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#ffb1c3" strokeOpacity="0.45" strokeWidth="0.8" pathLength="1" strokeDasharray="1" {...anima(DESENHAR, INICIO_CASAS + i * 35)} />
+              <line x1={b.x} y1={b.y} x2={c.x} y2={c.y} stroke="#ffb1c3" strokeOpacity="0.14" strokeWidth="0.6" strokeDasharray="2 4" {...anima(REVELAR, INICIO_CASAS + i * 35)} />
+              <g {...anima(SURGIR, INICIO_CASAS + 150 + i * 35)}>
+                <title>{`Casa ${casa.numero}`}</title>
+                <text x={numero.x} y={numero.y} textAnchor="middle" dominantBaseline="central" fill="#e5bcc4" fillOpacity="0.85" fontFamily={FONTE_TEXTO} fontSize="10.5" fontWeight="600">
+                  {casa.numero}
+                </text>
+              </g>
+            </g>
+          )
+        })}
+
+        {/* Eixos Ascendente–Descendente e Meio do Céu–Fundo do Céu */}
+        {eixos.map((eixo, i) => {
+          const a = ponto(eixo.grau, RAIO.casasInterno)
+          const b = ponto(eixo.grau, R + 4)
+          const rotulo = ponto(eixo.grau, R + 15)
+          const principal = eixo.rotulo === 'ASC' || eixo.rotulo === 'MC'
+          return (
+            <g key={eixo.rotulo} {...anima(REVELAR, INICIO_CASAS + i * 80)}>
+              <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#ffb1c3" strokeOpacity={principal ? 0.85 : 0.45} strokeWidth={principal ? 1.6 : 1} />
+              <text x={rotulo.x} y={rotulo.y} textAnchor="middle" dominantBaseline="central" fill={principal ? '#ffb1c3' : '#ac878f'} fontFamily={FONTE_TEXTO} fontSize="10" fontWeight="700" letterSpacing="1">
+                {eixo.rotulo}
               </text>
             </g>
           )
         })}
 
-        {/* Linhas de aspecto: traçadas depois dos planetas, abaixo deles e de seus rótulos */}
+        {/* Aspectos: ligam as posições exatas na borda do miolo, sem cruzar os glifos */}
         {data?.aspectos && (
-          <g opacity="0.6">
+          <g>
             {data.aspectos.map((aspecto, index) => {
-              const p1 = getPlanetPosition(aspecto.planeta1.grau, 160)
-              const p2 = getPlanetPosition(aspecto.planeta2.grau, 160)
+              const p1 = ponto(Number(aspecto.planeta1.grau), RAIO.casasInterno)
+              const p2 = ponto(Number(aspecto.planeta2.grau), RAIO.casasInterno)
               const envolveAtivo = planetaAtivo && (aspecto.planeta1.nome === planetaAtivo || aspecto.planeta2.nome === planetaAtivo)
               const tracejado = aspecto.tipo === 'quadratura' || aspecto.tipo === 'oposição'
               return (
-                <g key={index} {...anima(REVELAR, inicioAspectos + index * 60)}>
+                <g key={index} {...anima(REVELAR, inicioAspectos + index * 50)}>
                   <line
                     x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y}
-                    stroke={ASPECT_COLORS[aspecto.tipo] || '#5c3f45'}
-                    strokeWidth={envolveAtivo ? 1.8 : 1}
-                    strokeDasharray={tracejado ? '4 2' : undefined}
-                    opacity={planetaAtivo && !envolveAtivo ? 0.25 : 1}
+                    stroke={ASPECT_COLORS[aspecto.tipo] || '#ac878f'}
+                    strokeWidth={envolveAtivo ? 1.8 : 0.9}
+                    strokeDasharray={tracejado ? '4 3' : undefined}
+                    opacity={planetaAtivo ? (envolveAtivo ? 0.95 : 0.12) : 0.55}
                     className="transition-all duration-300"
-                  />
+                  >
+                    <title>{`${aspecto.planeta1.nome} ${aspecto.tipo} ${aspecto.planeta2.nome}`}</title>
+                  </line>
                 </g>
               )
             })}
           </g>
         )}
 
-        {/* O núcleo fica acima das linhas para preservar a legibilidade no centro. */}
-        <g aria-label="Terra" role="img" {...anima(SURGIR, 300)}>
-          <title>Terra</title>
-          <circle cx="250" cy="250" r="22" fill="#0b1323" stroke="#ffb1c3" strokeWidth="2" />
-          <circle cx="250" cy="250" r="17" fill="#131c2b" stroke="#ffb1c3" strokeOpacity="0.25" strokeWidth="0.75" />
-          <text x="250" y="254" textAnchor="middle" fill="#ffb1c3" fontFamily="Inter" fontSize="9" fontWeight="bold" letterSpacing="0.5">
-            TERRA
-          </text>
-        </g>
-
-        {/* Planetas */}
+        {/* Planetas: traço na posição exata, glifo e grau dentro do signo */}
         {planetas.map((planeta, index) => {
-          const pos = getPlanetPosition(planeta.grau, 160)
-          const labelPos = getPlanetPosition(planeta.grau, 181)
-          const labelWidth = Math.max(38, planeta.nome.length * 6.4 + 14)
-          const color = PLANET_COLORS[planeta.nome] || '#ffb1c3'
+          const info = PLANETAS[planeta.nome] || { simbolo: '✦', cor: '#ffb1c3' }
+          const exibido = posicoesExibidas[index]
+          const exato = ponto(Number(planeta.grau), RAIO.zodiacoInterno)
+          const exatoInterno = ponto(Number(planeta.grau), RAIO.planetaTraco)
+          const glifo = ponto(exibido, RAIO.planetaGlifo)
+          const grau = ponto(exibido, RAIO.planetaGrau)
           const ativo = planetaAtivo === planeta.nome
+          const atenuado = planetaAtivo && !ativo
 
           return (
             <g
               key={planeta.nome}
               className="cursor-pointer"
-              onMouseEnter={() => destacar(planeta)}
-              onMouseLeave={() => destacar(null)}
-              onClick={() => onPlanetClick?.(planeta)}
+              tabIndex={0}
+              role="button"
+              aria-label={`${planeta.nome} em ${planeta.signo}, ${planeta.posicao}${planeta.casa ? `, casa ${planeta.casa}` : ''}`}
+              onMouseEnter={() => temHover() && destacar(planeta)}
+              onMouseLeave={() => temHover() && destacar(null)}
+              onFocus={() => temHover() && destacar(planeta)}
+              onBlur={() => destacar(null)}
+              onClick={() => {
+                // no toque não há hover: tocar alterna o destaque do planeta
+                if (!temHover()) destacar(ativo ? null : planeta)
+                onPlanetClick?.(planeta)
+              }}
+              opacity={atenuado ? 0.4 : 1}
+              style={{ transition: 'opacity 300ms' }}
             >
-              <g {...anima(SURGIR, INICIO_PLANETAS + index * 110)}>
-                {/* halo de destaque no hover */}
-                <circle cx={pos.x} cy={pos.y} r="15" fill="none" stroke={color} strokeWidth="1" opacity={ativo ? 0.7 : 0} className="transition-opacity duration-300" />
-                <line x1={pos.x} y1={pos.y} x2={labelPos.x} y2={labelPos.y} stroke={color} strokeWidth="1" strokeOpacity="0.7" />
-                <circle
-                  cx={pos.x} cy={pos.y} r="8.5"
-                  fill={color}
-                  filter="url(#glow)"
-                  className="animate-planet-pulse [transform-box:fill-box] origin-center"
-                  style={{ '--planet-color': color }}
+              <title>{`${planeta.nome} · ${planeta.signo} ${planeta.posicao}${planeta.casa ? ` · Casa ${planeta.casa}` : ''}`}</title>
+              <g {...anima(SURGIR, INICIO_PLANETAS + index * 90)}>
+                <polyline
+                  points={`${exato.x},${exato.y} ${exatoInterno.x},${exatoInterno.y} ${ponto(exibido, RAIO.planetaGlifo + 13).x},${ponto(exibido, RAIO.planetaGlifo + 13).y}`}
+                  fill="none" stroke={info.cor} strokeOpacity="0.7" strokeWidth="0.9"
                 />
-                <rect
-                  x={labelPos.x - labelWidth / 2}
-                  y={labelPos.y - 9}
-                  width={labelWidth}
-                  height="18"
-                  rx="9"
-                  fill="#060e1d"
-                  fillOpacity="0.94"
-                  stroke={color}
-                  strokeWidth={ativo ? 1.4 : 0.75}
-                  strokeOpacity="0.75"
-                  className="transition-all duration-300"
-                />
+                <circle cx={exato.x} cy={exato.y} r="2" fill={info.cor} />
+                <circle cx={glifo.x} cy={glifo.y} r="12.5" fill="#060e1d" stroke={info.cor} strokeOpacity={ativo ? 0.95 : 0.35} strokeWidth={ativo ? 1.6 : 0.8} className="transition-all duration-300" />
                 <text
-                  x={labelPos.x} y={labelPos.y}
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fill={ativo ? '#ffffff' : '#dbe2f8'}
-                  fontSize="10.5"
-                  fontFamily="'Space Grotesk', 'Inter', sans-serif"
-                  fontWeight="650"
-                  letterSpacing="0.15"
+                  x={glifo.x} y={glifo.y + 0.5}
+                  textAnchor="middle" dominantBaseline="central"
+                  fill={info.cor} fontFamily={FONTE_GLIFOS} fontSize="15.5" fontWeight="600"
+                  aria-hidden="true"
                 >
-                  {planeta.nome}
+                  {info.simbolo + TXT}
+                </text>
+                {/* grau em cima, minutos (e ℞ se retrógrado) embaixo */}
+                <text
+                  x={grau.x} y={grau.y}
+                  textAnchor="middle"
+                  fill={ativo ? '#ffffff' : '#dbe2f8'} fillOpacity={ativo ? 1 : 0.85}
+                  fontFamily={FONTE_TEXTO} fontWeight="600"
+                  aria-hidden="true"
+                >
+                  <tspan x={grau.x} dy="-1" fontSize="9.5">{grauEMinutos(planeta)[0]}</tspan>
+                  <tspan x={grau.x} dy="9" fontSize="7" fillOpacity="0.75">
+                    {grauEMinutos(planeta)[1]}{planeta.retrogrado ? ' ℞' : ''}
+                  </tspan>
                 </text>
               </g>
             </g>
           )
         })}
+
+        {/* Centro */}
+        <g aria-label="Terra" role="img" {...anima(SURGIR, 300)}>
+          <title>Terra</title>
+          <circle cx={C} cy={C} r="7" fill="#060e1d" stroke="#ffb1c3" strokeWidth="1.2" />
+          <line x1={C - 7} y1={C} x2={C + 7} y2={C} stroke="#ffb1c3" strokeWidth="0.8" />
+          <line x1={C} y1={C - 7} x2={C} y2={C + 7} stroke="#ffb1c3" strokeWidth="0.8" />
+        </g>
       </svg>
     </div>
   )

@@ -6,6 +6,8 @@ export default {
   ],
   darkMode: 'class',
   theme: {
+    // xs separa os Galaxy S25/S26 (360px) dos iPhone 14/15 (390px+); fica fora do extend para vir antes de sm no CSS
+    screens: { xs: '380px', sm: '640px', md: '768px', lg: '1024px', xl: '1280px', '2xl': '1536px' },
     extend: {
       colors: {
         'primary': '#ffb1c3',

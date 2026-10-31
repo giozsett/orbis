@@ -28,8 +28,8 @@ export default function Perfil() {
     return usuario.nome.split(/\s+/).slice(0, 2).map(parte => parte[0]).join('').toUpperCase()
   }, [usuario])
 
-  if (erro) return <Layout showSidebar={false}><div className="p-8 md:p-16 text-error">{erro}</div></Layout>
-  if (!usuario) return <Layout showSidebar={false}><div className="p-8 md:p-16 text-outline">Carregando perfil…</div></Layout>
+  if (erro) return <Layout showSidebar={false}><div className="p-5 md:p-16 text-error">{erro}</div></Layout>
+  if (!usuario) return <Layout showSidebar={false}><div className="p-5 md:p-16 text-outline">Carregando perfil…</div></Layout>
 
   const membroDesde = new Intl.DateTimeFormat('pt-BR', {
     month: 'long',
@@ -38,28 +38,28 @@ export default function Perfil() {
 
   return (
     <Layout showSidebar={false}>
-      <div className="min-h-[calc(100vh-64px)] px-4 py-10 md:px-12 md:py-16">
-        <div className="max-w-5xl mx-auto space-y-8">
+      <div className="px-4 py-6 xs:px-5 md:px-12 md:py-16">
+        <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
           <header className="animate-fade-in-up">
             <span className="font-label text-xs uppercase tracking-[0.2em] text-primary">Conta ORBIS</span>
-            <h1 className="font-headline text-4xl md:text-5xl mt-2">Meu Perfil</h1>
+            <h1 className="font-headline text-3xl md:text-5xl mt-2">Meu Perfil</h1>
             <p className="text-on-surface-variant mt-3">Seus dados de acesso e sua jornada pelo observatório.</p>
           </header>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
-            <GlassPanel className="p-8 flex flex-col items-center text-center animate-fade-in-up">
-              <div className="w-28 h-28 rounded-full bg-gradient-to-br from-primary-container/60 to-tertiary-container/40 border border-primary/30 flex items-center justify-center shadow-[0_0_30px_rgba(255,177,195,0.12)]">
+          <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 md:gap-6">
+            <GlassPanel className="p-6 md:p-8 flex flex-col items-center text-center animate-fade-in-up">
+              <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-primary-container/60 to-tertiary-container/40 border border-primary/30 flex items-center justify-center shadow-[0_0_30px_rgba(255,177,195,0.12)]">
                 <span className="font-headline text-3xl text-secondary">{iniciais}</span>
               </div>
               <h2 className="font-headline text-2xl mt-5">{usuario.nome}</h2>
-              <p className="text-outline text-sm mt-1">{usuario.email}</p>
+              <p className="text-outline text-sm mt-1 break-all">{usuario.email}</p>
               <div className="mt-6 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary font-label text-xs uppercase tracking-wider">
                 Membro desde {membroDesde}
               </div>
             </GlassPanel>
 
-            <GlassPanel className="p-6 md:p-8 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-              <div className="flex items-center gap-3 mb-8">
+            <GlassPanel className="p-5 md:p-8 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+              <div className="flex items-center gap-3 mb-6 md:mb-8">
                 <span className="material-symbols-outlined text-primary">badge</span>
                 <h2 className="font-headline text-2xl">Dados da conta</h2>
               </div>
@@ -71,7 +71,7 @@ export default function Perfil() {
                 </div>
                 <div className="p-4 rounded-xl bg-surface-container-low border border-white/5">
                   <dt className="font-label text-xs text-outline uppercase tracking-widest">E-mail</dt>
-                  <dd className="mt-2 text-on-surface">{usuario.email}</dd>
+                  <dd className="mt-2 text-on-surface break-all">{usuario.email}</dd>
                 </div>
                 <div className="p-4 rounded-xl bg-surface-container-low border border-white/5 flex items-center justify-between gap-4">
                   <div>
