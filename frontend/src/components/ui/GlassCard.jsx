@@ -12,18 +12,19 @@ export default function GlassCard({ children, className = '', magnetic = false, 
 
     cardRef.current.style.setProperty('--mouse-x', `${x}px`)
     cardRef.current.style.setProperty('--mouse-y', `${y}px`)
-    cardRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(234, 185, 206, 0.08), transparent 40%)`
+    cardRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(255, 75, 137, 0.1), rgba(184, 109, 253, 0.04) 30%, rgba(6, 14, 29, 0.68) 60%)`
   }, [magnetic])
 
+  // Limpa o estilo inline para voltar ao fundo definido em .glass-card
   const handleMouseLeave = useCallback(() => {
     if (!magnetic || !cardRef.current) return
-    cardRef.current.style.background = 'rgba(24, 32, 47, 0.6)'
+    cardRef.current.style.background = ''
   }, [magnetic])
 
   return (
     <div
       ref={cardRef}
-      className={`glass-card rounded-xl transition-all duration-300 ${magnetic ? 'glass-card-magnetic cursor-pointer' : ''} ${className}`}
+      className={`glass-card rounded-2xl transition-all duration-300 ${magnetic ? 'glass-card-magnetic cursor-pointer' : ''} ${className}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       {...props}

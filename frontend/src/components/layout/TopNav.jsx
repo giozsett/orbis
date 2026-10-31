@@ -214,11 +214,11 @@ export default function TopNav() {
 
   return (
     <>
-      <header className="fixed top-0 w-full z-50 flex justify-between items-center px-4 md:px-16 h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10">
+      <header className="fixed top-0 w-full z-50 flex justify-between items-center px-4 md:px-16 h-16 bg-surface/45 backdrop-blur-[18px] border-b border-white/[0.08] motion-safe:animate-orbis-header">
         <div className="flex items-center gap-4 xl:gap-8">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-2xl">auto_awesome</span>
-            <span className="font-headline text-2xl font-bold tracking-tighter text-secondary">ORBIS</span>
+            <span className="material-symbols-outlined text-primary text-[22px] motion-safe:animate-orbis-twinkle">auto_awesome</span>
+            <span className="font-headline text-[22px] font-bold tracking-[-0.03em] text-secondary">ORBIS</span>
           </Link>
           <nav className="hidden md:flex items-center gap-1 xl:gap-2">
             <Link to="/dashboard" className={linkClass(location.pathname === '/dashboard')}>

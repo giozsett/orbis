@@ -388,10 +388,12 @@ export default function CriarMapa() {
                     {erroEnvio && <p className="text-sm text-error text-center" role="alert">{erroEnvio}</p>}
                     <button
                       type="submit"
-                      className="w-full bg-primary text-on-primary py-5 rounded-full font-headline flex items-center justify-center gap-4 transition-all uppercase tracking-widest text-lg hover:shadow-[0_0_30px_rgba(255,0,122,0.4)] active:scale-[0.98]"
+                      className="group relative w-full overflow-hidden bg-orbis-cta text-white py-5 rounded-full font-headline flex items-center justify-center gap-4 transition-all uppercase tracking-widest text-lg shadow-[0_12px_30px_rgba(255,75,137,0.28)] hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(255,75,137,0.38)] active:scale-[0.98]"
                     >
-                      Calcular Meu Mapa
-                      <span className="material-symbols-outlined">explore</span>
+                      {/* brilho que atravessa o botão no hover */}
+                      <span className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -translate-x-full -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[350%]" />
+                      <span className="relative">Calcular Meu Mapa</span>
+                      <span className="material-symbols-outlined relative transition-transform group-hover:translate-x-1">explore</span>
                     </button>
                     <button
                       type="button"

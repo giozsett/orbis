@@ -7,10 +7,10 @@ export default function Button({
   className = '',
   ...props 
 }) {
-  const baseStyles = 'font-label rounded-full flex items-center justify-center gap-2 transition-all duration-300 active:scale-95'
-  
+  const baseStyles = 'group relative overflow-hidden font-label uppercase tracking-[0.08em] rounded-full flex items-center justify-center gap-2 transition-all duration-300 active:scale-95'
+
   const variants = {
-    primary: 'bg-primary text-on-primary hover:shadow-[0_0_20px_rgba(255,0,122,0.4)]',
+    primary: 'bg-orbis-cta text-white shadow-[0_12px_30px_rgba(255,75,137,0.28)] hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(255,75,137,0.38)]',
     secondary: 'border border-secondary/30 text-secondary hover:bg-secondary/10',
     ghost: 'text-on-surface-variant hover:text-on-surface hover:bg-white/5',
     outline: 'border border-white/10 text-on-surface hover:border-primary/60 hover:bg-primary/5',
@@ -28,6 +28,10 @@ export default function Button({
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
+      {/* brilho que atravessa o botão no hover, como no CTA do login */}
+      {variant === 'primary' && (
+        <span className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -translate-x-full -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[350%]" />
+      )}
       {icon && iconPosition === 'left' && (
         <span className="material-symbols-outlined">{icon}</span>
       )}

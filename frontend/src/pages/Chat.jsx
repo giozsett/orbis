@@ -344,7 +344,7 @@ export default function Chat() {
               type="button"
               onClick={sendMessage}
               disabled={!input.trim() || isLoading || limiteAtingido || visualizandoHistorico}
-              className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-on-primary transition-all hover:shadow-[0_0_15px_rgba(255,0,122,0.4)] disabled:opacity-50"
+              className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-orbis-cta text-white shadow-[0_8px_20px_rgba(255,75,137,0.28)] transition-all hover:shadow-[0_12px_28px_rgba(255,75,137,0.4)] disabled:opacity-50"
               aria-label="Enviar pergunta"
             >
               <span className="material-symbols-outlined">send</span>

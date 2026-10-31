@@ -1,17 +1,20 @@
 {
   "chat": [
+    "nvidia/nemotron-3.5-super-vl:free",
+    "google/gemma-4-31b-it:free",
     "google/gemma-4-26b-a4b-it:free",
-    "nex-agi/nex-n2.5-mini:free",
     "openrouter/free"
   ],
   "horoscopo": [
+    "nvidia/nemotron-3.5-super-vl:free",
+    "google/gemma-4-31b-it:free",
     "google/gemma-4-26b-a4b-it:free",
-    "nex-agi/nex-n2.5-mini:free",
     "openrouter/free"
   ],
   "interpretacoes": [
+    "nvidia/nemotron-3.5-super-vl:free",
+    "google/gemma-4-31b-it:free",
     "google/gemma-4-26b-a4b-it:free",
-    "nex-agi/nex-n2.5-mini:free",
     "openrouter/free"
   ]
 }

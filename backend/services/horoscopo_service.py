@@ -160,7 +160,7 @@ def gerar_horoscopo(
         modelo,
         modelos_fallback=modelos[1:],
         temperatura=0.55,
-        max_tokens=1600,
+        max_tokens=2200,
         formato_json=True,
     )
     conteudo = _validar_conteudo(_extrair_json(resposta))
@@ -265,26 +265,26 @@ def _calcular_transitos(dados_natais: dict, referencia: date) -> dict:
 def _montar_mensagens(mapa: MapaNatal, limites: dict, contexto: dict) -> list[dict]:
     contrato = {
         "titulo": "frase curta para o ciclo",
-        "resumo": "um parágrafo breve com no máximo 55 palavras",
-        "conselho": "orientação prática com no máximo 45 palavras",
-        "destaque_astral": "um trânsito real presente nos dados, sem inventar",
+        "resumo": "um parágrafo de 70 a 110 palavras ligando os trânsitos ao mapa natal",
+        "conselho": "orientação prática de 35 a 60 palavras",
+        "destaque_astral": "um trânsito real presente nos dados, sem inventar, e o que ele simboliza",
         "palavras_chave": ["três", "termos", "curtos"],
         "areas": [
             {
                 "nome": "Amor",
-                "texto": "no máximo 40 palavras",
+                "texto": "de 40 a 70 palavras",
                 "energia": 68,
                 "tendencia": "alta, estavel ou baixa",
             },
             {
                 "nome": "Trabalho",
-                "texto": "no máximo 40 palavras",
+                "texto": "de 40 a 70 palavras",
                 "energia": 61,
                 "tendencia": "alta, estavel ou baixa",
             },
             {
                 "nome": "Bem-estar",
-                "texto": "no máximo 40 palavras",
+                "texto": "de 40 a 70 palavras",
                 "energia": 57,
                 "tendencia": "alta, estavel ou baixa",
             },
@@ -295,7 +295,7 @@ def _montar_mensagens(mapa: MapaNatal, limites: dict, contexto: dict) -> list[di
             "role": "system",
             "content": (
                 "Você é o redator astrológico do ORBIS. Escreva em português do "
-                "Brasil, com tom acolhedor, sóbrio e breve. Baseie toda menção "
+                "Brasil, com tom acolhedor, sóbrio e específico. Baseie toda menção "
                 "astrológica exclusivamente no mapa e nos trânsitos fornecidos. "
                 "Não invente aspectos, não faça previsões deterministas e não dê "
                 "aconselhamento médico, jurídico ou financeiro. Trate astrologia "

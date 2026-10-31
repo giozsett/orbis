@@ -18,6 +18,10 @@ class OpenRouterResponseError(OpenRouterError):
     """Resposta inválida ou erro retornado pelo provedor."""
 
 
+# Status que indicam problema da conta/chave: trocar de modelo não resolve.
+STATUS_FATAIS = {401, 402, 403}
+
+
 def completar(
     mensagens: list[dict[str, str]],
     modelo: str,
@@ -59,45 +63,67 @@ def completar(
         "messages": mensagens,
         "temperature": temperatura,
         "max_tokens": max_tokens,
+        # Os modelos gratuitos de raciocínio gastavam todo o max_tokens
+        # "pensando" e devolviam conteúdo vazio. `exclude` só escondia esse
+        # raciocínio; `enabled: False` impede que ele consuma o orçamento.
+        "reasoning": {"enabled": False},
     }
-    if len(modelos) > 1:
-        payload["models"] = modelos
-    else:
-        payload["model"] = modelo
     if formato_json:
         payload["response_format"] = {"type": "json_object"}
-        payload["reasoning"] = {
-            "exclude": True,
-        }
 
+    # O fallback nativo do OpenRouter (`models`) só troca de modelo quando o
+    # provedor dá erro; resposta vazia ou cortada passava direto. Por isso cada
+    # modelo é tentado aqui, em ordem, até um devolver conteúdo utilizável.
     timeout = float(current_app.config.get("OPENROUTER_TIMEOUT_SECONDS", 30))
+    falhas = []
+    with httpx.Client(timeout=timeout) as cliente:
+        for atual in modelos:
+            try:
+                return _tentar_modelo(
+                    cliente, f"{base_url}/chat/completions", headers,
+                    {**payload, "model": atual}, formato_json,
+                )
+            except OpenRouterConfigurationError:
+                raise
+            except OpenRouterResponseError as erro:
+                current_app.logger.warning("OpenRouter: %s falhou: %s", atual, erro)
+                falhas.append(f"{atual}: {erro}")
+
+    raise OpenRouterResponseError(
+        "Nenhum modelo gratuito respondeu. " + " | ".join(falhas)
+    )
+
+
+def _tentar_modelo(
+    cliente: httpx.Client,
+    url: str,
+    headers: dict[str, str],
+    payload: dict[str, Any],
+    formato_json: bool,
+) -> str:
     try:
-        with httpx.Client(timeout=timeout) as cliente:
-            resposta = cliente.post(
-                f"{base_url}/chat/completions",
-                headers=headers,
-                json=payload,
-            )
+        resposta = cliente.post(url, headers=headers, json=payload)
     except httpx.TimeoutException as erro:
         raise OpenRouterResponseError(
-            "O modelo demorou mais que o limite configurado para responder."
+            "o modelo demorou mais que o limite configurado para responder"
         ) from erro
     except httpx.HTTPError as erro:
         raise OpenRouterResponseError(
-            "Não foi possível conectar ao OpenRouter."
+            "não foi possível conectar ao OpenRouter"
         ) from erro
 
     if resposta.is_error:
-        mensagem = _mensagem_erro(resposta)
-        raise OpenRouterResponseError(
-            f"OpenRouter respondeu com status {resposta.status_code}: {mensagem}"
-        )
+        mensagem = f"status {resposta.status_code}: {_mensagem_erro(resposta)}"
+        if resposta.status_code in STATUS_FATAIS:
+            raise OpenRouterConfigurationError(f"OpenRouter recusou a chave ({mensagem}).")
+        raise OpenRouterResponseError(mensagem)
 
     try:
-        conteudo = resposta.json()["choices"][0]["message"]["content"]
+        escolha = resposta.json()["choices"][0]
+        conteudo = escolha["message"]["content"]
     except (ValueError, KeyError, IndexError, TypeError) as erro:
         raise OpenRouterResponseError(
-            "O OpenRouter retornou uma resposta sem conteúdo utilizável."
+            "resposta sem conteúdo utilizável"
         ) from erro
 
     if isinstance(conteudo, list):
@@ -107,8 +133,13 @@ def completar(
             if isinstance(parte, dict)
         )
     conteudo = str(conteudo or "").strip()
+    cortada = escolha.get("finish_reason") == "length"
     if not conteudo:
-        raise OpenRouterResponseError("O modelo retornou uma resposta vazia.")
+        raise OpenRouterResponseError(
+            "resposta vazia (limite de tokens esgotado)" if cortada else "resposta vazia"
+        )
+    if cortada and formato_json:
+        raise OpenRouterResponseError("JSON cortado pelo limite de tokens")
     return conteudo
 
 

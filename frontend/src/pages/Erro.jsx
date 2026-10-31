@@ -1,17 +1,17 @@
 import { Link } from 'react-router-dom'
+import FundoOrbis from '../components/ui/FundoOrbis'
 
 export default function Erro() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-background">
-      {/* Glow de fundo */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] rounded-full bg-primary/5 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-5%] w-[40vw] h-[40vw] rounded-full bg-tertiary/5 blur-[120px]" />
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-24 pb-28">
+      <FundoOrbis />
 
       {/* Header */}
-      <header className="fixed top-0 w-full z-50 flex justify-between items-center px-16 h-16 bg-surface/40 backdrop-blur-xl border-b border-white/15">
-        <Link to="/dashboard" className="font-headline text-lg font-bold tracking-tighter text-secondary">ORBIS</Link>
+      <header className="fixed top-0 w-full z-50 flex justify-between items-center px-4 md:px-16 h-16 bg-surface/45 backdrop-blur-[18px] border-b border-white/[0.08] motion-safe:animate-orbis-header">
+        <Link to="/dashboard" className="flex items-center gap-2">
+          <span className="material-symbols-outlined text-[22px] text-primary motion-safe:animate-orbis-twinkle">auto_awesome</span>
+          <span className="font-headline text-[22px] font-bold tracking-[-0.03em] text-secondary">ORBIS</span>
+        </Link>
         <div className="hidden md:flex gap-6 items-center">
           <Link to="/dashboard" className="font-label text-sm text-on-surface-variant hover:text-secondary transition-colors cursor-pointer">Dashboard</Link>
           <Link to="/horoscopo" className="font-label text-sm text-on-surface-variant hover:text-secondary transition-colors cursor-pointer">Transits</Link>
@@ -24,9 +24,9 @@ export default function Erro() {
       </header>
 
       {/* Conteúdo */}
-      <main className="z-10 w-full max-w-4xl px-4 md:px-16 text-center flex flex-col items-center">
+      <main className="relative z-10 w-full max-w-4xl px-4 md:px-16 text-center flex flex-col items-center">
         {/* Ilustração de erro */}
-        <div className="relative w-64 h-64 mb-8 group">
+        <div className="relative w-64 h-64 mb-8 group motion-safe:animate-orbis-sphere-in">
           {/* Eclipse central */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-32 h-32 bg-surface-container-lowest rounded-full relative z-20 border border-white/10 overflow-hidden"
@@ -49,19 +49,17 @@ export default function Erro() {
 
         {/* Tipografia */}
         <div className="space-y-2 max-w-xl">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <span className="font-label text-xs text-primary uppercase tracking-[0.2em] px-2 py-1 border border-primary/20 rounded">
-              Erro 404 // Fluxo Interrompido
-            </span>
-          </div>
-          <h1 className="font-headline text-4xl md:text-5xl text-on-surface leading-tight">Interferência Cósmica</h1>
-          <p className="text-lg text-on-surface-variant/80">
+          <p className="mb-4 font-label text-[11px] uppercase tracking-[0.32em] text-primary motion-safe:animate-orbis-rise sm:text-xs" style={{ animationDelay: '150ms' }}>
+            Erro 404 · fluxo interrompido
+          </p>
+          <h1 className="bg-orbis-wordmark bg-[length:250%_100%] bg-clip-text font-headline text-4xl md:text-5xl font-bold leading-tight text-transparent motion-safe:[animation:orbis-rise_0.9s_cubic-bezier(0.22,1,0.36,1)_280ms_both,orbis-shimmer_7s_ease-in-out_1.2s_infinite]">Interferência Cósmica</h1>
+          <p className="text-lg text-on-surface-variant/80 motion-safe:animate-orbis-rise" style={{ animationDelay: '430ms' }}>
             Os sensores do observatório detectaram um <span className="text-primary">alinhamento inválido</span> para as coordenadas fornecidas. A transmissão de dados foi pausada para evitar corrupção sistêmica.
           </p>
         </div>
 
         {/* Detalhes do erro */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mt-8 motion-safe:animate-orbis-rise" style={{ animationDelay: '560ms' }}>
           <div className="glass-panel p-4 rounded-xl text-left border-l-4 border-l-primary/30">
             <span className="font-label text-xs text-secondary block mb-1">CAUSA PROVÁVEL</span>
             <p className="text-sm">Sincronização temporal fora dos parâmetros orbitais permitidos ou limite de processamento atingido.</p>
@@ -73,17 +71,17 @@ export default function Erro() {
         </div>
 
         {/* Ações */}
-        <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full sm:w-auto motion-safe:animate-orbis-rise" style={{ animationDelay: '700ms' }}>
           <Link
             to="/dashboard"
-            className="bg-primary text-on-primary font-label px-8 py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(255,0,122,0.4)]"
+            className="group relative overflow-hidden bg-orbis-cta text-white font-label text-xs uppercase tracking-[0.08em] px-8 py-3.5 rounded-full transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_12px_30px_rgba(255,75,137,0.28)] hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(255,75,137,0.38)]"
           >
             <span className="material-symbols-outlined text-sm">refresh</span>
             Tentativa de Reconexão
           </Link>
           <Link
             to="/criar-mapa"
-            className="border border-secondary/30 text-secondary font-label px-8 py-3 rounded-lg hover:bg-secondary/5 transition-all flex items-center justify-center gap-2"
+            className="border border-secondary/20 text-secondary font-label text-xs uppercase tracking-[0.08em] px-8 py-3.5 rounded-full hover:border-secondary/60 hover:bg-secondary/5 transition-all flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-sm">edit_location_alt</span>
             Corrigir Coordenadas
@@ -110,7 +108,7 @@ export default function Erro() {
       </aside>
 
       {/* Footer */}
-      <footer className="fixed bottom-0 w-full py-4 px-16 flex justify-between items-center bg-surface-container-lowest border-t border-white/5">
+      <footer className="fixed bottom-0 z-20 w-full py-4 px-4 md:px-16 flex justify-between items-center bg-surface/45 backdrop-blur-[18px] border-t border-white/[0.08]">
         <div className="font-label text-xs text-outline">© 2024 Orbis Astronomical Observatory</div>
         <div className="flex gap-4">
           <span className="text-sm text-outline hover:text-primary transition-colors cursor-pointer">Data Sources</span>

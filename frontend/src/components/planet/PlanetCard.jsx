@@ -26,7 +26,7 @@ const PLANET_COLORS = {
   'Plutão': '#93000a',
 }
 
-export default function PlanetCard({ planeta, index = 0 }) {
+export default function PlanetCard({ planeta, index = 0, atraso = 0 }) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
 
@@ -56,10 +56,10 @@ export default function PlanetCard({ planeta, index = 0 }) {
 
   return (
     <div
-      className={`glass-card rounded-xl overflow-hidden transition-all duration-500 ${
-        isExpanded ? 'col-span-full' : ''
+      className={`glass-card rounded-2xl overflow-hidden transition-all duration-500 motion-safe:animate-orbis-rise ${
+        isExpanded ? 'col-span-full border-primary/30' : ''
       }`}
-      style={{ animationDelay: `${index * 100}ms` }}
+      style={{ animationDelay: `${atraso + index * 80}ms` }}
     >
       {/* Header - sempre visível */}
       <div

@@ -79,10 +79,12 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="fixed left-0 top-16 z-40 hidden h-[calc(100vh-64px)] w-80 flex-col border-r border-white/10 bg-surface-container-low/60 p-6 backdrop-blur-lg lg:flex" style={{ '--map-accent': cor }}>
+    <aside className="fixed left-0 top-16 z-40 hidden h-[calc(100vh-64px)] w-80 flex-col border-r border-white/[0.08] bg-surface/45 p-6 backdrop-blur-[18px] motion-safe:animate-orbis-rise lg:flex" style={{ '--map-accent': cor }}>
+      {/* faixa de destaque da borda, a mesma da tela de login, colada à sidebar */}
+      <div className="pointer-events-none absolute bottom-0 left-0 h-[220px] w-1.5 origin-bottom bg-gradient-to-b from-primary-container to-tertiary-container opacity-[.65] motion-safe:animate-orbis-edge" />
       <div className="mb-5">
-        <h3 className="font-headline text-lg" style={{ color: cor }}>Detalhes Celestes</h3>
-        <p className="mt-1 text-xs uppercase tracking-widest text-on-surface-variant">Mapa em observação</p>
+        <p className="font-label text-[11px] uppercase tracking-[0.32em] text-primary">Mapa em observação</p>
+        <h3 className="mt-2 font-headline text-lg" style={{ color: cor }}>Detalhes Celestes</h3>
       </div>
 
       {selecionado && <Link to={`/mapa/${selecionado.id}`} className="mb-3 flex items-center gap-3 rounded-xl border p-3 transition-all hover:bg-white/5" style={{ borderColor: `${cor}55`, backgroundColor: `${cor}12` }}>
@@ -104,7 +106,7 @@ export default function Sidebar() {
       </nav>
 
       {erroExportacao && <p className="mb-2 rounded-lg border border-error/20 bg-error/10 p-2 text-center text-xs text-error">{erroExportacao}</p>}
-      <button onClick={exportarPdf} disabled={exportando || !selecionado} className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg py-3 font-label text-sm transition-all hover:opacity-90 active:scale-95 disabled:opacity-60" style={{ backgroundColor: cor, color: '#1a1220' }}><span className={`material-symbols-outlined text-sm ${exportando ? 'animate-spin' : ''}`}>{exportando ? 'progress_activity' : 'download'}</span>{exportando ? 'Gerando PDF…' : `Exportar ${selecionado?.nome || 'mapa'}`}</button>
+      <button onClick={exportarPdf} disabled={exportando || !selecionado} className="mt-2 flex w-full items-center justify-center gap-2 rounded-full py-3 font-label text-xs uppercase tracking-[0.08em] shadow-[0_12px_30px_rgba(0,0,0,0.28)] transition-all hover:-translate-y-0.5 hover:opacity-90 active:scale-95 disabled:opacity-60" style={{ backgroundColor: cor, color: '#1a1220' }}><span className={`material-symbols-outlined text-sm ${exportando ? 'animate-spin' : ''}`}>{exportando ? 'progress_activity' : 'download'}</span>{exportando ? 'Gerando PDF…' : `Exportar ${selecionado?.nome || 'mapa'}`}</button>
       <p className="mt-2 text-center font-label text-[9px] uppercase tracking-wider text-outline">PDF · máximo 15 MB</p>
     </aside>
   )

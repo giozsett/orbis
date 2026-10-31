@@ -1,18 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 
 const SIGNOS = [
-  { nome: 'Áries', simbolo: '\u2648\uFE0E', grau: 0, cor: '#ffb1c3' },
-  { nome: 'Touro', simbolo: '\u2649\uFE0E', grau: 30, cor: '#eab9ce' },
-  { nome: 'Gêmeos', simbolo: '\u264A\uFE0E', grau: 60, cor: '#deb7ff' },
-  { nome: 'Câncer', simbolo: '\u264B\uFE0E', grau: 90, cor: '#ac878f' },
-  { nome: 'Leão', simbolo: '\u264C\uFE0E', grau: 120, cor: '#ffb1c3' },
-  { nome: 'Virgem', simbolo: '\u264D\uFE0E', grau: 150, cor: '#eab9ce' },
-  { nome: 'Libra', simbolo: '\u264E\uFE0E', grau: 180, cor: '#deb7ff' },
-  { nome: 'Escorpião', simbolo: '\u264F\uFE0E', grau: 210, cor: '#ac878f' },
-  { nome: 'Sagitário', simbolo: '\u2650\uFE0E', grau: 240, cor: '#ffb1c3' },
-  { nome: 'Capricórnio', simbolo: '\u2651\uFE0E', grau: 270, cor: '#eab9ce' },
-  { nome: 'Aquário', simbolo: '\u2652\uFE0E', grau: 300, cor: '#deb7ff' },
-  { nome: 'Peixes', simbolo: '\u2653\uFE0E', grau: 330, cor: '#ac878f' },
+  { nome: 'Áries', simbolo: '♈︎', grau: 0, cor: '#ffb1c3' },
+  { nome: 'Touro', simbolo: '♉︎', grau: 30, cor: '#eab9ce' },
+  { nome: 'Gêmeos', simbolo: '♊︎', grau: 60, cor: '#deb7ff' },
+  { nome: 'Câncer', simbolo: '♋︎', grau: 90, cor: '#ac878f' },
+  { nome: 'Leão', simbolo: '♌︎', grau: 120, cor: '#ffb1c3' },
+  { nome: 'Virgem', simbolo: '♍︎', grau: 150, cor: '#eab9ce' },
+  { nome: 'Libra', simbolo: '♎︎', grau: 180, cor: '#deb7ff' },
+  { nome: 'Escorpião', simbolo: '♏︎', grau: 210, cor: '#ac878f' },
+  { nome: 'Sagitário', simbolo: '♐︎', grau: 240, cor: '#ffb1c3' },
+  { nome: 'Capricórnio', simbolo: '♑︎', grau: 270, cor: '#eab9ce' },
+  { nome: 'Aquário', simbolo: '♒︎', grau: 300, cor: '#deb7ff' },
+  { nome: 'Peixes', simbolo: '♓︎', grau: 330, cor: '#ac878f' },
 ]
 
 const PLANET_COLORS = {
@@ -28,55 +28,66 @@ const PLANET_COLORS = {
   Plutão: '#93000a',
 }
 
+const ASPECT_COLORS = {
+  'conjunção': '#ffb1c3',
+  'sextil': '#deb7ff',
+  'quadratura': '#ffb4ab',
+  'trígono': '#eab9ce',
+  'oposição': '#ff4b89',
+}
+
+const getPlanetPosition = (grau, raio = 180) => {
+  const rad = ((grau - 90) * Math.PI) / 180
+  return { x: 250 + raio * Math.cos(rad), y: 250 + raio * Math.sin(rad) }
+}
+
+// Régua de graus do aro externo, no mesmo estilo das marcações da esfera armilar
+const MARCACOES = Array.from({ length: 72 }, (_, i) => {
+  const grau = i * 5
+  const p1 = getPlanetPosition(grau, 234)
+  const p2 = getPlanetPosition(grau, i % 6 === 0 ? 244 : 239)
+  return [p1.x, p1.y, p2.x, p2.y]
+})
+
+const ESTRELAS = [
+  [34, 52, 1.6, '0s'],
+  [470, 38, 1.2, '1.1s'],
+  [462, 468, 1.6, '0.6s'],
+  [28, 440, 1.2, '1.9s'],
+]
+
+// A abertura segue a coreografia da tela de login (mesma curva de easing):
+// a mandala entra girando, os aros são desenhados, as casas se abrem, os signos
+// e os planetas surgem em sequência e os aspectos são traçados por último.
+// Os traços usam pathLength=1, então o desenho funciona para qualquer raio.
+// Tudo fica sob motion-safe: com movimento reduzido, o mapa aparece pronto.
+const DESENHAR = 'motion-safe:animate-orbis-draw'
+const SURGIR = 'motion-safe:animate-orbis-pop [transform-box:fill-box] origin-center'
+const REVELAR = 'motion-safe:animate-orbis-fade-in'
+const PIVO = 'origin-[250px_250px]'
+
+const INICIO_SIGNOS = 1100
+const INICIO_PLANETAS = 1900
+
 export default function Mandala({ data, onPlanetHover, onPlanetClick, animated = true }) {
-  const [visibleLayers, setVisibleLayers] = useState(0)
-  const [visibleSigns, setVisibleSigns] = useState(0)
-  const [visiblePlanets, setVisiblePlanets] = useState(0)
-  const svgRef = useRef(null)
+  const [planetaAtivo, setPlanetaAtivo] = useState(null)
 
-  useEffect(() => {
-    if (!animated) {
-      setVisibleLayers(4)
-      setVisibleSigns(12)
-      setVisiblePlanets(10)
-      return
-    }
+  // Sem `animated`, nenhuma classe/atraso é aplicado e o mapa já nasce completo
+  const anima = (classe, atraso = 0) => (animated ? { className: classe, style: { animationDelay: `${atraso}ms` } } : {})
+  const gira = (classe) => (animated ? `${PIVO} ${classe}` : undefined)
 
-    const layerTimers = []
-    for (let i = 1; i <= 4; i++) {
-      layerTimers.push(setTimeout(() => setVisibleLayers(i), i * 500))
-    }
+  const planetas = data?.planetas || []
+  const inicioAspectos = INICIO_PLANETAS + planetas.length * 110 + 200
 
-    const signTimers = []
-    for (let i = 1; i <= 12; i++) {
-      signTimers.push(setTimeout(() => setVisibleSigns(i), 2000 + i * 150))
-    }
-
-    const planetTimers = []
-    const planetCount = data?.planetas?.length || 6
-    for (let i = 1; i <= planetCount; i++) {
-      planetTimers.push(setTimeout(() => setVisiblePlanets(i), 4000 + i * 200))
-    }
-
-    return () => {
-      layerTimers.forEach(clearTimeout)
-      signTimers.forEach(clearTimeout)
-      planetTimers.forEach(clearTimeout)
-    }
-  }, [animated, data])
-
-  const getPlanetPosition = (grau, raio = 180) => {
-    const rad = ((grau - 90) * Math.PI) / 180
-    const x = 250 + raio * Math.cos(rad)
-    const y = 250 + raio * Math.sin(rad)
-    return { x, y }
+  const destacar = (planeta) => {
+    setPlanetaAtivo(planeta?.nome || null)
+    onPlanetHover?.(planeta)
   }
 
   return (
     <div className="mandala-container relative">
       <svg
-        ref={svgRef}
-        className="w-full h-full drop-shadow-[0_0_20px_rgba(255,177,195,0.1)]"
+        className={`h-full w-full drop-shadow-[0_0_24px_rgba(255,75,137,0.12)] ${animated ? 'motion-safe:animate-orbis-sphere-in' : ''}`}
         viewBox="0 0 500 500"
       >
         <defs>
@@ -88,89 +99,52 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
             </feMerge>
           </filter>
           <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ffb1c3" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#ffb1c3" stopOpacity="0" />
+            <stop offset="0%" stopColor="#ff4b89" stopOpacity="0.35" />
+            <stop offset="55%" stopColor="#b86dfd" stopOpacity="0.12" />
+            <stop offset="100%" stopColor="#b86dfd" stopOpacity="0" />
           </radialGradient>
         </defs>
 
-        {/* Glow central */}
-        <circle cx="250" cy="250" r="60" fill="url(#centerGlow)" />
+        {/* Glow central que "respira" */}
+        <circle cx="250" cy="250" r="90" fill="url(#centerGlow)" className={animated ? 'motion-safe:animate-orbis-twinkle' : undefined} />
 
-        {/* Camada 1: Círculos externos */}
-        <g className={visibleLayers >= 1 ? 'animate-draw-circle' : 'opacity-0'} style={{ '--path-length': '1500' }}>
-          <circle
-            cx="250" cy="250" r="230"
-            fill="none" stroke="#ffb1c3" strokeWidth="0.5" opacity="0.3"
-            strokeDasharray="1500"
-            style={{ strokeDashoffset: visibleLayers >= 1 ? 0 : 1500, transition: 'stroke-dashoffset 2s ease-out' }}
-          />
+        {/* Estrelas soltas */}
+        <g fill="rgba(219,226,248,0.7)">
+          {ESTRELAS.map(([cx, cy, r, atraso]) => (
+            <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} className={animated ? 'motion-safe:animate-orbis-twinkle' : undefined} style={animated ? { animationDelay: atraso } : undefined} />
+          ))}
         </g>
 
-        {/* Camada 2: Círculo médio */}
-        <g className={visibleLayers >= 2 ? 'animate-draw-circle' : 'opacity-0'} style={{ '--path-length': '1200' }}>
-          <circle
-            cx="250" cy="250" r="190"
-            fill="none" stroke="#ffb1c3" strokeWidth="0.3" opacity="0.5"
-            strokeDasharray="1200"
-            style={{ strokeDashoffset: visibleLayers >= 2 ? 0 : 1200, transition: 'stroke-dashoffset 2s ease-out' }}
-          />
+        {/* Régua de graus girando devagar, como o aro dentado da esfera */}
+        <g {...anima(REVELAR, 700)}>
+          <g stroke="rgba(217,176,107,0.45)" strokeWidth="1" className={gira('motion-safe:animate-orbis-spin-slow')}>
+            {MARCACOES.map(([x1, y1, x2, y2], i) => <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} />)}
+          </g>
         </g>
 
-        {/* Camada 3: Círculo interno tracejado */}
-        <g className={visibleLayers >= 3 ? 'animate-draw-circle' : 'opacity-0'} style={{ '--path-length': '900' }}>
-          <circle
-            cx="250" cy="250" r="140"
-            fill="none" stroke="#ffb1c3" strokeWidth="1" opacity="0.6"
-            strokeDasharray="4 8"
-            strokeDashoffset={visibleLayers >= 3 ? 0 : 900}
-            style={{ transition: 'stroke-dashoffset 2s ease-out' }}
-          />
+        {/* Aros desenhados em sequência */}
+        <circle cx="250" cy="250" r="230" fill="none" stroke="#ffb1c3" strokeWidth="0.8" opacity="0.4" pathLength="1" strokeDasharray="1" transform="rotate(-90 250 250)" {...anima(DESENHAR, 200)} />
+        <circle cx="250" cy="250" r="190" fill="none" stroke="#deb7ff" strokeWidth="0.6" opacity="0.5" pathLength="1" strokeDasharray="1" transform="rotate(-90 250 250)" {...anima(DESENHAR, 400)} />
+        <g {...anima(REVELAR, 600)}>
+          <circle cx="250" cy="250" r="140" fill="none" stroke="#ffb1c3" strokeWidth="1" opacity="0.6" strokeDasharray="4 8" className={gira('motion-safe:animate-orbis-spin-rev')} />
         </g>
 
-        {/* Camada 4: Divisões de casa */}
-        <g style={{ opacity: visibleLayers >= 4 ? 1 : 0, transition: 'opacity 1s ease-out' }}>
-          {[0, 30, 60, 90, 120, 150].map((angulo) => {
-            const rad = ((angulo - 90) * Math.PI) / 180
-            const x1 = 250 + 100 * Math.cos(rad)
-            const y1 = 250 + 100 * Math.sin(rad)
-            const x2 = 250 + 230 * Math.cos(rad)
-            const y2 = 250 + 230 * Math.sin(rad)
-            return (
-              <line
-                key={angulo}
-                x1={x1} y1={y1} x2={x2} y2={y2}
-                stroke="#5c3f45" strokeWidth="0.5"
-                strokeDasharray="500"
-                strokeDashoffset={visibleLayers >= 4 ? 0 : 500}
-                style={{ transition: 'stroke-dashoffset 1.5s ease-out' }}
-              />
-            )
+        {/* Divisões de casa abrindo a partir do centro */}
+        <g stroke="#5c3f45" strokeWidth="0.6">
+          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angulo, i) => {
+            const p1 = getPlanetPosition(angulo, 100)
+            const p2 = getPlanetPosition(angulo, 230)
+            return <line key={angulo} x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} pathLength="1" strokeDasharray="1" {...anima(DESENHAR, 850 + i * 40)} />
           })}
         </g>
 
         {/* Signos do zodíaco */}
         {SIGNOS.map((signo, index) => {
-          const pos = getPlanetPosition(signo.grau, 210)
-          const isVisible = visibleSigns > index
+          const pos = getPlanetPosition(signo.grau + 15, 210)
           return (
-            <g
-              key={signo.nome}
-              role="img"
-              aria-label={signo.nome}
-              style={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'scale(1)' : 'scale(0.5)',
-                transformOrigin: `${pos.x}px ${pos.y}px`,
-                transition: 'all 0.4s ease-out',
-              }}
-            >
+            <g key={signo.nome} role="img" aria-label={signo.nome} {...anima(SURGIR, INICIO_SIGNOS + index * 70)}>
               <title>{signo.nome}</title>
-              <circle
-                cx={pos.x} cy={pos.y} r="16"
-                fill="#18202f"
-                fillOpacity="0.96"
-                stroke={signo.cor} strokeWidth="1.25"
-              />
+              <circle cx={pos.x} cy={pos.y} r="16" fill="#060e1d" fillOpacity="0.96" stroke={signo.cor} strokeWidth="1.25" />
               <text
                 x={pos.x} y={pos.y}
                 textAnchor="middle"
@@ -187,34 +161,32 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
           )
         })}
 
-        {/* Linhas de aspecto: ficam abaixo dos planetas e de seus rótulos */}
-        {data?.aspectos && visiblePlanets > 3 && (
-          <g style={{ opacity: visiblePlanets > 3 ? 0.6 : 0, transition: 'opacity 1s ease-out' }}>
+        {/* Linhas de aspecto: traçadas depois dos planetas, abaixo deles e de seus rótulos */}
+        {data?.aspectos && (
+          <g opacity="0.6">
             {data.aspectos.map((aspecto, index) => {
               const p1 = getPlanetPosition(aspecto.planeta1.grau, 160)
               const p2 = getPlanetPosition(aspecto.planeta2.grau, 160)
-              const colors = {
-                'conjunção': '#ffb1c3',
-                'sextil': '#deb7ff',
-                'quadratura': '#ffb4ab',
-                'trígono': '#eab9ce',
-                'oposição': '#ff4b89',
-              }
+              const envolveAtivo = planetaAtivo && (aspecto.planeta1.nome === planetaAtivo || aspecto.planeta2.nome === planetaAtivo)
+              const tracejado = aspecto.tipo === 'quadratura' || aspecto.tipo === 'oposição'
               return (
-                <line
-                  key={index}
-                  x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y}
-                  stroke={colors[aspecto.tipo] || '#5c3f45'}
-                  strokeWidth="1"
-                  strokeDasharray={aspecto.tipo === 'quadratura' || aspecto.tipo === 'oposição' ? '4 2' : 'none'}
-                />
+                <g key={index} {...anima(REVELAR, inicioAspectos + index * 60)}>
+                  <line
+                    x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y}
+                    stroke={ASPECT_COLORS[aspecto.tipo] || '#5c3f45'}
+                    strokeWidth={envolveAtivo ? 1.8 : 1}
+                    strokeDasharray={tracejado ? '4 2' : undefined}
+                    opacity={planetaAtivo && !envolveAtivo ? 0.25 : 1}
+                    className="transition-all duration-300"
+                  />
+                </g>
               )
             })}
           </g>
         )}
 
         {/* O núcleo fica acima das linhas para preservar a legibilidade no centro. */}
-        <g aria-label="Terra" role="img">
+        <g aria-label="Terra" role="img" {...anima(SURGIR, 300)}>
           <title>Terra</title>
           <circle cx="250" cy="250" r="22" fill="#0b1323" stroke="#ffb1c3" strokeWidth="2" />
           <circle cx="250" cy="250" r="17" fill="#131c2b" stroke="#ffb1c3" strokeOpacity="0.25" strokeWidth="0.75" />
@@ -224,73 +196,62 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
         </g>
 
         {/* Planetas */}
-        {data?.planetas?.slice(0, visiblePlanets).map((planeta, index) => {
+        {planetas.map((planeta, index) => {
           const pos = getPlanetPosition(planeta.grau, 160)
           const labelPos = getPlanetPosition(planeta.grau, 181)
           const labelWidth = Math.max(38, planeta.nome.length * 6.4 + 14)
           const color = PLANET_COLORS[planeta.nome] || '#ffb1c3'
+          const ativo = planetaAtivo === planeta.nome
 
           return (
             <g
               key={planeta.nome}
               className="cursor-pointer"
-              onMouseEnter={() => onPlanetHover?.(planeta)}
-              onMouseLeave={() => onPlanetHover?.(null)}
+              onMouseEnter={() => destacar(planeta)}
+              onMouseLeave={() => destacar(null)}
               onClick={() => onPlanetClick?.(planeta)}
-              style={{
-                opacity: visiblePlanets > index ? 1 : 0,
-                transform: visiblePlanets > index ? 'scale(1)' : 'scale(0)',
-                transformOrigin: `${pos.x}px ${pos.y}px`,
-                transition: 'all 0.5s ease-out',
-              }}
             >
-              <line
-                x1={pos.x} y1={pos.y}
-                x2={labelPos.x} y2={labelPos.y}
-                stroke={color}
-                strokeWidth="1"
-                strokeOpacity="0.7"
-              />
-              <circle
-                cx={pos.x} cy={pos.y} r="8.5"
-                fill={color}
-                filter="url(#glow)"
-                className="animate-planet-pulse"
-                style={{ '--planet-color': color }}
-              />
-              <rect
-                x={labelPos.x - labelWidth / 2}
-                y={labelPos.y - 9}
-                width={labelWidth}
-                height="18"
-                rx="9"
-                fill="#0b1323"
-                fillOpacity="0.94"
-                stroke={color}
-                strokeWidth="0.75"
-                strokeOpacity="0.75"
-              />
-              <text
-                x={labelPos.x} y={labelPos.y}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fill="#dbe2f8"
-                fontSize="10.5"
-                fontFamily="'Space Grotesk', 'Inter', sans-serif"
-                fontWeight="650"
-                letterSpacing="0.15"
-              >
-                {planeta.nome}
-              </text>
+              <g {...anima(SURGIR, INICIO_PLANETAS + index * 110)}>
+                {/* halo de destaque no hover */}
+                <circle cx={pos.x} cy={pos.y} r="15" fill="none" stroke={color} strokeWidth="1" opacity={ativo ? 0.7 : 0} className="transition-opacity duration-300" />
+                <line x1={pos.x} y1={pos.y} x2={labelPos.x} y2={labelPos.y} stroke={color} strokeWidth="1" strokeOpacity="0.7" />
+                <circle
+                  cx={pos.x} cy={pos.y} r="8.5"
+                  fill={color}
+                  filter="url(#glow)"
+                  className="animate-planet-pulse [transform-box:fill-box] origin-center"
+                  style={{ '--planet-color': color }}
+                />
+                <rect
+                  x={labelPos.x - labelWidth / 2}
+                  y={labelPos.y - 9}
+                  width={labelWidth}
+                  height="18"
+                  rx="9"
+                  fill="#060e1d"
+                  fillOpacity="0.94"
+                  stroke={color}
+                  strokeWidth={ativo ? 1.4 : 0.75}
+                  strokeOpacity="0.75"
+                  className="transition-all duration-300"
+                />
+                <text
+                  x={labelPos.x} y={labelPos.y}
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fill={ativo ? '#ffffff' : '#dbe2f8'}
+                  fontSize="10.5"
+                  fontFamily="'Space Grotesk', 'Inter', sans-serif"
+                  fontWeight="650"
+                  letterSpacing="0.15"
+                >
+                  {planeta.nome}
+                </text>
+              </g>
             </g>
           )
         })}
       </svg>
-
-      {/* Anel de rotação externo */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-full h-full border border-dashed border-outline-variant rounded-full animate-rotate-slow opacity-20" />
-      </div>
     </div>
   )
 }
