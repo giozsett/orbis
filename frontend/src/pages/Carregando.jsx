@@ -22,7 +22,7 @@ export default function Carregando() {
         <MandalaLoading />
 
         <div className="mt-10 flex max-w-lg flex-col items-center text-center">
-          <h1 className="bg-orbis-wordmark bg-[length:250%_100%] bg-clip-text font-headline text-5xl font-bold tracking-[0.06em] text-transparent motion-safe:[animation:orbis-rise_0.9s_cubic-bezier(0.22,1,0.36,1)_both,orbis-shimmer_7s_ease-in-out_1.2s_infinite]">
+          <h1 className="bg-orbis-wordmark bg-[length:250%_100%] bg-clip-text font-headline text-5xl font-medium tracking-[0.01em] text-transparent motion-safe:[animation:orbis-rise_0.9s_cubic-bezier(0.22,1,0.36,1)_both,orbis-shimmer_7s_ease-in-out_1.2s_infinite]">
             ORBIS
           </h1>
           <p className="mt-4 font-label text-xs uppercase tracking-[0.22em] text-outline motion-safe:animate-orbis-twinkle">

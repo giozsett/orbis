@@ -52,7 +52,7 @@ export default function Erro() {
           <p className="mb-4 font-label text-[11px] uppercase tracking-[0.32em] text-primary motion-safe:animate-orbis-rise sm:text-xs" style={{ animationDelay: '150ms' }}>
             Erro 404 · fluxo interrompido
           </p>
-          <h1 className="bg-orbis-wordmark bg-[length:250%_100%] bg-clip-text font-headline text-4xl md:text-5xl font-bold leading-tight text-transparent motion-safe:[animation:orbis-rise_0.9s_cubic-bezier(0.22,1,0.36,1)_280ms_both,orbis-shimmer_7s_ease-in-out_1.2s_infinite]">Interferência Cósmica</h1>
+          <h1 className="bg-orbis-wordmark bg-[length:250%_100%] bg-clip-text font-headline text-4xl md:text-5xl font-medium leading-tight text-transparent motion-safe:[animation:orbis-rise_0.9s_cubic-bezier(0.22,1,0.36,1)_280ms_both,orbis-shimmer_7s_ease-in-out_1.2s_infinite]">Interferência Cósmica</h1>
           <p className="text-base md:text-lg text-on-surface-variant/80 motion-safe:animate-orbis-rise" style={{ animationDelay: '430ms' }}>
             Os sensores do observatório detectaram um <span className="text-primary">alinhamento inválido</span> para as coordenadas fornecidas. A transmissão de dados foi pausada para evitar corrupção sistêmica.
           </p>

@@ -12,7 +12,7 @@ from backend.app.database import db
 from backend.app.frontend import servir_spa
 from backend.models.mapa_natal import MapaNatal
 from backend.services.mapa_natal_service import calcular_mapa_natal
-from backend.services.arcano_pessoal_service import calcular_arcano_pessoal, obter_arcano, obter_arcano_pessoal, obter_arcanos
+from backend.services.arcano_pessoal_service import ano_do_ciclo, calcular_arcano_pessoal, obter_arcano, obter_arcano_pessoal, obter_arcanos
 from backend.services.matriz_destino_service import calcular_matriz_destino
 from backend.services.asteroide_service import AsteroideCalculoError, calcular_asteroides_mapa
 from backend.services.interpretacao_base_service import enriquecer_dados_mapa
@@ -270,7 +270,7 @@ def tarot_por_mapa(mapa_id):
 
 def _resposta_tarot(mapa):
     ano_atual = datetime.now().year
-    ano = request.args.get("ano", type=int) or ano_atual
+    ano = request.args.get("ano", type=int) or ano_do_ciclo(mapa.data_nascimento)
     if not 1900 <= ano <= ano_atual + 100:
         return jsonify(erro="Informe um ano válido."), 400
     return jsonify(

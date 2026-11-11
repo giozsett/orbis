@@ -257,7 +257,7 @@ export default function Login() {
         <div className="max-w-[560px] text-center lg:text-left">
           <p className="mb-5 font-label text-[11px] uppercase tracking-[0.32em] text-primary motion-safe:animate-orbis-rise sm:text-xs" style={{ animationDelay: '150ms' }}>Mapa natal · observatório celeste</p>
           <div style={{ animationDelay: '280ms' }} className="relative inline-block px-[22px] py-3.5 motion-safe:animate-orbis-rise motion-safe:before:animate-orbis-bracket motion-safe:after:animate-orbis-bracket before:absolute before:left-0 before:top-0 before:h-[26px] before:w-[26px] before:border-l-2 before:border-t-2 before:border-primary before:content-[''] after:absolute after:bottom-0 after:right-0 after:h-[26px] after:w-[26px] after:border-b-2 after:border-r-2 after:border-primary after:content-[''] sm:px-[34px] sm:py-[18px]">
-            <h1 className="bg-orbis-wordmark bg-[length:250%_100%] bg-clip-text font-headline motion-safe:animate-orbis-shimmer text-[clamp(48px,9vw,88px)] font-bold leading-[0.92] tracking-[0.06em] text-transparent">
+            <h1 className="bg-orbis-wordmark bg-[length:250%_100%] bg-clip-text font-headline motion-safe:animate-orbis-shimmer text-[clamp(48px,9vw,88px)] font-medium leading-[0.92] tracking-[0.01em] text-transparent">
               ORBIS
             </h1>
           </div>

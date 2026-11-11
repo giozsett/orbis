@@ -24,15 +24,19 @@ def reduzir_arcano(numero: int) -> int:
     return numero or 22
 
 
+def _somar_algarismos(texto: str) -> int:
+    return sum(int(algarismo) for algarismo in texto)
+
+
 def _validar_data(data_nascimento) -> None:
     if not isinstance(data_nascimento, date):
         raise ArcanoPessoalError("Informe uma data de nascimento válida.")
 
 
 def calcular_arcano_pessoal(data_nascimento: date) -> int:
-    """Soma dia, mês e ano e reduz o total até o intervalo de 1 a 22."""
+    """Soma todos os algarismos de DD/MM/AAAA e reduz o total até o intervalo de 1 a 22."""
     _validar_data(data_nascimento)
-    resultado = reduzir_arcano(data_nascimento.day + data_nascimento.month + data_nascimento.year)
+    resultado = reduzir_arcano(_somar_algarismos(data_nascimento.strftime("%d%m%Y")))
     if not 1 <= resultado <= 22:
         raise ArcanoPessoalError("Não foi possível obter um arcano entre 1 e 22.")
     return resultado
@@ -46,9 +50,17 @@ def calcular_arcano_complementar(pessoal: int) -> int | None:
 
 
 def calcular_arcano_anual(data_nascimento: date, ano: int) -> int:
-    """Soma dia e mês de nascimento ao ano informado e reduz até 22."""
+    """Soma os algarismos de dia e mês de nascimento com os do ano do ciclo e reduz até 22."""
     _validar_data(data_nascimento)
-    return reduzir_arcano(data_nascimento.day + data_nascimento.month + ano)
+    return reduzir_arcano(_somar_algarismos(f"{data_nascimento:%d%m}{ano}"))
+
+
+def ano_do_ciclo(data_nascimento: date, hoje: date | None = None) -> int:
+    """Ano do último aniversário: o arcano anual vale de aniversário a aniversário."""
+    _validar_data(data_nascimento)
+    hoje = hoje or date.today()
+    ja_fez_aniversario = (hoje.month, hoje.day) >= (data_nascimento.month, data_nascimento.day)
+    return hoje.year if ja_fez_aniversario else hoje.year - 1
 
 
 @lru_cache(maxsize=1)

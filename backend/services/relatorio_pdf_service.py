@@ -1,6 +1,5 @@
 """Relatório vetorial e compacto do mapa natal principal."""
 
-from datetime import date
 from io import BytesIO
 from math import cos, pi, radians, sin
 from pathlib import Path
@@ -25,7 +24,7 @@ from reportlab.platypus import (
 )
 
 from backend.models.mapa_natal import MapaNatal
-from backend.services.arcano_pessoal_service import carregar_catalogo_arcanos, obter_arcanos
+from backend.services.arcano_pessoal_service import ano_do_ciclo, carregar_catalogo_arcanos, obter_arcanos
 from backend.services.matriz_destino_service import calcular_matriz_destino
 
 
@@ -750,7 +749,7 @@ def _capitulo_tarot(mapa: MapaNatal, estilos: dict, largura: float, ano: int) ->
         ["Zona de conforto", "Centro da matriz", nome(matriz["pontos"]["E"])],
         ["Canal do dinheiro", f"Entrada {canais['dinheiro']['ponto']} · equilíbrio {canais['dinheiro']['cruzamento']}", nome(canais["dinheiro"]["canal"])],
         ["Canal do amor", f"Entrada {canais['amor']['entrada']} · equilíbrio {canais['amor']['cruzamento']}", nome(canais["amor"]["canal"])],
-        ["Cauda cármica", " · ".join(str(n) for n in canais["cauda_carmica"]), nome(canais["cauda_carmica"][0])],
+        ["Cauda cármica", " · ".join(str(n) for n in canais["cauda_carmica"]), nome(canais["cauda_carmica"][-1])],
     ]
 
     linhas_chakras = [["Chakra", "Físico", "Energia", "Emoções"]] + [
@@ -777,13 +776,13 @@ def _capitulo_tarot(mapa: MapaNatal, estilos: dict, largura: float, ano: int) ->
             estilos["suave"],
         ),
         Spacer(1, 4 * mm),
-        _bloco_arcano(pessoal, estilos, largura, "Arcano pessoal", f"Soma de dia, mês e ano de nascimento ({nascimento}), reduzida até 22."),
+        _bloco_arcano(pessoal, estilos, largura, "Arcano pessoal", f"Soma de todos os algarismos da data de nascimento ({nascimento}), reduzida até 22."),
         Spacer(1, 4 * mm),
         bloco_complementar,
         Spacer(1, 4 * mm),
         _bloco_arcano(
             anual, estilos, largura, f"Arcano anual · {ano}",
-            f"Dia e mês de nascimento somados a {ano}, reduzidos até 22. Vale de aniversário a aniversário.",
+            f"Algarismos do dia e mês de nascimento somados aos de {ano}, reduzidos até 22. Vale do aniversário de {ano} ao seguinte.",
         ),
         PageBreak(),
         *_secao("Tarot", "Matriz do destino", estilos),
@@ -985,7 +984,7 @@ def gerar_relatorio_pdf(mapa: MapaNatal, ano: int | None = None) -> bytes:
         ))
     else:
         historia.append(Paragraph("Nenhum aspecto foi registrado para este mapa.", estilos["corpo"]))
-    historia += _capitulo_tarot(mapa, estilos, largura, ano or date.today().year)
+    historia += _capitulo_tarot(mapa, estilos, largura, ano or ano_do_ciclo(mapa.data_nascimento))
     historia += [
         Spacer(1, 8 * mm),
         Paragraph(

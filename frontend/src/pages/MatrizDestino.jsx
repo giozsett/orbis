@@ -16,16 +16,18 @@ const PROPOSITOS = [
   ['Propósito espiritual', 'a partir dos 60 anos', [['espiritual', 'Pessoal + social']]],
 ]
 
-function Numero({ numero, catalogo, onArcano, destaque = false }) {
+// Linha de leitura: rótulo à esquerda, numeral e nome do arcano à direita.
+// Ocupa a largura toda do card, então nunca disputa espaço com as vizinhas.
+function Leitura({ rotulo, numero, catalogo, onArcano, destaque = false, cor }) {
   return (
     <button
       type="button"
       onClick={() => onArcano(numero)}
-      title={catalogo[numero]?.nome}
-      className={`flex min-h-[44px] items-center gap-2 rounded-full border px-3 text-left transition-colors hover:bg-white/10 ${destaque ? 'border-primary/40 bg-primary/10' : 'border-white/10 bg-white/[.03]'}`}
+      className="group flex min-h-[48px] w-full items-center gap-3 border-t border-white/[0.06] py-2 text-left first:border-t-0"
     >
-      <span className="font-label text-base text-on-surface">{numero}</span>
-      <span className="truncate text-xs text-on-surface-variant">{catalogo[numero]?.nome}</span>
+      <span className="min-w-0 flex-1 truncate text-sm text-on-surface-variant" style={cor ? { color: cor } : undefined}>{rotulo}</span>
+      <span className={`min-w-0 truncate text-right text-sm transition-colors group-hover:text-on-surface ${destaque ? 'text-on-surface' : 'text-outline'}`}>{catalogo[numero]?.nome}</span>
+      <span className={`w-9 shrink-0 text-right font-headline text-2xl leading-none ${destaque ? 'text-primary' : 'text-on-surface'}`}>{numero}</span>
     </button>
   )
 }
@@ -81,7 +83,7 @@ export default function MatrizDestino() {
                 <div className="h-32 w-20 shrink-0"><ArcanoIlustracao arcano={arcanoPainel} compacta /></div>
                 <div className="min-w-0">
                   <p className="font-label text-[11px] uppercase tracking-[0.22em]" style={{ color: arcanoPainel.cores?.[0] }}>{rotuloPonto(pontoPainel)}</p>
-                  <h2 className="mt-1 font-headline text-2xl">{arcanoPainel.numero} · {arcanoPainel.nome}</h2>
+                  <h2 className="mt-1 font-headline text-2xl leading-tight">{arcanoPainel.numero} · {arcanoPainel.nome}</h2>
                   <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">{arcanoPainel.resumo}</p>
                   <button type="button" onClick={() => setAberto(arcanoPainel)} className="mt-3 min-h-[44px] rounded-full border px-4 text-sm transition-colors hover:bg-white/5" style={{ borderColor: `${arcanoPainel.cores?.[0]}80`, color: arcanoPainel.cores?.[0] }}>
                     Ler o arcano
@@ -92,40 +94,30 @@ export default function MatrizDestino() {
 
             {PROPOSITOS.map(([titulo, fase, itens]) => (
               <GlassCard key={titulo} className="p-5">
-                <div className="flex items-baseline justify-between gap-3">
-                  <h3 className="font-headline text-lg">{titulo}</h3>
-                  <p className="font-label text-[10px] uppercase tracking-[0.16em] text-outline">{fase}</p>
+                <div className="mb-1 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                  <h3 className="font-headline text-xl">{titulo}</h3>
+                  <p className="text-xs text-outline">{fase}</p>
                 </div>
-                <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                  {itens.map(([chave, rotulo]) => (
-                    <div key={chave} className="min-w-0">
-                      <p className="mb-1 font-label text-[10px] uppercase tracking-wider text-outline">{rotulo}</p>
-                      <Numero numero={proposito[chave]} catalogo={catalogo} onArcano={abrir} destaque={chave === 'pessoal' || chave === 'social' || chave === 'espiritual'} />
-                    </div>
-                  ))}
-                </div>
+                {itens.map(([chave, rotulo]) => (
+                  <Leitura key={chave} rotulo={rotulo} numero={proposito[chave]} catalogo={catalogo} onArcano={abrir} destaque={chave === 'pessoal' || chave === 'social' || chave === 'espiritual'} />
+                ))}
               </GlassCard>
             ))}
 
             <GlassCard className="p-5">
-              <h3 className="font-headline text-lg">Amor, dinheiro e carma</h3>
-              <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                <div className="min-w-0">
-                  <p className="mb-1 font-label text-[10px] uppercase tracking-wider text-[#f2c7a5]">Canal do dinheiro</p>
-                  <Numero numero={canais.dinheiro.canal} catalogo={catalogo} onArcano={abrir} destaque />
-                </div>
-                <div className="min-w-0">
-                  <p className="mb-1 font-label text-[10px] uppercase tracking-wider text-[#ff897d]">Canal do amor</p>
-                  <Numero numero={canais.amor.canal} catalogo={catalogo} onArcano={abrir} destaque />
-                </div>
-                <div className="min-w-0">
-                  <p className="mb-1 font-label text-[10px] uppercase tracking-wider text-[#ff6a7d]">Cauda cármica</p>
-                  <p className="flex min-h-[44px] items-center gap-1 font-label text-base text-on-surface">
-                    {canais.cauda_carmica.map((numero, i) => (
-                      <button key={i} type="button" onClick={() => abrir(numero)} title={catalogo[numero]?.nome} className="rounded-full px-2 py-1 hover:bg-white/10">{numero}</button>
-                    ))}
-                  </p>
-                </div>
+              <h3 className="mb-1 font-headline text-xl">Amor, dinheiro e carma</h3>
+              <Leitura rotulo="Canal do dinheiro" cor="#f2c7a5" numero={canais.dinheiro.canal} catalogo={catalogo} onArcano={abrir} destaque />
+              <Leitura rotulo="Canal do amor" cor="#ff897d" numero={canais.amor.canal} catalogo={catalogo} onArcano={abrir} destaque />
+              <div className="flex min-h-[48px] items-center gap-3 border-t border-white/[0.06] py-2">
+                <span className="min-w-0 flex-1 truncate text-sm text-[#ff6a7d]">Cauda cármica</span>
+                <span className="flex shrink-0 items-center font-headline text-2xl leading-none text-on-surface">
+                  {canais.cauda_carmica.map((numero, i) => (
+                    <span key={i} className="flex items-center">
+                      {i > 0 && <span className="px-1 text-base text-outline" aria-hidden="true">–</span>}
+                      <button type="button" onClick={() => abrir(numero)} title={catalogo[numero]?.nome} className="min-h-[40px] rounded-full px-1.5 transition-colors hover:text-primary">{numero}</button>
+                    </span>
+                  ))}
+                </span>
               </div>
             </GlassCard>
           </div>

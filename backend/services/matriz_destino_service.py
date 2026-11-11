@@ -118,7 +118,8 @@ def calcular_matriz_destino(data_nascimento: date) -> dict:
         "canais": {
             "dinheiro": {"entrada": p["C"], "ponto": p["C2"], "cruzamento": p["X"], "canal": p["dinheiro"]},
             "amor": {"entrada": p["D2"], "cruzamento": p["X"], "canal": p["amor"]},
-            "cauda_carmica": [p["D"], p["D1"], p["D2"]],
+            # lida do centro para fora, terminando no vértice D
+            "cauda_carmica": [p["D2"], p["D1"], p["D"]],
         },
         "idades": idades,
         "chakras": chakras,

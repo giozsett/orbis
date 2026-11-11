@@ -9,7 +9,7 @@ const ASPECT_COLORS = {
   'oposição': '#ff897d',
 }
 
-const FONTE_TEXTO = "'Space Grotesk', 'Inter', sans-serif"
+const FONTE_TEXTO = "'Instrument Sans', system-ui, sans-serif"
 
 // Geometria da roda (viewBox com margem para os rótulos dos eixos)
 const C = 250

@@ -1,6 +1,8 @@
 import { useState } from 'react'
 
-const FONTE_TEXTO = "'Space Grotesk', 'Inter', sans-serif"
+const FONTE_TEXTO = "'Instrument Sans', system-ui, sans-serif"
+// numerais dos pontos principais na mesma serifa dos títulos
+const FONTE_NUMERAL = "'Fraunces', Georgia, serif"
 
 // Geometria do octagrama (viewBox com margem para a linha das idades)
 const C = 250
@@ -208,7 +210,7 @@ export default function MatrizDestino({ matriz, catalogo = {}, selecionado, onPo
                 x={p.x} y={p.y + 0.5}
                 textAnchor="middle" dominantBaseline="central"
                 fill={ehAtivo ? '#ffffff' : cor}
-                fontFamily={FONTE_TEXTO} fontSize={raio >= 18 ? 15 : raio >= 13 ? 11 : 9.5} fontWeight="700"
+                fontFamily={raio >= 18 ? FONTE_NUMERAL : FONTE_TEXTO} fontSize={raio >= 18 ? 17 : raio >= 13 ? 11 : 9.5} fontWeight={raio >= 18 ? 500 : 600}
                 aria-hidden="true"
               >
                 {valor}

@@ -51,3 +51,19 @@ def test_chakras():
 def test_entrada_invalida():
     with pytest.raises(ArcanoPessoalError):
         calcular_matriz_destino(None)
+
+
+def test_confere_com_exemplo_de_referencia():
+    # exemplo de 07/01/1987 do destiny-matrix.cc: J = A + E e Q = A + J
+    pontos = calcular_matriz_destino(date(1987, 1, 7))["pontos"]
+    assert {k: pontos[k] for k in "ABCDEFGHI"} == {
+        "A": 7, "B": 1, "C": 7, "D": 15, "E": 3, "F": 8, "G": 8, "H": 22, "I": 22,
+    }
+    assert (pontos["A2"], pontos["B2"], pontos["C2"], pontos["D2"]) == (10, 4, 10, 18)
+    assert (pontos["A1"], pontos["B1"], pontos["C1"], pontos["D1"]) == (17, 5, 17, 6)
+    assert (pontos["X"], pontos["amor"], pontos["dinheiro"]) == (10, 10, 20)
+
+
+def test_cauda_carmica_lida_do_centro_para_fora():
+    # exemplo de 17/08/1992 do destiny-matrix.cc: cauda 21-4-10
+    assert calcular_matriz_destino(date(1992, 8, 17))["canais"]["cauda_carmica"] == [21, 4, 10]

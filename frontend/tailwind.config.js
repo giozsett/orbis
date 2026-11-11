@@ -159,9 +159,11 @@ export default {
         'orbis-fade-in': 'orbis-fade-in 1.2s ease-out both',
       },
       fontFamily: {
-        'headline': ['Space Grotesk', 'sans-serif'],
-        'body': ['Inter', 'sans-serif'],
-        'label': ['JetBrains Mono', 'monospace'],
+        // Fraunces: títulos e numerais dos arcanos; Instrument Sans: texto e interface;
+        // DM Mono: leituras de instrumento (graus, coordenadas, rótulos técnicos)
+        'headline': ['Fraunces', 'Georgia', 'serif'],
+        'body': ['Instrument Sans', 'system-ui', 'sans-serif'],
+        'label': ['DM Mono', 'ui-monospace', 'monospace'],
       },
     },
   },

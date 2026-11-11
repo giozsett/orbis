@@ -23,12 +23,12 @@ export default function ArcanoIlustracao({ arcano, compacta = false }) {
       {[42, 78, 118, 162, 204, 238].map((x, indice) => (
         <circle key={x} cx={x} cy={78 + (indice % 2) * 245} r={indice % 2 ? 2 : 3} fill={primaria} opacity=".8" />
       ))}
-      <text x="140" y="55" textAnchor="middle" fill={primaria} fontFamily="serif" fontSize="19">{arcano.numero}</text>
+      <text x="140" y="55" textAnchor="middle" fill={primaria} fontFamily="Fraunces, Georgia, serif" fontSize="19">{arcano.numero}</text>
       <text x="140" y="235" textAnchor="middle" fill={primaria} fontFamily="serif" fontSize={compacta ? '92' : '112'}>{arcano.simbolo}</text>
       <path d="M80 305 Q140 270 200 305 Q140 340 80 305Z" fill="none" stroke={primaria} strokeOpacity=".75" />
       <circle cx="140" cy="305" r="12" fill={secundaria} stroke={primaria} />
-      <text x="140" y="406" textAnchor="middle" fill="#f8eff5" fontFamily="serif" fontSize="18" letterSpacing="1">{arcano.nome.toUpperCase()}</text>
-      <text x="140" y="428" textAnchor="middle" fill={primaria} fontFamily="sans-serif" fontSize="8" letterSpacing="2">ORBIS · ARCANO PESSOAL</text>
+      <text x="140" y="406" textAnchor="middle" fill="#f8eff5" fontFamily="Fraunces, Georgia, serif" fontSize="17" letterSpacing="1.5">{arcano.nome.toUpperCase()}</text>
+      <text x="140" y="428" textAnchor="middle" fill={primaria} fontFamily="'DM Mono', monospace" fontSize="8" letterSpacing="2">ORBIS · ARCANO PESSOAL</text>
     </svg>
   )
 }

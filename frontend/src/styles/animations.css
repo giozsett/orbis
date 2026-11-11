@@ -40,8 +40,35 @@
 body {
   background-color: var(--color-background);
   color: var(--color-on-surface);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Instrument Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
+}
+
+/* ========== TIPOGRAFIA ========== */
+/* Em @layer base para que font-bold, tracking-* etc. dos componentes continuem valendo */
+@layer base {
+  /* Títulos em serifa óptica: peso contido e entrelinha curta, sem negrito pesado */
+  .font-headline {
+    font-optical-sizing: auto;
+    font-weight: 460;
+    letter-spacing: -0.012em;
+    font-feature-settings: 'lnum', 'kern';
+  }
+
+  /* Leituras de instrumento: algarismos alinhados em coluna */
+  .font-label {
+    font-variant-numeric: tabular-nums;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
 }
 
 ::selection {

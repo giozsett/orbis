@@ -50,7 +50,7 @@ def test_tarot_do_mapa(cliente_com_mapa):
     assert dados["mapa"] == {"id": mapa_id, "nome": "Mapa de teste", "data_nascimento": "1990-08-15"}
     assert dados["arcanos"]["pessoal"]["numero"] == 6
     assert dados["arcanos"]["complementar"] is None
-    assert dados["arcanos"]["anual"]["numero"] == 15
+    assert dados["arcanos"]["anual"]["numero"] == 6
     assert dados["matriz"]["pontos"]["E"] == 12
     assert len(dados["catalogo"]) == 22
 

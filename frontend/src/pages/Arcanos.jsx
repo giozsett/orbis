@@ -7,15 +7,14 @@ import ArcanoDetalhes from '../components/arcano/ArcanoDetalhes'
 import GlassCard from '../components/ui/GlassCard'
 import useTarotMapa from '../hooks/useTarotMapa'
 
-const ANO_ATUAL = new Date().getFullYear()
-
 function dataBR(iso) {
   const [ano, mes, dia] = iso.split('-')
   return `${dia}/${mes}/${ano}`
 }
 
 export default function Arcanos() {
-  const [ano, setAno] = useState(ANO_ATUAL)
+  // null = ciclo atual, definido pelo servidor a partir do último aniversário
+  const [ano, setAno] = useState(null)
   const [aberto, setAberto] = useState(null)
   const { mapa, tarot, erro } = useTarotMapa(ano)
 
@@ -42,7 +41,7 @@ export default function Arcanos() {
             <ArcanoCard
               arcano={pessoal}
               rotulo="Arcano pessoal"
-              nota={`Soma de dia, mês e ano de nascimento (${nascimento}), reduzida até 22.`}
+              nota={`Soma de todos os algarismos da data de nascimento (${nascimento}), reduzida até 22.`}
               onExplorar={() => setAberto(pessoal)}
             />
           </div>
@@ -68,21 +67,21 @@ export default function Arcanos() {
 
           <div className="space-y-3 motion-safe:animate-orbis-rise" style={{ animationDelay: '800ms' }}>
             <div className="flex items-center justify-center gap-2 md:justify-start">
-              <button type="button" onClick={() => setAno(atual => atual - 1)} aria-label="Ano anterior" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-on-surface-variant transition-colors hover:bg-white/5">
+              <button type="button" onClick={() => setAno(anual.ano - 1)} aria-label="Ano anterior" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-on-surface-variant transition-colors hover:bg-white/5">
                 <span className="material-symbols-outlined">chevron_left</span>
               </button>
               <p className="min-w-[7rem] text-center font-label text-sm uppercase tracking-[0.2em] text-on-surface" aria-live="polite">Ciclo {anual.ano}</p>
-              <button type="button" onClick={() => setAno(atual => atual + 1)} aria-label="Próximo ano" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-on-surface-variant transition-colors hover:bg-white/5">
+              <button type="button" onClick={() => setAno(anual.ano + 1)} aria-label="Próximo ano" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-on-surface-variant transition-colors hover:bg-white/5">
                 <span className="material-symbols-outlined">chevron_right</span>
               </button>
-              {ano !== ANO_ATUAL && (
-                <button type="button" onClick={() => setAno(ANO_ATUAL)} className="ml-1 min-h-[44px] rounded-full px-3 font-label text-xs uppercase tracking-wider text-primary hover:bg-white/5">Hoje</button>
+              {ano !== null && (
+                <button type="button" onClick={() => setAno(null)} className="ml-1 min-h-[44px] rounded-full px-3 font-label text-xs uppercase tracking-wider text-primary hover:bg-white/5">Hoje</button>
               )}
             </div>
             <ArcanoCard
               arcano={anual}
               rotulo={`Arcano anual · ${anual.ano}`}
-              nota={`Dia e mês de nascimento (${dia}/${mes}) somados a ${anual.ano}, reduzidos até 22. Vale de aniversário a aniversário.`}
+              nota={`Algarismos do dia e mês de nascimento (${dia}/${mes}) somados aos de ${anual.ano}, reduzidos até 22. Vale do aniversário de ${anual.ano} ao seguinte.`}
               acao="Explorar o ano"
               onExplorar={() => setAberto(anual)}
             />
