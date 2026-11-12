@@ -34,16 +34,12 @@ def create_app(config_object=Config):
 
     from backend.routes.auth import auth_bp
     from backend.routes.charts import charts_bp
-    from backend.routes.chat import chat_bp
-    from backend.routes.horoscopo import horoscopo_bp
     from backend.routes.localizacoes import localizacoes_bp
     from backend.routes.pages import pages_bp
 
     app.register_blueprint(pages_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(charts_bp)
-    app.register_blueprint(horoscopo_bp)
-    app.register_blueprint(chat_bp)
     app.register_blueprint(localizacoes_bp)
 
     @app.errorhandler(404)

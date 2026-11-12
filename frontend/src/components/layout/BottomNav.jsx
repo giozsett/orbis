@@ -4,7 +4,7 @@ import BottomSheet from '../ui/BottomSheet'
 import BotaoTema from '../ui/BotaoTema'
 import { abasMobile, ehRotaMais, ehRotaMapa, encerrarSessao, itensMais } from './navItems'
 
-// Tab bar fixa do mobile (abaixo de lg). Some quando o teclado está aberto (ver Chat).
+// Tab bar fixa do mobile (abaixo de lg). Some quando o teclado está aberto.
 export default function BottomNav({ onAbrirMapa, comMapa }) {
   const location = useLocation()
   const navigate = useNavigate()

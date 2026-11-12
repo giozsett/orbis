@@ -62,7 +62,7 @@ export default function MeusMapas() {
               <span className="font-label text-xs uppercase tracking-[0.2em] text-primary">Seu observatório</span>
               <h1 className="mt-2 font-headline text-3xl text-on-surface md:text-5xl">Meus Mapas</h1>
               <p className="mt-3 max-w-2xl text-sm text-on-surface-variant md:text-base">
-                Consulte todos os mapas já calculados. O primeiro permanece como principal para personalizar o horóscopo e o Chat Astral.
+                Consulte todos os mapas já calculados. O primeiro permanece como seu mapa principal.
               </p>
             </div>
             <Link

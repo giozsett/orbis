@@ -8,7 +8,7 @@ from flask import current_app, render_template, send_from_directory
 DIST_FRONTEND = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 ROTAS_SPA = {
     "/login", "/dashboard", "/criar-mapa", "/meus-mapas", "/mapa",
-    "/interpretacoes", "/horoscopo", "/horoscopos-malucos", "/chat", "/carregando", "/perfil",
+    "/interpretacoes", "/horoscopos-malucos", "/carregando", "/perfil",
     "/arcanos", "/matriz-do-destino",
 }
 

@@ -132,9 +132,6 @@ export default function TopNav() {
               Dashboard
             </Link>
             {navGroups.map(renderDesktopGroup)}
-            <Link to="/chat" className={linkClass(location.pathname === '/chat')}>
-              Chat Astral
-            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-2">

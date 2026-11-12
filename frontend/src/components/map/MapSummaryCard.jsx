@@ -71,7 +71,7 @@ export default function MapSummaryCard({
       {mapa.principal && (
         <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-on-surface-variant">
           <span className="material-symbols-outlined text-base text-primary">auto_awesome</span>
-          Horóscopos e conversas do Chat Astral usam este mapa.
+          Este é o seu mapa principal.
         </p>
       )}
 

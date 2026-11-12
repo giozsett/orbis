@@ -14,10 +14,9 @@ export const mapaGroup = {
 
 export const horoscopoGroup = {
   id: 'horo',
-  label: 'Horóscopo',
-  match: (path) => path === '/horoscopo' || path.startsWith('/horoscopos-malucos'),
+  label: 'Horóscopos',
+  match: (path) => path.startsWith('/horoscopos-malucos'),
   items: [
-    { path: '/horoscopo', label: 'Horóscopo do dia', icon: 'calendar_today' },
     { path: '/horoscopos-malucos', label: 'Horóscopos malucos', icon: 'psychology' },
   ],
 }
@@ -55,8 +54,7 @@ export const ehRotaMapa = (path) => path === '/mapa' || path.startsWith('/mapa/'
 export const abasMobile = [
   { id: 'inicio', path: '/dashboard', label: 'Início', icon: 'home', match: (path) => path === '/dashboard' || path === '/criar-mapa' },
   { id: 'mapa', path: '/mapa', label: 'Mapa', icon: 'explore', match: ehRotaMapa },
-  { id: 'horo', path: '/horoscopo', label: 'Horóscopo', icon: 'calendar_today', match: horoscopoGroup.match },
-  { id: 'chat', path: '/chat', label: 'Chat', icon: 'forum', match: (path) => path === '/chat' },
+  { id: 'horo', path: '/horoscopos-malucos', label: 'Horóscopos', icon: 'psychology', match: horoscopoGroup.match },
 ]
 
 // Itens da folha "Mais"
@@ -65,7 +63,6 @@ export const itensMais = [
   { path: '/interpretacoes', label: 'Interpretações', icon: 'auto_stories' },
   { path: '/arcanos', label: 'Arcanos', icon: 'style' },
   { path: '/matriz-do-destino', label: 'Matriz do destino', icon: 'pentagon' },
-  { path: '/horoscopos-malucos', label: 'Horóscopos malucos', icon: 'psychology' },
   { path: '/criar-mapa', label: 'Criar novo mapa', icon: 'add_circle' },
   { path: '/perfil', label: 'Meu perfil', icon: 'account_circle' },
 ]

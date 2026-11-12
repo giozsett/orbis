@@ -4,8 +4,6 @@ import Dashboard from './pages/Dashboard'
 import CriarMapa from './pages/CriarMapa'
 import MapaPrincipal from './pages/MapaPrincipal'
 import Interpretacoes from './pages/Interpretacoes'
-import Horoscopo from './pages/Horoscopo'
-import Chat from './pages/Chat'
 import Carregando from './pages/Carregando'
 import Erro from './pages/Erro'
 import Perfil from './pages/Perfil'
@@ -42,9 +40,7 @@ export default function App() {
         <Route path="/arcanos" element={<Arcanos />} />
         <Route path="/matriz-do-destino" element={<MatrizDestino />} />
         <Route path="/interpretacoes" element={<Interpretacoes />} />
-        <Route path="/horoscopo" element={<Horoscopo />} />
         <Route path="/horoscopos-malucos" element={<HoroscoposMalucos />} />
-        <Route path="/chat" element={<Chat />} />
         <Route path="/carregando" element={<Carregando />} />
         <Route path="/perfil" element={<Perfil />} />
         <Route path="*" element={<Erro />} />

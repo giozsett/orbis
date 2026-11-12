@@ -21,3 +21,9 @@ frontend/dist/
 proximos_passos.txt
 !/tests/
 !/tests/*.py
+
+# Testes E2E (plano, resultado e screenshots versionados; vídeos não)
+!/tests/e2e/
+!/tests/e2e/**
+tests/e2e/evidencias/*.webm
+tests/e2e/evidencias/*.mp4

@@ -14,7 +14,7 @@ export default function Erro() {
         </Link>
         <div className="hidden md:flex gap-6 items-center">
           <Link to="/dashboard" className="font-label text-sm text-on-surface-variant hover:text-secondary transition-colors cursor-pointer">Dashboard</Link>
-          <Link to="/horoscopo" className="font-label text-sm text-on-surface-variant hover:text-secondary transition-colors cursor-pointer">Transits</Link>
+          <Link to="/horoscopos-malucos" className="font-label text-sm text-on-surface-variant hover:text-secondary transition-colors cursor-pointer">Horóscopos</Link>
           <Link to="/interpretacoes" className="font-label text-sm text-on-surface-variant hover:text-secondary transition-colors cursor-pointer">Ephemeris</Link>
           <Link to="/mapa" className="font-label text-sm text-on-surface-variant hover:text-secondary transition-colors cursor-pointer">Natal</Link>
         </div>
