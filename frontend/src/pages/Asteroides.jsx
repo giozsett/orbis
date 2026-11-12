@@ -4,10 +4,11 @@ import Layout from '../components/layout/Layout'
 import { CelestialError, CelestialLoading, TechnicalHeader } from '../components/map/CelestialPageState'
 import GlassCard from '../components/ui/GlassCard'
 import useMapaSelecionado from '../hooks/useMapaSelecionado'
+import { comCorTema, mapaDeVisuais } from '../utils/tema'
 
-const VISUAIS = {
-  Quíron: { icon: 'healing', color: '#ffb1c3' }, Ceres: { icon: 'eco', color: '#8fd9d1' }, Palas: { icon: 'strategy', color: '#deb7ff' }, Juno: { icon: 'handshake', color: '#eab9ce' }, Vesta: { icon: 'local_fire_department', color: '#ffb4ab' },
-}
+const VISUAIS = mapaDeVisuais({
+  Quíron: { icon: 'healing', color: '#a9b8ff' }, Ceres: { icon: 'eco', color: '#8fd9d1' }, Palas: { icon: 'strategy', color: '#c3a6ff' }, Juno: { icon: 'handshake', color: '#e0b96e' }, Vesta: { icon: 'local_fire_department', color: '#ffb4ab' },
+})
 
 export default function Asteroides() {
   const { mapa, erro: erroMapa } = useMapaSelecionado()
@@ -40,8 +41,8 @@ export default function Asteroides() {
         <TechnicalHeader mapa={mapa} eyebrow="Asteroids" titulo="Corpos Menores" icone="star" descricao="Quíron, Ceres, Palas, Juno e Vesta calculados para o mesmo instante e as mesmas cúspides do mapa selecionado." />
         <div className="grid gap-4 md:gap-6 md:grid-cols-2 xl:grid-cols-5">
           {asteroides.map((item, index) => {
-            const visual = VISUAIS[item.nome] || { icon: 'star', color: '#ffb1c3' }
-            return <GlassCard key={item.nome} magnetic className="group relative overflow-hidden p-5 md:min-h-80 md:p-6 animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}><div className="absolute -right-14 -top-14 h-40 w-40 animate-rotate-slow rounded-full border border-dashed opacity-20" style={{ borderColor: visual.color }} /><span className="material-symbols-outlined text-5xl transition-transform group-hover:scale-110" style={{ color: visual.color }}>{visual.icon}</span><h2 className="mt-6 font-headline text-2xl">{item.nome}</h2><p className="mt-2 font-label text-xs" style={{ color: visual.color }}>{item.signo} · Casa {item.casa}</p><p className="mt-1 font-label text-[10px] text-outline">{item.posicao} · {item.retrogrado ? 'Retrógrado' : 'Direto'}</p><div className="mt-5 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" /><p className="mt-5 text-sm leading-relaxed text-on-surface-variant">{item.interpretacao}</p></GlassCard>
+            const visual = VISUAIS[item.nome] || comCorTema({ icon: 'star', color: '#a9b8ff' })
+            return <GlassCard key={item.nome} magnetic className="group relative overflow-hidden p-5 md:min-h-80 md:p-6 animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}><div className="absolute -right-14 -top-14 h-40 w-40 animate-rotate-slow rounded-full border border-dashed opacity-20" style={{ borderColor: visual.color }} /><span className="material-symbols-outlined text-5xl transition-transform group-hover:scale-110" style={{ color: visual.color }}>{visual.icon}</span><h2 className="mt-6 font-headline text-2xl">{item.nome}</h2><p className="mt-2 font-label text-xs" style={{ color: visual.color }}>{item.signo} · Casa {item.casa}</p><p className="mt-1 font-dados text-[10px] text-outline">{item.posicao} · {item.retrogrado ? 'Retrógrado' : 'Direto'}</p><div className="mt-5 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" /><p className="mt-5 text-sm leading-relaxed text-on-surface-variant">{item.interpretacao}</p></GlassCard>
           })}
         </div>
         <p className="mt-8 animate-fade-in text-center text-xs text-outline">Efemérides Swiss Ephemeris · cobertura do arquivo atual: 1800–2399</p>

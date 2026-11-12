@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import BottomSheet from '../ui/BottomSheet'
+import BotaoTema from '../ui/BotaoTema'
 import { abasMobile, ehRotaMais, ehRotaMapa, encerrarSessao, itensMais } from './navItems'
 
 // Tab bar fixa do mobile (abaixo de lg). Some quando o teclado está aberto (ver Chat).
@@ -27,7 +28,7 @@ export default function BottomNav({ onAbrirMapa, comMapa }) {
   }
 
   const classeAba = (ativo) =>
-    `flex h-16 flex-1 flex-col items-center justify-center gap-0.5 font-label text-[10px] tracking-wide transition-colors ${
+    `flex h-16 flex-1 flex-col items-center justify-center gap-0.5 font-label text-[11px] font-medium transition-colors ${
       ativo ? 'text-primary' : 'text-on-surface-variant/80 active:text-on-surface'
     }`
 
@@ -40,7 +41,7 @@ export default function BottomNav({ onAbrirMapa, comMapa }) {
     <>
       <nav
         aria-label="Navegação principal"
-        className="orbis-bottom-nav fixed inset-x-0 bottom-0 z-50 border-t border-white/[0.08] bg-surface/85 pb-safe backdrop-blur-[18px] lg:hidden"
+        className="orbis-bottom-nav fixed inset-x-0 bottom-0 z-50 border-t border-veu/[0.08] bg-surface/85 pb-safe backdrop-blur-[18px] lg:hidden"
       >
         <div className="mx-auto flex max-w-xl">
           {abasMobile.map((aba) => {
@@ -68,7 +69,7 @@ export default function BottomNav({ onAbrirMapa, comMapa }) {
                 key={item.path}
                 to={item.path}
                 onClick={() => setMaisAberto(false)}
-                className={`flex min-h-[52px] items-center gap-4 rounded-2xl px-3 text-[15px] active:bg-white/10 ${ativo ? 'bg-primary/10 text-primary' : 'text-on-surface'}`}
+                className={`flex min-h-[52px] items-center gap-4 rounded-2xl px-3 text-[15px] active:bg-veu/10 ${ativo ? 'bg-primary/10 text-primary' : 'text-on-surface'}`}
               >
                 <span className={`material-symbols-outlined text-[22px] ${ativo ? '' : 'text-on-surface-variant'}`}>{item.icon}</span>
                 <span className="flex-1">{item.label}</span>
@@ -81,7 +82,7 @@ export default function BottomNav({ onAbrirMapa, comMapa }) {
             <button
               type="button"
               onClick={() => { setMaisAberto(false); onAbrirMapa() }}
-              className="flex min-h-[52px] items-center gap-4 rounded-2xl px-3 text-left text-[15px] text-on-surface active:bg-white/10"
+              className="flex min-h-[52px] items-center gap-4 rounded-2xl px-3 text-left text-[15px] text-on-surface active:bg-veu/10"
             >
               <span className="material-symbols-outlined text-[22px] text-on-surface-variant">download</span>
               <span className="flex-1">Detalhes do mapa e PDF</span>
@@ -89,7 +90,8 @@ export default function BottomNav({ onAbrirMapa, comMapa }) {
             </button>
           )}
 
-          <div className="my-2 h-px bg-white/5" />
+          <div className="my-2 h-px bg-veu/5" />
+          <BotaoTema comRotulo className="mb-1 w-full !justify-start !border-transparent !bg-transparent !px-3" />
           <button
             type="button"
             onClick={sair}
@@ -99,7 +101,7 @@ export default function BottomNav({ onAbrirMapa, comMapa }) {
             <span className="material-symbols-outlined text-[22px]">logout</span>
             {saindo ? 'Saindo…' : 'Sair'}
           </button>
-          <p className="mt-4 text-center font-label text-[10px] uppercase tracking-[0.18em] text-outline">ORBIS · mapa natal</p>
+          <p className="mt-4 text-center font-marca text-xs tracking-[0.16em] text-outline">ORBIS</p>
         </div>
       </BottomSheet>
     </>

@@ -154,7 +154,7 @@ export default function CriarMapa() {
                   {s < 3 && (
                     <div
                       className={`h-px flex-1 transition-all duration-500 ${
-                        s < step ? 'bg-primary/40' : 'bg-white/10'
+                        s < step ? 'bg-primary/40' : 'bg-veu/10'
                       }`}
                     />
                   )}
@@ -176,7 +176,7 @@ export default function CriarMapa() {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 orbis-cascata">
                     <div className="space-y-2 md:col-span-2">
                       <label className="font-label text-sm text-secondary block" htmlFor="nome-mapa">Nome do mapa <span className="text-outline">(opcional)</span></label>
                       <div className="relative">
@@ -187,7 +187,7 @@ export default function CriarMapa() {
                           onChange={(e) => updateForm('nome', e.target.value)}
                           maxLength={100}
                           placeholder="Ex.: Meu mapa, Ana, Projeto pessoal…"
-                          className="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:ring-0 focus:border-primary transition-all"
+                          className="w-full bg-surface-container-low border border-veu/10 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:ring-0 focus:border-primary transition-all"
                         />
                         <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">
                           label
@@ -203,7 +203,7 @@ export default function CriarMapa() {
                           type="date"
                           value={formData.data_nascimento}
                           onChange={(e) => updateForm('data_nascimento', e.target.value)}
-                          className="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 px-4 text-on-surface focus:ring-0 focus:border-primary transition-all"
+                          className="w-full bg-surface-container-low border border-veu/10 rounded-lg py-4 px-4 text-on-surface focus:ring-0 focus:border-primary transition-all"
                           required
                         />
                         <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">
@@ -219,7 +219,7 @@ export default function CriarMapa() {
                           type="time"
                           value={formData.horario_nascimento}
                           onChange={(e) => updateForm('horario_nascimento', e.target.value)}
-                          className="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 px-4 text-on-surface focus:ring-0 focus:border-primary transition-all"
+                          className="w-full bg-surface-container-low border border-veu/10 rounded-lg py-4 px-4 text-on-surface focus:ring-0 focus:border-primary transition-all"
                           required
                         />
                         <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">
@@ -235,7 +235,7 @@ export default function CriarMapa() {
                       type="button"
                       onClick={() => setStep(2)}
                       disabled={!isStepValid(1)}
-                      className="w-full justify-center bg-primary-container text-on-primary-container px-8 py-4 rounded-full font-label flex items-center gap-2 transition-all md:w-auto hover:shadow-[0_0_20px_rgba(255,0,122,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full justify-center bg-primary-container text-on-primary-container px-8 py-4 rounded-full font-label flex items-center gap-2 transition-all md:w-auto hover:shadow-[0_0_20px_rgb(var(--c-primary-container)/0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Continuar
                       <span className="material-symbols-outlined">arrow_forward</span>
@@ -274,7 +274,7 @@ export default function CriarMapa() {
                             setSugestoes([])
                             setErroCidade('')
                           }}
-                          className="w-full appearance-none bg-surface-container-low border border-white/10 rounded-lg py-4 pl-12 pr-12 text-on-surface focus:ring-0 focus:border-primary transition-all"
+                          className="w-full appearance-none bg-surface-container-low border border-veu/10 rounded-lg py-4 pl-12 pr-12 text-on-surface focus:ring-0 focus:border-primary transition-all"
                         >
                           {[...paises].sort((a, b) => nomeDoPais(a).localeCompare(nomeDoPais(b), 'pt-BR')).map(pais => (
                             <option key={pais.codigo} value={pais.codigo}>{nomeDoPais(pais)}</option>
@@ -298,7 +298,7 @@ export default function CriarMapa() {
                           aria-autocomplete="list"
                           aria-expanded={sugestoes.length > 0}
                           aria-controls="sugestoes-cidades"
-                          className="w-full bg-surface-container-low border border-white/10 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:ring-0 focus:border-primary transition-all"
+                          className="w-full bg-surface-container-low border border-veu/10 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:ring-0 focus:border-primary transition-all"
                           required
                         />
                         {buscandoCidade && (
@@ -306,13 +306,13 @@ export default function CriarMapa() {
                         )}
                       </div>
                       {sugestoes.length > 0 && (
-                        <ul id="sugestoes-cidades" role="listbox" className="absolute z-20 w-full mt-2 glass-panel rounded-lg border border-white/10 overflow-y-auto max-h-60 shadow-2xl">
+                        <ul id="sugestoes-cidades" role="listbox" className="absolute z-20 w-full mt-2 glass-panel rounded-lg border border-veu/10 overflow-y-auto max-h-60 shadow-2xl">
                           {sugestoes.map(cidade => (
                             <li key={`${cidade.pais_codigo}-${cidade.id}`} role="option" aria-selected="false">
                               <button
                                 type="button"
                                 onClick={() => selecionarCidade(cidade)}
-                                className="w-full px-4 py-3 hover:bg-white/5 text-left transition-colors flex justify-between gap-3"
+                                className="w-full px-4 py-3 hover:bg-veu/5 text-left transition-colors flex justify-between gap-3"
                               >
                                 <span>{cidade.nome}, {cidade.subdivisao}</span>
                                 <span className="text-xs text-outline">{cidade.pais_nome}</span>
@@ -325,7 +325,7 @@ export default function CriarMapa() {
                       {erroCidade && <p className="text-xs text-error" role="alert">{erroCidade}</p>}
                     </div>
 
-                    <div className="rounded-xl overflow-hidden h-40 border border-white/5 relative">
+                    <div className="rounded-xl overflow-hidden h-40 border border-veu/5 relative">
                       <div className="absolute inset-0 bg-surface-container-low/50 flex items-center justify-center">
                         <span className="material-symbols-outlined text-primary/40 text-4xl">map</span>
                       </div>
@@ -345,7 +345,7 @@ export default function CriarMapa() {
                       type="button"
                       onClick={() => setStep(3)}
                       disabled={!isStepValid(2)}
-                      className="w-full justify-center bg-primary-container text-on-primary-container px-8 py-4 rounded-full font-label flex items-center gap-2 transition-all md:w-auto hover:shadow-[0_0_20px_rgba(255,0,122,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full justify-center bg-primary-container text-on-primary-container px-8 py-4 rounded-full font-label flex items-center gap-2 transition-all md:w-auto hover:shadow-[0_0_20px_rgb(var(--c-primary-container)/0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Revisar Dados
                       <span className="material-symbols-outlined">check_circle</span>
@@ -365,16 +365,16 @@ export default function CriarMapa() {
                     </p>
                   </div>
 
-                  <div className="space-y-3 bg-white/5 p-4 md:space-y-4 md:p-6 rounded-xl border border-white/5">
-                    <div className="flex justify-between items-center gap-4 py-2 border-b border-white/5">
+                  <div className="space-y-3 bg-veu/5 p-4 md:space-y-4 md:p-6 rounded-xl border border-veu/5">
+                    <div className="flex justify-between items-center gap-4 py-2 border-b border-veu/5">
                       <span className="text-outline font-label text-xs">NOME DO MAPA</span>
                       <span className="text-secondary font-label text-sm">{formData.nome || 'Meu mapa natal'}</span>
                     </div>
-                    <div className="flex justify-between items-center gap-4 py-2 border-b border-white/5">
+                    <div className="flex justify-between items-center gap-4 py-2 border-b border-veu/5">
                       <span className="text-outline font-label text-xs">HORÁRIO</span>
                       <span className="text-secondary font-label text-sm">{formData.horario_nascimento || '--:--'}</span>
                     </div>
-                    <div className="flex justify-between items-center gap-4 py-2 border-b border-white/5">
+                    <div className="flex justify-between items-center gap-4 py-2 border-b border-veu/5">
                       <span className="text-outline font-label text-xs">DATA</span>
                       <span className="text-secondary font-label text-sm">{formData.data_nascimento || '--/--/----'}</span>
                     </div>
@@ -388,7 +388,7 @@ export default function CriarMapa() {
                     {erroEnvio && <p className="text-sm text-error text-center" role="alert">{erroEnvio}</p>}
                     <button
                       type="submit"
-                      className="group relative w-full overflow-hidden bg-orbis-cta text-white py-4 md:py-5 rounded-full font-headline flex items-center justify-center gap-3 md:gap-4 transition-all uppercase tracking-wider md:tracking-widest text-base md:text-lg shadow-[0_12px_30px_rgba(255,75,137,0.28)] hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(255,75,137,0.38)] active:scale-[0.98]"
+                      className="group relative w-full overflow-hidden bg-orbis-cta text-on-cta py-4 md:py-5 rounded-full font-headline flex items-center justify-center gap-3 md:gap-4 transition-all uppercase tracking-wider md:tracking-widest text-base md:text-lg shadow-[var(--sombra-cta)] hover:-translate-y-0.5 hover:brightness-105 active:scale-[0.98]"
                     >
                       {/* brilho que atravessa o botão no hover */}
                       <span className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -translate-x-full -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[350%]" />
@@ -416,7 +416,7 @@ export default function CriarMapa() {
 
           {/* Ancoragem visual */}
           <div className="mt-8 text-center md:mt-16">
-            <div className="inline-flex items-center gap-4 px-5 py-3 md:gap-6 md:px-8 md:py-4 rounded-full bg-surface-container-low/40 border border-white/5">
+            <div className="inline-flex items-center gap-4 px-5 py-3 md:gap-6 md:px-8 md:py-4 rounded-full bg-surface-container-low/40 border border-veu/5">
               <div className="flex -space-x-3">
                 <div className="w-10 h-10 rounded-full border-2 border-background bg-secondary flex items-center justify-center text-on-secondary font-bold text-xs">
                   +4k

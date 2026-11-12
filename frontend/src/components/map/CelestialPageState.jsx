@@ -33,7 +33,7 @@ export function CelestialError({ mensagem }) {
 
 export function TechnicalHeader({ mapa, eyebrow, titulo, descricao, icone }) {
   return (
-    <header className="relative mb-6 overflow-hidden rounded-[24px] border border-white/10 bg-surface-container-lowest/75 p-5 xs:p-6 md:mb-10 md:rounded-[28px] shadow-[0_30px_80px_rgba(0,0,0,0.45),inset_0_1px_rgba(255,255,255,0.05)] backdrop-blur-xl motion-safe:animate-orbis-card-in md:p-10">
+    <header className="relative mb-6 overflow-hidden rounded-[24px] border border-veu/10 bg-surface-container-lowest/75 p-5 xs:p-6 md:mb-10 md:rounded-[28px] shadow-[var(--sombra-vidro)] backdrop-blur-xl motion-safe:animate-orbis-card-in md:p-10">
       <div className="pointer-events-none absolute -right-16 -top-16 w-48 opacity-20 md:w-72 md:opacity-25">
         <EsferaArmilar animada className="w-full" />
       </div>

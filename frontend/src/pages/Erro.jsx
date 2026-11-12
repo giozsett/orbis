@@ -7,10 +7,10 @@ export default function Erro() {
       <FundoOrbis />
 
       {/* Header */}
-      <header className="fixed top-0 w-full z-50 flex justify-between items-center px-4 md:px-16 h-16 bg-surface/45 backdrop-blur-[18px] border-b border-white/[0.08] motion-safe:animate-orbis-header">
+      <header className="fixed top-0 w-full z-50 flex justify-between items-center px-4 md:px-16 h-16 bg-surface/45 backdrop-blur-[18px] border-b border-veu/[0.08] motion-safe:animate-orbis-header">
         <Link to="/dashboard" className="flex items-center gap-2">
           <span className="material-symbols-outlined text-[22px] text-primary motion-safe:animate-orbis-twinkle">auto_awesome</span>
-          <span className="font-headline text-[22px] font-bold tracking-[-0.03em] text-secondary">ORBIS</span>
+          <span className="font-marca text-[22px] tracking-[0.16em] text-secondary">ORBIS</span>
         </Link>
         <div className="hidden md:flex gap-6 items-center">
           <Link to="/dashboard" className="font-label text-sm text-on-surface-variant hover:text-secondary transition-colors cursor-pointer">Dashboard</Link>
@@ -29,8 +29,8 @@ export default function Erro() {
         <div className="relative w-48 h-48 mb-6 md:w-64 md:h-64 md:mb-8 group motion-safe:animate-orbis-sphere-in">
           {/* Eclipse central */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-32 h-32 bg-surface-container-lowest rounded-full relative z-20 border border-white/10 overflow-hidden"
-              style={{ boxShadow: '0 0 60px rgba(255, 0, 122, 0.2)' }}
+            <div className="w-32 h-32 bg-surface-container-lowest rounded-full relative z-20 border border-veu/10 overflow-hidden"
+              style={{ boxShadow: '0 0 60px rgb(var(--c-primary-container)/0.2)' }}
             >
               <div className="absolute inset-0 opacity-20 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,#F4C2D7_3px)]" />
             </div>
@@ -39,7 +39,7 @@ export default function Erro() {
 
           {/* Sinal orbitando */}
           <div className="absolute inset-0 flex items-center justify-center" style={{ animation: 'orbit 12s linear infinite' }}>
-            <div className="w-4 h-4 bg-secondary rounded-full shadow-[0_0_15px_rgba(234,185,206,0.8)]" />
+            <div className="w-4 h-4 bg-secondary rounded-full shadow-[0_0_15px_rgb(var(--c-secondary)/0.8)]" />
           </div>
 
           {/* Linhas de sinal interrompidas */}
@@ -74,7 +74,7 @@ export default function Erro() {
         <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full sm:w-auto motion-safe:animate-orbis-rise" style={{ animationDelay: '700ms' }}>
           <Link
             to="/dashboard"
-            className="group relative overflow-hidden bg-orbis-cta text-white font-label text-xs uppercase tracking-[0.08em] px-8 py-3.5 rounded-full transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_12px_30px_rgba(255,75,137,0.28)] hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(255,75,137,0.38)]"
+            className="group relative overflow-hidden bg-orbis-cta text-on-cta font-label text-xs uppercase tracking-[0.08em] px-8 py-3.5 rounded-full transition-all duration-300 flex items-center justify-center gap-2 shadow-[var(--sombra-cta)] hover:-translate-y-0.5 hover:brightness-105"
           >
             <span className="material-symbols-outlined text-sm">refresh</span>
             Tentativa de Reconexão
@@ -90,7 +90,7 @@ export default function Erro() {
       </main>
 
       {/* Sidebar fantasma */}
-      <aside className="hidden lg:flex fixed left-0 top-16 h-[calc(100dvh-64px)] z-40 p-6 flex-col w-80 bg-surface-container-low/20 backdrop-blur-sm border-r border-white/5 opacity-50 pointer-events-none">
+      <aside className="hidden lg:flex fixed left-0 top-16 h-[calc(100dvh-64px)] z-40 p-6 flex-col w-80 bg-surface-container-low/20 backdrop-blur-sm border-r border-veu/5 opacity-50 pointer-events-none">
         <div className="mb-12">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-full bg-surface-container-highest" />
@@ -101,14 +101,14 @@ export default function Erro() {
           </div>
         </div>
         <div className="space-y-4">
-          <div className="h-4 w-3/4 bg-white/5 rounded" />
-          <div className="h-4 w-1/2 bg-white/5 rounded" />
-          <div className="h-4 w-2/3 bg-white/5 rounded" />
+          <div className="h-4 w-3/4 bg-veu/5 rounded" />
+          <div className="h-4 w-1/2 bg-veu/5 rounded" />
+          <div className="h-4 w-2/3 bg-veu/5 rounded" />
         </div>
       </aside>
 
       {/* Footer */}
-      <footer className="fixed bottom-0 z-20 hidden w-full py-4 px-4 md:px-16 md:flex justify-between items-center bg-surface/45 backdrop-blur-[18px] border-t border-white/[0.08]">
+      <footer className="fixed bottom-0 z-20 hidden w-full py-4 px-4 md:px-16 md:flex justify-between items-center bg-surface/45 backdrop-blur-[18px] border-t border-veu/[0.08]">
         <div className="font-label text-xs text-outline">© 2024 Orbis Astronomical Observatory</div>
         <div className="flex gap-4">
           <span className="text-sm text-outline hover:text-primary transition-colors cursor-pointer">Data Sources</span>

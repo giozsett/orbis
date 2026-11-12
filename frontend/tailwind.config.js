@@ -9,41 +9,43 @@ export default {
     // xs separa os Galaxy S25/S26 (360px) dos iPhone 14/15 (390px+); fica fora do extend para vir antes de sm no CSS
     screens: { xs: '380px', sm: '640px', md: '768px', lg: '1024px', xl: '1280px', '2xl': '1536px' },
     extend: {
+      // Cores vêm de variáveis CSS (styles/tema.css): céu noturno no escuro, nascer do sol no claro.
+      // `veu` é a película translúcida de bordas e realces: branca no escuro, tinta no claro.
       colors: {
-        'primary': '#ffb1c3',
-        'primary-container': '#ff4b89',
-        'on-primary': '#66002c',
-        'on-primary-container': '#590026',
-        'secondary': '#eab9ce',
-        'secondary-container': '#633e4f',
-        'tertiary': '#deb7ff',
-        'tertiary-container': '#b86dfd',
-        'surface': '#0b1323',
-        'surface-container': '#18202f',
-        'surface-container-low': '#131c2b',
-        'surface-container-high': '#222a3a',
-        'surface-container-highest': '#2d3546',
-        'surface-container-lowest': '#060e1d',
-        'on-surface': '#dbe2f8',
-        'on-surface-variant': '#e5bcc4',
-        'outline': '#ac878f',
-        'outline-variant': '#5c3f45',
-        'background': '#0b1323',
-        'on-background': '#dbe2f8',
-        'error': '#ffb4ab',
-        'error-container': '#93000a',
-        'brass': '#d9b06b',
-        'cream': '#fffae2',
-        'on-cream': '#0b1323',
+        'primary': 'rgb(var(--c-primary) / <alpha-value>)',
+        'primary-container': 'rgb(var(--c-primary-container) / <alpha-value>)',
+        'on-primary': 'rgb(var(--c-on-primary) / <alpha-value>)',
+        'on-primary-container': 'rgb(var(--c-on-primary-container) / <alpha-value>)',
+        'secondary': 'rgb(var(--c-secondary) / <alpha-value>)',
+        'secondary-container': 'rgb(var(--c-secondary-container) / <alpha-value>)',
+        'tertiary': 'rgb(var(--c-tertiary) / <alpha-value>)',
+        'tertiary-container': 'rgb(var(--c-tertiary-container) / <alpha-value>)',
+        'surface': 'rgb(var(--c-surface) / <alpha-value>)',
+        'surface-container': 'rgb(var(--c-surface-container) / <alpha-value>)',
+        'surface-container-low': 'rgb(var(--c-surface-container-low) / <alpha-value>)',
+        'surface-container-high': 'rgb(var(--c-surface-container-high) / <alpha-value>)',
+        'surface-container-highest': 'rgb(var(--c-surface-container-highest) / <alpha-value>)',
+        'surface-container-lowest': 'rgb(var(--c-surface-container-lowest) / <alpha-value>)',
+        'on-surface': 'rgb(var(--c-on-surface) / <alpha-value>)',
+        'on-surface-variant': 'rgb(var(--c-on-surface-variant) / <alpha-value>)',
+        'outline': 'rgb(var(--c-outline) / <alpha-value>)',
+        'outline-variant': 'rgb(var(--c-outline-variant) / <alpha-value>)',
+        'background': 'rgb(var(--c-background) / <alpha-value>)',
+        'on-background': 'rgb(var(--c-on-background) / <alpha-value>)',
+        'error': 'rgb(var(--c-error) / <alpha-value>)',
+        'error-container': 'rgb(var(--c-error-container) / <alpha-value>)',
+        'brass': 'rgb(var(--c-brass) / <alpha-value>)',
+        'cream': 'rgb(var(--c-cream) / <alpha-value>)',
+        'on-cream': 'rgb(var(--c-on-cream) / <alpha-value>)',
+        'veu': 'rgb(var(--c-veu) / <alpha-value>)',
+        'on-cta': 'rgb(var(--c-on-cta) / <alpha-value>)',
       },
       backgroundImage: {
-        'orbis-aurora':
-          'radial-gradient(1100px 750px at 8% -8%, #ff4b89 0%, rgba(255,75,137,0.55) 18%, rgba(184,109,253,0.35) 34%, rgba(11,19,35,0) 60%), ' +
-          'radial-gradient(700px 500px at 22% 18%, rgba(222,183,255,0.28) 0%, rgba(11,19,35,0) 55%)',
-        'orbis-fade': 'linear-gradient(160deg, rgba(6,14,29,0) 30%, #060e1d 92%)',
-        'orbis-cta': 'linear-gradient(120deg, #ff4b89, #b86dfd)',
-        'orbis-wordmark': 'linear-gradient(110deg, #dbe2f8 0%, #dbe2f8 36%, #ffffff 44%, #ffb1c3 50%, #dbe2f8 58%, #eab9ce 100%)',
-        'orbis-meteoro': 'linear-gradient(90deg, #ffffff, rgba(255,177,195,0.9) 30%, rgba(255,255,255,0))',
+        'orbis-aurora': 'var(--bg-aurora)',
+        'orbis-fade': 'var(--bg-fade)',
+        'orbis-cta': 'var(--bg-cta)',
+        'orbis-wordmark': 'var(--bg-wordmark)',
+        'orbis-meteoro': 'var(--bg-meteoro)',
       },
       // Animações da tela de login (usar sempre com motion-safe:)
       keyframes: {
@@ -80,8 +82,8 @@ export default {
           to: { transform: 'scaleY(1)' },
         },
         'orbis-glow': {
-          '0%, 100%': { opacity: '0.65', boxShadow: '0 0 0 rgba(255,75,137,0)' },
-          '50%': { opacity: '1', boxShadow: '0 0 18px rgba(255,75,137,0.55)' },
+          '0%, 100%': { opacity: '0.65', boxShadow: '0 0 0 rgb(var(--c-primary-container) / 0)' },
+          '50%': { opacity: '1', boxShadow: '0 0 18px rgb(var(--c-primary-container) / 0.55)' },
         },
         'orbis-sphere-in': {
           from: { opacity: '0', transform: 'scale(0.85) rotate(-25deg)' },
@@ -103,8 +105,8 @@ export default {
           '50%': { transform: 'translateY(-12px)' },
         },
         'orbis-halo': {
-          '0%, 100%': { boxShadow: '0 30px 80px rgba(0,0,0,0.45), 0 0 0 rgba(255,75,137,0), inset 0 1px rgba(255,255,255,0.05)' },
-          '50%': { boxShadow: '0 30px 80px rgba(0,0,0,0.45), 0 0 46px rgba(184,109,253,0.18), inset 0 1px rgba(255,255,255,0.05)' },
+          '0%, 100%': { boxShadow: 'var(--sombra-vidro), 0 0 0 rgb(var(--c-primary-container) / 0), inset 0 1px rgb(var(--c-veu) / 0.05)' },
+          '50%': { boxShadow: 'var(--sombra-vidro), 0 0 46px rgb(var(--c-tertiary-container) / 0.18), inset 0 1px rgb(var(--c-veu) / 0.05)' },
         },
         'orbis-swap': {
           from: { opacity: '0', transform: 'translateY(12px)', filter: 'blur(4px)' },
@@ -133,6 +135,16 @@ export default {
           from: { opacity: '0' },
           to: { opacity: '1' },
         },
+        // Entrada de página: termina em `transform: none` para não prender elementos fixed
+        'orbis-page': {
+          from: { opacity: '0', transform: 'translateY(10px)' },
+          to: { opacity: '1', transform: 'none' },
+        },
+        // Troca de tema: o ícone de sol/lua gira ao entrar
+        'orbis-astro': {
+          from: { opacity: '0', transform: 'rotate(-90deg) scale(0.6)' },
+          to: { opacity: '1', transform: 'rotate(0) scale(1)' },
+        },
       },
       animation: {
         'orbis-rise': 'orbis-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both',
@@ -157,13 +169,17 @@ export default {
         'orbis-draw': 'orbis-draw 1.6s cubic-bezier(0.22, 1, 0.36, 1) both',
         'orbis-pop': 'orbis-pop 0.7s cubic-bezier(0.22, 1, 0.36, 1) both',
         'orbis-fade-in': 'orbis-fade-in 1.2s ease-out both',
+        'orbis-page': 'orbis-page 0.55s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'orbis-astro': 'orbis-astro 0.5s cubic-bezier(0.22, 1, 0.36, 1) both',
       },
       fontFamily: {
-        // Fraunces: títulos e numerais dos arcanos; Instrument Sans: texto e interface;
-        // DM Mono: leituras de instrumento (graus, coordenadas, rótulos técnicos)
-        'headline': ['Fraunces', 'Georgia', 'serif'],
+        // Marcellus: títulos, como letra gravada em placa de instrumento; Marcellus SC: wordmark ORBIS;
+        // Instrument Sans: texto, navegação e rótulos; DM Mono: só leituras de instrumento (graus, coordenadas)
+        'headline': ['Marcellus', 'Georgia', 'serif'],
+        'marca': ['"Marcellus SC"', 'Marcellus', 'Georgia', 'serif'],
         'body': ['Instrument Sans', 'system-ui', 'sans-serif'],
-        'label': ['DM Mono', 'ui-monospace', 'monospace'],
+        'label': ['Instrument Sans', 'system-ui', 'sans-serif'],
+        'dados': ['DM Mono', 'ui-monospace', 'monospace'],
       },
     },
   },

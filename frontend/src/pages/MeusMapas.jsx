@@ -57,7 +57,7 @@ export default function MeusMapas() {
     <Layout>
       <div className="px-4 py-6 xs:px-5 md:px-12 md:py-16">
         <div className="mx-auto max-w-6xl">
-          <header className="flex flex-col gap-5 border-b border-white/5 pb-6 md:gap-6 md:pb-8 md:flex-row md:items-end md:justify-between">
+          <header className="flex flex-col gap-5 border-b border-veu/5 pb-6 md:gap-6 md:pb-8 md:flex-row md:items-end md:justify-between">
             <div>
               <span className="font-label text-xs uppercase tracking-[0.2em] text-primary">Seu observatório</span>
               <h1 className="mt-2 font-headline text-3xl text-on-surface md:text-5xl">Meus Mapas</h1>
@@ -67,7 +67,7 @@ export default function MeusMapas() {
             </div>
             <Link
               to="/criar-mapa"
-              className="flex min-h-[48px] shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-label text-sm text-on-primary transition-all hover:shadow-[0_0_24px_rgba(255,177,195,0.25)]"
+              className="flex min-h-[48px] shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-label text-sm text-on-primary transition-all hover:shadow-[0_0_24px_rgb(var(--c-primary)/0.25)]"
             >
               <span className="material-symbols-outlined">add_circle</span>
               Criar outro mapa
@@ -95,7 +95,7 @@ export default function MeusMapas() {
           )}
 
           {mapas?.length === 0 && (
-            <div className="mt-8 rounded-2xl border border-white/5 bg-surface-container-low/50 p-6 text-center md:mt-10 md:p-10">
+            <div className="mt-8 rounded-2xl border border-veu/5 bg-surface-container-low/50 p-6 text-center md:mt-10 md:p-10">
               <span className="material-symbols-outlined text-6xl text-primary/40">telescope</span>
               <h2 className="mt-4 font-headline text-2xl">Nenhum mapa criado ainda</h2>
               <p className="mx-auto mt-2 max-w-md text-on-surface-variant">Crie seu primeiro mapa para iniciar sua jornada pelo ORBIS.</p>
@@ -106,7 +106,7 @@ export default function MeusMapas() {
           )}
 
           {mapas?.length > 0 && (
-            <section className="mt-6 grid grid-cols-1 gap-4 md:mt-10 md:gap-6 xl:grid-cols-2" aria-label="Mapas natais criados">
+            <section className="mt-6 grid grid-cols-1 gap-4 md:mt-10 md:gap-6 xl:grid-cols-2 orbis-cascata" aria-label="Mapas natais criados">
               {mapas.map(mapa => (
                 <MapSummaryCard
                   key={mapa.id}

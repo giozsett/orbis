@@ -45,14 +45,14 @@ export default function BottomSheet({ aberto, onFechar, titulo, children, classN
         aria-modal="true"
         aria-label={titulo}
         tabIndex={-1}
-        className={`absolute inset-x-0 bottom-0 flex max-h-[88dvh] flex-col rounded-t-[28px] border-t border-white/10 bg-surface-container-lowest/[.97] shadow-[0_-24px_60px_rgba(0,0,0,0.5)] outline-none backdrop-blur-xl animate-sheet-up ${className}`}
+        className={`absolute inset-x-0 bottom-0 flex max-h-[88dvh] flex-col rounded-t-[28px] border-t border-veu/10 bg-surface-container-lowest/[.97] shadow-[0_-24px_60px_rgba(0,0,0,0.5)] outline-none backdrop-blur-xl animate-sheet-up ${className}`}
         style={arraste ? { transform: `translateY(${arraste}px)`, transition: 'none' } : undefined}
       >
         <div className="shrink-0 touch-none px-5 pb-2 pt-3" onTouchStart={tocar} onTouchMove={mover} onTouchEnd={soltar}>
-          <div className="mx-auto h-1.5 w-10 rounded-full bg-white/20" />
+          <div className="mx-auto h-1.5 w-10 rounded-full bg-veu/20" />
           <div className="mt-3 flex items-center justify-between">
-            <span className="font-label text-[10px] uppercase tracking-widest text-outline">{titulo}</span>
-            <button type="button" onClick={onFechar} aria-label="Fechar" className="-mr-2 flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant active:bg-white/10">
+            <span className="font-headline text-lg text-on-surface">{titulo}</span>
+            <button type="button" onClick={onFechar} aria-label="Fechar" className="-mr-2 flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant active:bg-veu/10">
               <span className="material-symbols-outlined text-xl">close</span>
             </button>
           </div>

@@ -1,9 +1,10 @@
 import ArcanoIlustracao from './ArcanoIlustracao'
 import './arcano.css'
+import { corTema } from '../../utils/tema'
 
 export default function ArcanoCard({ arcano, compacta = false, rotulo = 'Arcano pessoal', nota, acao = 'Explorar meu arcano', onExplorar }) {
   if (!arcano) return null
-  const cor = arcano.cores?.[0] || '#ffb1c3'
+  const cor = corTema(arcano.cores?.[0] || '#a9b8ff')
   if (compacta) {
     return (
       <div className="arcano-mini" style={{ '--arcano-cor': cor }}>
@@ -24,7 +25,7 @@ export default function ArcanoCard({ arcano, compacta = false, rotulo = 'Arcano 
         <p className="mt-4 leading-relaxed text-on-surface-variant">{arcano.resumo}</p>
         <div className="mt-4 flex flex-wrap gap-2">{arcano.palavras_chave.map(palavra => <span key={palavra} className="arcano-tag">{palavra}</span>)}</div>
         <p className="mt-5 text-xs leading-relaxed text-outline">{nota || 'Leitura simbólica do tarot, complementar e independente do cálculo astrológico.'}</p>
-        {onExplorar && <button type="button" onClick={onExplorar} className="mt-6 min-h-[44px] w-full rounded-full border px-5 py-2 text-sm md:w-auto transition-colors hover:bg-white/5" style={{ borderColor: `${cor}80`, color: cor }}>{acao}</button>}
+        {onExplorar && <button type="button" onClick={onExplorar} className="mt-6 min-h-[44px] w-full rounded-full border px-5 py-2 text-sm md:w-auto transition-colors hover:bg-veu/5" style={{ borderColor: `${cor}80`, color: cor }}>{acao}</button>}
       </div>
     </section>
   )

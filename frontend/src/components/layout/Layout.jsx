@@ -24,7 +24,8 @@ export default function Layout({ children, showSidebar = true, showFooter = true
       {showSidebar && <Sidebar />}
       <main className={`relative z-[2] ${showSidebar ? 'lg:ml-80' : ''} ${exibeMenuTematico ? 'pt-28' : 'pt-16'} min-h-dvh pb-tabbar lg:pb-0`}>
         {showSidebar && <MapaSheet aberto={mapaAberto} onAbrir={abrirMapa} onFechar={fecharMapa} mostrarChip={mostrarChip} />}
-        {children}
+        {/* cada rota entra com um leve subir; a key refaz a animação ao navegar */}
+        <div key={location.pathname} className="motion-safe:animate-orbis-page">{children}</div>
       </main>
       {showFooter && <Footer comSidebar={showSidebar} />}
       <BottomNav comMapa={showSidebar} onAbrirMapa={abrirMapa} />

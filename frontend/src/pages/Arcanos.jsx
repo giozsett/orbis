@@ -67,15 +67,15 @@ export default function Arcanos() {
 
           <div className="space-y-3 motion-safe:animate-orbis-rise" style={{ animationDelay: '800ms' }}>
             <div className="flex items-center justify-center gap-2 md:justify-start">
-              <button type="button" onClick={() => setAno(anual.ano - 1)} aria-label="Ano anterior" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-on-surface-variant transition-colors hover:bg-white/5">
+              <button type="button" onClick={() => setAno(anual.ano - 1)} aria-label="Ano anterior" className="flex h-11 w-11 items-center justify-center rounded-full border border-veu/10 text-on-surface-variant transition-colors hover:bg-veu/5">
                 <span className="material-symbols-outlined">chevron_left</span>
               </button>
               <p className="min-w-[7rem] text-center font-label text-sm uppercase tracking-[0.2em] text-on-surface" aria-live="polite">Ciclo {anual.ano}</p>
-              <button type="button" onClick={() => setAno(anual.ano + 1)} aria-label="Próximo ano" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-on-surface-variant transition-colors hover:bg-white/5">
+              <button type="button" onClick={() => setAno(anual.ano + 1)} aria-label="Próximo ano" className="flex h-11 w-11 items-center justify-center rounded-full border border-veu/10 text-on-surface-variant transition-colors hover:bg-veu/5">
                 <span className="material-symbols-outlined">chevron_right</span>
               </button>
               {ano !== null && (
-                <button type="button" onClick={() => setAno(null)} className="ml-1 min-h-[44px] rounded-full px-3 font-label text-xs uppercase tracking-wider text-primary hover:bg-white/5">Hoje</button>
+                <button type="button" onClick={() => setAno(null)} className="ml-1 min-h-[44px] rounded-full px-3 font-label text-xs uppercase tracking-wider text-primary hover:bg-veu/5">Hoje</button>
               )}
             </div>
             <ArcanoCard

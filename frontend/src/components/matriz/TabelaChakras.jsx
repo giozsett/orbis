@@ -12,7 +12,7 @@ export default function TabelaChakras({ chakras, total, catalogo = {}, onArcano 
       type="button"
       onClick={() => onArcano?.(numero)}
       title={catalogo[numero]?.nome}
-      className="min-h-[36px] min-w-[36px] rounded-full px-2 font-label text-sm text-on-surface transition-colors hover:bg-white/10"
+      className="min-h-[36px] min-w-[36px] rounded-full px-2 font-label text-sm text-on-surface transition-colors hover:bg-veu/10"
     >
       {numero}
     </button>
@@ -20,7 +20,7 @@ export default function TabelaChakras({ chakras, total, catalogo = {}, onArcano 
 
   return (
     <GlassCard className="overflow-hidden">
-      <div className="flex items-center justify-between border-b border-white/5 p-4 md:p-5">
+      <div className="flex items-center justify-between border-b border-veu/5 p-4 md:p-5">
         <h2 className="font-headline text-xl">Mapa da saúde</h2>
         <span className="material-symbols-outlined text-primary">self_improvement</span>
       </div>
@@ -34,7 +34,7 @@ export default function TabelaChakras({ chakras, total, catalogo = {}, onArcano 
           </thead>
           <tbody>
             {chakras.map((chakra) => (
-              <tr key={chakra.id} className="border-t border-white/5">
+              <tr key={chakra.id} className="border-t border-veu/5">
                 <th scope="row" className="px-4 py-2 font-normal md:px-5">
                   <span className="flex items-center gap-3">
                     <span className="h-3 w-3 shrink-0 rounded-full shadow-[0_0_10px_currentColor]" style={{ color: chakra.cor, backgroundColor: chakra.cor }} />

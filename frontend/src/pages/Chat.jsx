@@ -223,21 +223,21 @@ export default function Chat() {
         {historicoAberto && <>
           <button type="button" aria-label="Fechar histórico" onClick={() => setHistoricoAberto(false)} className="absolute inset-0 z-20 bg-surface/70 backdrop-blur-sm" />
           <aside className="absolute inset-y-0 left-0 z-30 flex w-[min(88vw,360px)] flex-col border-r border-primary/15 bg-surface-container-low/95 p-5 shadow-2xl backdrop-blur-xl animate-slide-in-left" aria-label="Histórico do Chat Astral">
-            <div className="flex items-center justify-between border-b border-white/5 pb-4">
+            <div className="flex items-center justify-between border-b border-veu/5 pb-4">
               <div><p className="font-label text-[10px] uppercase tracking-[0.2em] text-primary">Conversas</p><h2 className="mt-1 font-headline text-2xl">Histórico Astral</h2></div>
-              <button type="button" onClick={() => setHistoricoAberto(false)} className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-outline hover:text-on-surface" aria-label="Fechar"><span className="material-symbols-outlined">close</span></button>
+              <button type="button" onClick={() => setHistoricoAberto(false)} className="flex h-9 w-9 items-center justify-center rounded-full border border-veu/10 text-outline hover:text-on-surface" aria-label="Fechar"><span className="material-symbols-outlined">close</span></button>
             </div>
             <p className="mt-4 text-xs leading-relaxed text-on-surface-variant">Aparecem somente os dias em que você enviou pelo menos uma pergunta.</p>
             {erroHistorico && <p className="mt-4 rounded-lg border border-error/20 bg-error/10 p-3 text-xs text-error">{erroHistorico}</p>}
             <div className="custom-scrollbar mt-4 flex-1 space-y-2 overflow-y-auto pr-1">
               {!carregandoHistorico && !diasHistorico.length && <div className="py-12 text-center"><span className="material-symbols-outlined text-5xl text-primary/30">history</span><p className="mt-3 text-sm text-outline">Seu histórico aparecerá após a primeira conversa.</p></div>}
-              {diasHistorico.map(dia => <button key={dia.id} type="button" onClick={() => abrirDia(dia.data)} disabled={carregandoDia} className={`w-full rounded-xl border p-4 text-left transition-all hover:border-primary/30 hover:bg-primary/5 ${dia.data === diaVisualizado ? 'border-primary/30 bg-primary/10' : 'border-white/5 bg-white/[.025]'}`}><div className="flex items-center justify-between gap-3"><strong className="font-headline text-lg text-on-surface">{formatarDataHistorico(dia.data)}</strong><span className="rounded-full bg-primary/10 px-2 py-1 font-label text-[9px] text-primary">{dia.quantidade_perguntas} {dia.quantidade_perguntas === 1 ? 'pergunta' : 'perguntas'}</span></div><p className="mt-2 line-clamp-2 text-xs leading-relaxed text-on-surface-variant">{dia.primeira_pergunta}</p></button>)}
+              {diasHistorico.map(dia => <button key={dia.id} type="button" onClick={() => abrirDia(dia.data)} disabled={carregandoDia} className={`w-full rounded-xl border p-4 text-left transition-all hover:border-primary/30 hover:bg-primary/5 ${dia.data === diaVisualizado ? 'border-primary/30 bg-primary/10' : 'border-veu/5 bg-veu/[.025]'}`}><div className="flex items-center justify-between gap-3"><strong className="font-headline text-lg text-on-surface">{formatarDataHistorico(dia.data)}</strong><span className="rounded-full bg-primary/10 px-2 py-1 font-label text-[9px] text-primary">{dia.quantidade_perguntas} {dia.quantidade_perguntas === 1 ? 'pergunta' : 'perguntas'}</span></div><p className="mt-2 line-clamp-2 text-xs leading-relaxed text-on-surface-variant">{dia.primeira_pergunta}</p></button>)}
               {carregandoHistorico && <div className="flex items-center justify-center gap-2 py-8 text-xs text-outline"><span className="material-symbols-outlined animate-spin">progress_activity</span>Carregando histórico…</div>}
-              {cursorHistorico && !carregandoHistorico && <button type="button" onClick={() => carregarHistorico({ cursor: cursorHistorico, acumular: true })} className="w-full rounded-lg border border-white/10 py-3 font-label text-xs text-outline hover:text-primary">Carregar dias anteriores</button>}
+              {cursorHistorico && !carregandoHistorico && <button type="button" onClick={() => carregarHistorico({ cursor: cursorHistorico, acumular: true })} className="w-full rounded-lg border border-veu/10 py-3 font-label text-xs text-outline hover:text-primary">Carregar dias anteriores</button>}
             </div>
           </aside>
         </>}
-        <div className="flex items-center justify-between gap-3 border-b border-white/5 bg-surface/20 px-4 py-3 backdrop-blur-md md:gap-4 md:p-4">
+        <div className="flex items-center justify-between gap-3 border-b border-veu/5 bg-surface/20 px-4 py-3 backdrop-blur-md md:gap-4 md:p-4">
           <div className="flex min-w-0 items-center gap-3 md:gap-4">
             <div className="hidden h-10 w-10 shrink-0 xs:flex items-center justify-center rounded-full border border-primary/30 bg-surface-container">
               <span className="material-symbols-outlined text-primary">auto_awesome</span>
@@ -252,7 +252,7 @@ export default function Chat() {
           </div>
 
           <div className="flex shrink-0 items-center gap-2">
-            <button type="button" onClick={abrirHistorico} aria-label="Abrir histórico" className="flex h-11 min-w-[44px] items-center justify-center gap-2 rounded-lg border border-white/10 px-3 font-label text-xs text-on-surface-variant transition-colors hover:border-primary/30 hover:text-primary"><span className="material-symbols-outlined text-lg">history</span><span className="hidden sm:inline">Histórico</span></button>
+            <button type="button" onClick={abrirHistorico} aria-label="Abrir histórico" className="flex h-11 min-w-[44px] items-center justify-center gap-2 rounded-lg border border-veu/10 px-3 font-label text-xs text-on-surface-variant transition-colors hover:border-primary/30 hover:text-primary"><span className="material-symbols-outlined text-lg">history</span><span className="hidden sm:inline">Histórico</span></button>
             <div className={`rounded-lg border px-2.5 py-1.5 text-right md:px-3 md:py-2 ${limiteAtingido ? 'border-error/30 bg-error/10' : 'border-primary/20 bg-primary/10'}`} title="Perguntas restantes em 24h">
               <p className="font-label text-[9px] uppercase text-outline md:text-[10px]"><span className="sm:hidden">Em 24h</span><span className="hidden sm:inline">Perguntas em 24h</span></p>
               <p className={`font-label text-sm ${limiteAtingido ? 'text-error' : 'text-primary'}`}>
@@ -283,8 +283,8 @@ export default function Chat() {
               <div key={message.id} className={`flex max-w-[88%] flex-col gap-1 lg:max-w-[70%] ${isUser ? 'self-end items-end' : ''}`}>
                 <div className={`rounded-2xl px-4 py-3 md:p-4 ${
                   isUser
-                    ? 'rounded-tr-none bg-gradient-to-br from-primary-container to-on-primary text-white'
-                    : 'rounded-tl-none border-t border-white/10 bg-surface-container-highest/50'
+                    ? 'rounded-tr-none bg-gradient-to-br from-primary-container to-on-primary text-on-cta'
+                    : 'rounded-tl-none border-t border-veu/10 bg-surface-container-highest/50'
                 }`}>
                   <p className="whitespace-pre-wrap leading-relaxed">{message.mensagem}</p>
                 </div>
@@ -295,7 +295,7 @@ export default function Chat() {
 
           {isLoading && (
             <div className="flex max-w-[85%] flex-col gap-1 lg:max-w-[70%]">
-              <div className="rounded-2xl rounded-tl-none border-t border-white/10 bg-surface-container-highest/50 p-4">
+              <div className="rounded-2xl rounded-tl-none border-t border-veu/10 bg-surface-container-highest/50 p-4">
                 <div className="flex gap-1">
                   {[0, 150, 300].map((delay) => <div key={delay} className="h-2 w-2 animate-bounce rounded-full bg-primary" style={{ animationDelay: `${delay}ms` }} />)}
                 </div>
@@ -320,7 +320,7 @@ export default function Chat() {
                 type="button"
                 disabled={limiteAtingido || isLoading || visualizandoHistorico}
                 onClick={() => setInput(sugestao.pergunta)}
-                className="group min-w-[230px] max-w-[280px] snap-start rounded-xl border border-outline/20 bg-white/[.025] p-2.5 text-left md:min-w-[270px] md:max-w-[320px] md:p-3 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[.05] disabled:cursor-not-allowed disabled:opacity-40"
+                className="group min-w-[230px] max-w-[280px] snap-start rounded-xl border border-outline/20 bg-veu/[.025] p-2.5 text-left md:min-w-[270px] md:max-w-[320px] md:p-3 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[.05] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <span className="mb-1 flex items-center gap-2 font-label text-[10px] uppercase tracking-wider text-primary">
                   <span className="material-symbols-outlined text-base">{sugestao.icone}</span>
@@ -332,7 +332,7 @@ export default function Chat() {
           </div>
         </div>
 
-        <div className="border-t border-white/5 bg-surface-container-low/80 px-3 py-3 backdrop-blur-xl md:p-4 lg:px-6">
+        <div className="border-t border-veu/5 bg-surface-container-low/80 px-3 py-3 backdrop-blur-xl md:p-4 lg:px-6">
           <div className="relative">
             <input
               type="text"
@@ -351,7 +351,7 @@ export default function Chat() {
               type="button"
               onClick={sendMessage}
               disabled={!input.trim() || isLoading || limiteAtingido || visualizandoHistorico}
-              className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 md:right-3 md:h-10 md:w-10 items-center justify-center rounded-full bg-orbis-cta text-white shadow-[0_8px_20px_rgba(255,75,137,0.28)] transition-all hover:shadow-[0_12px_28px_rgba(255,75,137,0.4)] disabled:opacity-50"
+              className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 md:right-3 md:h-10 md:w-10 items-center justify-center rounded-full bg-orbis-cta text-on-cta shadow-[var(--sombra-cta)] transition-all hover:brightness-105 disabled:opacity-50"
               aria-label="Enviar pergunta"
             >
               <span className="material-symbols-outlined">send</span>

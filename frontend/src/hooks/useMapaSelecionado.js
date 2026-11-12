@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
+import { corTema } from '../utils/tema'
 
 const CHAVE_MAPA = 'orbis:mapa-selecionado'
 const CHAVE_COR_MAPA = 'orbis:cor-mapa-selecionado'
 const EVENTO_MAPA = 'orbis:mapa-selecionado-alterado'
 
-export const CORES_MAPAS = ['#ffb1c3', '#b9d9ff', '#c9c2ff', '#b8e2d4', '#f2c7a5', '#e7b9d6']
+// Guardadas sempre no tom pastel; quem exibe passa por corTema() para o tema claro
+export const CORES_MAPAS = ['#c3a6ff', '#b9d9ff', '#e0b96e', '#b8e2d4', '#f2c7a5', '#e7b9d6']
 
 export function corDoMapa(indice = 0) {
   return CORES_MAPAS[indice % CORES_MAPAS.length]
@@ -73,5 +75,5 @@ export default function useMapaSelecionado() {
     return () => controller.abort()
   }, [mapaId])
 
-  return { mapa, mapaId, cor, erro }
+  return { mapa, mapaId, cor: corTema(cor), erro }
 }

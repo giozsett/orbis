@@ -15,7 +15,7 @@ export default function GlassCard({ children, className = '', magnetic = false, 
 
     cardRef.current.style.setProperty('--mouse-x', `${x}px`)
     cardRef.current.style.setProperty('--mouse-y', `${y}px`)
-    cardRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(255, 75, 137, 0.1), rgba(184, 109, 253, 0.04) 30%, rgba(6, 14, 29, 0.68) 60%)`
+    cardRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgb(var(--c-secondary)/0.1), rgb(var(--c-tertiary-container)/0.04) 30%, rgb(var(--c-surface-container-lowest)/0.68) 60%)`
   }, [magnetic])
 
   // Limpa o estilo inline para voltar ao fundo definido em .glass-card

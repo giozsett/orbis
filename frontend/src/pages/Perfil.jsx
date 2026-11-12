@@ -46,9 +46,9 @@ export default function Perfil() {
             <p className="text-on-surface-variant mt-3">Seus dados de acesso e sua jornada pelo observatório.</p>
           </header>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 md:gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 md:gap-6 orbis-cascata">
             <GlassPanel className="p-6 md:p-8 flex flex-col items-center text-center animate-fade-in-up">
-              <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-primary-container/60 to-tertiary-container/40 border border-primary/30 flex items-center justify-center shadow-[0_0_30px_rgba(255,177,195,0.12)]">
+              <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-primary-container/60 to-tertiary-container/40 border border-primary/30 flex items-center justify-center shadow-[0_0_30px_rgb(var(--c-primary)/0.12)]">
                 <span className="font-headline text-3xl text-secondary">{iniciais}</span>
               </div>
               <h2 className="font-headline text-2xl mt-5">{usuario.nome}</h2>
@@ -65,15 +65,15 @@ export default function Perfil() {
               </div>
 
               <dl className="space-y-4">
-                <div className="p-4 rounded-xl bg-surface-container-low border border-white/5">
+                <div className="p-4 rounded-xl bg-surface-container-low border border-veu/5">
                   <dt className="font-label text-xs text-outline uppercase tracking-widest">Nome</dt>
                   <dd className="mt-2 text-on-surface">{usuario.nome}</dd>
                 </div>
-                <div className="p-4 rounded-xl bg-surface-container-low border border-white/5">
+                <div className="p-4 rounded-xl bg-surface-container-low border border-veu/5">
                   <dt className="font-label text-xs text-outline uppercase tracking-widest">E-mail</dt>
                   <dd className="mt-2 text-on-surface break-all">{usuario.email}</dd>
                 </div>
-                <div className="p-4 rounded-xl bg-surface-container-low border border-white/5 flex items-center justify-between gap-4">
+                <div className="p-4 rounded-xl bg-surface-container-low border border-veu/5 flex items-center justify-between gap-4">
                   <div>
                     <dt className="font-label text-xs text-outline uppercase tracking-widest">Mapas natais</dt>
                     <dd className="mt-2 text-on-surface">{usuario.total_mapas} {usuario.total_mapas === 1 ? 'mapa criado' : 'mapas criados'}</dd>

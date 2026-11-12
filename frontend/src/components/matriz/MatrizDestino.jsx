@@ -1,8 +1,9 @@
 import { useState } from 'react'
+import { corTema } from '../../utils/tema'
 
 const FONTE_TEXTO = "'Instrument Sans', system-ui, sans-serif"
 // numerais dos pontos principais na mesma serifa dos títulos
-const FONTE_NUMERAL = "'Fraunces', Georgia, serif"
+const FONTE_NUMERAL = "'Marcellus', Georgia, serif"
 
 // Geometria do octagrama (viewBox com margem para a linha das idades)
 const C = 250
@@ -21,9 +22,9 @@ const CORES = {
   A: '#c9a7ff', B: '#c9a7ff', A1: '#9c8cff', B1: '#9c8cff', A2: '#87b8ff', B2: '#87b8ff',
   A3: '#87dfb0', B3: '#87dfb0', E: '#ffd16a', C2: '#ffad6a', D2: '#ffad6a',
   C1: '#ff8a74', D1: '#ff8a74', C: '#ff6a7d', D: '#ff6a7d',
-  X: '#ffb1c3', dinheiro: '#f2c7a5', amor: '#ff897d',
+  X: '#a9b8ff', dinheiro: '#f2c7a5', amor: '#ff897d',
 }
-const COR_DIAGONAL = '#e5bcc4'
+const COR_DIAGONAL = '#b4bcdf'
 
 const NOMES = {
   A: 'Personalidade', B: 'Talento', C: 'Dinheiro e matéria', D: 'Cauda cármica',
@@ -42,7 +43,7 @@ export function rotuloPonto(id) {
   return NOMES[id]
 }
 
-const corPonto = (id) => CORES[id] || (DIAGONAIS.includes(id[0]) ? COR_DIAGONAL : '#ffb1c3')
+const corPonto = (id) => corTema(CORES[id] || (DIAGONAIS.includes(id[0]) ? COR_DIAGONAL : '#a9b8ff'))
 
 function posicao(angulo, raio) {
   const rad = (angulo * Math.PI) / 180
@@ -101,7 +102,7 @@ export default function MatrizDestino({ matriz, catalogo = {}, selecionado, onPo
 
   return (
     <svg
-      className={`h-full w-full drop-shadow-[0_0_24px_rgba(255,75,137,0.12)] ${animated ? 'motion-safe:animate-orbis-sphere-in' : ''}`}
+      className={`h-full w-full drop-shadow-[0_0_24px_rgb(var(--c-secondary)/0.12)] ${animated ? 'motion-safe:animate-orbis-sphere-in' : ''}`}
       viewBox="-24 -24 548 548"
       role="img"
       aria-label="Matriz do destino"
@@ -109,28 +110,28 @@ export default function MatrizDestino({ matriz, catalogo = {}, selecionado, onPo
       <defs>
         <radialGradient id="matrizMiolo" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#ffd16a" stopOpacity="0.16" />
-          <stop offset="60%" stopColor="#b86dfd" stopOpacity="0.06" />
-          <stop offset="100%" stopColor="#060e1d" stopOpacity="0" />
+          <stop offset="60%" stopColor="rgb(var(--c-tertiary-container))" stopOpacity="0.06" />
+          <stop offset="100%" stopColor="rgb(var(--c-surface-container-lowest))" stopOpacity="0" />
         </radialGradient>
       </defs>
 
       {/* Fundo e aros */}
-      <circle cx={C} cy={C} r={RAIO_IDADES + 14} fill="#060e1d" fillOpacity="0.72" />
+      <circle cx={C} cy={C} r={RAIO_IDADES + 14} fill="rgb(var(--c-surface-container-lowest))" fillOpacity="0.72" />
       <circle cx={C} cy={C} r={R * 0.75} fill="url(#matrizMiolo)" className={animated ? 'motion-safe:animate-orbis-twinkle' : undefined} />
       <g {...anima(REVELAR, 700)}>
         <circle
-          cx={C} cy={C} r={RAIO_IDADES + 14} fill="none" stroke="#d9b06b" strokeOpacity="0.28" strokeWidth="0.8" strokeDasharray="1 7"
+          cx={C} cy={C} r={RAIO_IDADES + 14} fill="none" stroke="rgb(var(--c-brass))" strokeOpacity="0.28" strokeWidth="0.8" strokeDasharray="1 7"
           className={animated ? 'origin-[250px_250px] motion-safe:animate-orbis-spin-slow' : undefined}
         />
       </g>
-      <circle cx={C} cy={C} r={RAIO_IDADES} fill="none" stroke="#ffb1c3" strokeOpacity="0.22" strokeWidth="0.8" pathLength="1" strokeDasharray="1" transform={`rotate(-90 ${C} ${C})`} {...anima(DESENHAR, 150)} />
+      <circle cx={C} cy={C} r={RAIO_IDADES} fill="none" stroke="rgb(var(--c-primary))" strokeOpacity="0.22" strokeWidth="0.8" pathLength="1" strokeDasharray="1" transform={`rotate(-90 ${C} ${C})`} {...anima(DESENHAR, 150)} />
 
       {/* Octagrama: quadrado pessoal (losango) e quadrado ancestral */}
-      <polygon points={poligono(RETOS)} fill="none" stroke="#ffb1c3" strokeOpacity="0.55" strokeWidth="1.2" pathLength="1" strokeDasharray="1" {...anima(DESENHAR, 300)} />
+      <polygon points={poligono(RETOS)} fill="none" stroke="rgb(var(--c-primary))" strokeOpacity="0.55" strokeWidth="1.2" pathLength="1" strokeDasharray="1" {...anima(DESENHAR, 300)} />
       <polygon points={poligono(DIAGONAIS)} fill="none" stroke={COR_DIAGONAL} strokeOpacity="0.4" strokeWidth="1" pathLength="1" strokeDasharray="1" {...anima(DESENHAR, 450)} />
 
       {/* Raios até o centro */}
-      <g stroke="#dbe2f8" strokeOpacity="0.2" strokeWidth="0.8">
+      <g stroke="rgb(var(--c-on-surface))" strokeOpacity="0.2" strokeWidth="0.8">
         {[...RETOS, ...DIAGONAIS].map((v, i) => {
           const p = posicao(ANGULOS[v], R)
           return <line key={v} x1={p.x} y1={p.y} x2={C} y2={C} pathLength="1" strokeDasharray="1" {...anima(DESENHAR, 600 + i * 40)} />
@@ -149,8 +150,8 @@ export default function MatrizDestino({ matriz, catalogo = {}, selecionado, onPo
             const rotulo = posicao(angulo, RAIO_ROTULO_IDADE)
             return (
               <g key={item.idade}>
-                <line x1={posicao(angulo, R + 22).x} y1={posicao(angulo, R + 22).y} x2={posicao(angulo, RAIO_IDADES + 12).x} y2={posicao(angulo, RAIO_IDADES + 12).y} stroke="#ffb1c3" strokeOpacity="0.5" strokeWidth="0.8" />
-                <text x={rotulo.x} y={rotulo.y} textAnchor="middle" dominantBaseline="central" fill="#ffb1c3" fontFamily={FONTE_TEXTO} fontSize="10" fontWeight="700" letterSpacing="0.5">
+                <line x1={posicao(angulo, R + 22).x} y1={posicao(angulo, R + 22).y} x2={posicao(angulo, RAIO_IDADES + 12).x} y2={posicao(angulo, RAIO_IDADES + 12).y} stroke="rgb(var(--c-primary))" strokeOpacity="0.5" strokeWidth="0.8" />
+                <text x={rotulo.x} y={rotulo.y} textAnchor="middle" dominantBaseline="central" fill="rgb(var(--c-primary))" fontFamily={FONTE_TEXTO} fontSize="10" fontWeight="700" letterSpacing="0.5">
                   {item.idade} anos
                 </text>
               </g>
@@ -159,8 +160,8 @@ export default function MatrizDestino({ matriz, catalogo = {}, selecionado, onPo
           return (
             <g key={item.idade}>
               <title>{`${formatarIdade(item.idade)} anos · ${catalogo[item.arcano]?.nome || `Arcano ${item.arcano}`}`}</title>
-              <circle cx={p.x} cy={p.y} r="8" fill="#060e1d" stroke="#dbe2f8" strokeOpacity="0.25" strokeWidth="0.6" />
-              <text x={p.x} y={p.y + 0.5} textAnchor="middle" dominantBaseline="central" fill="#dbe2f8" fillOpacity="0.8" fontFamily={FONTE_TEXTO} fontSize="8" fontWeight="600">
+              <circle cx={p.x} cy={p.y} r="8" fill="rgb(var(--c-surface-container-lowest))" stroke="rgb(var(--c-on-surface))" strokeOpacity="0.25" strokeWidth="0.6" />
+              <text x={p.x} y={p.y + 0.5} textAnchor="middle" dominantBaseline="central" fill="rgb(var(--c-on-surface))" fillOpacity="0.8" fontFamily={FONTE_TEXTO} fontSize="8" fontWeight="600">
                 {item.arcano}
               </text>
             </g>
@@ -201,7 +202,7 @@ export default function MatrizDestino({ matriz, catalogo = {}, selecionado, onPo
             <g {...anima(SURGIR, INICIO_PONTOS + ORDEM_SURGIR[id] * 25)}>
               <circle
                 cx={p.x} cy={p.y} r={raio}
-                fill="#060e1d" stroke={cor}
+                fill="rgb(var(--c-surface-container-lowest))" stroke={cor}
                 strokeOpacity={ehAtivo ? 1 : 0.7} strokeWidth={ehAtivo ? 2.2 : 1.2}
                 className="transition-all duration-300"
               />
@@ -209,7 +210,7 @@ export default function MatrizDestino({ matriz, catalogo = {}, selecionado, onPo
               <text
                 x={p.x} y={p.y + 0.5}
                 textAnchor="middle" dominantBaseline="central"
-                fill={ehAtivo ? '#ffffff' : cor}
+                fill={ehAtivo ? 'rgb(var(--c-on-surface))' : cor}
                 fontFamily={raio >= 18 ? FONTE_NUMERAL : FONTE_TEXTO} fontSize={raio >= 18 ? 17 : raio >= 13 ? 11 : 9.5} fontWeight={raio >= 18 ? 500 : 600}
                 aria-hidden="true"
               >

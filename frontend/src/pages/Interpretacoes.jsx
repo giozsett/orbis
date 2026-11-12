@@ -3,20 +3,21 @@ import { useEffect, useState } from 'react'
 import Layout from '../components/layout/Layout'
 import { CelestialError, CelestialLoading } from '../components/map/CelestialPageState'
 import GlassCard from '../components/ui/GlassCard'
+import { comCorTema, corTema, mapaDeVisuais } from '../utils/tema'
 
-const PLANETAS_VISUAIS = {
-  Sol: { icon: 'wb_sunny', color: '#ffb1c3' },
-  Lua: { icon: 'dark_mode', color: '#deb7ff' },
-  Mercúrio: { icon: 'auto_awesome_motion', color: '#eab9ce' },
+const PLANETAS_VISUAIS = mapaDeVisuais({
+  Sol: { icon: 'wb_sunny', color: '#ffd16a' },
+  Lua: { icon: 'dark_mode', color: '#d9c5ff' },
+  Mercúrio: { icon: 'auto_awesome_motion', color: '#e0b96e' },
   Vênus: { icon: 'favorite', color: '#ff4b89' },
   Marte: { icon: 'local_fire_department', color: '#ffb4ab' },
-  Júpiter: { icon: 'expand_circle_up', color: '#b86dfd' },
-  Saturno: { icon: 'schedule', color: '#ac878f' },
+  Júpiter: { icon: 'expand_circle_up', color: '#9a6dfd' },
+  Saturno: { icon: 'schedule', color: '#8a93ba' },
   Urano: { icon: 'public', color: '#91cfff' },
   Netuno: { icon: 'water_drop', color: '#8fd9d1' },
   Plutão: { icon: 'diamond', color: '#d9b8ff' },
   'Nodo Norte': { icon: 'route', color: '#f4c2d7' },
-}
+})
 
 export default function Interpretacoes() {
   const [mapa, setMapa] = useState(null)
@@ -63,8 +64,8 @@ export default function Interpretacoes() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
           {interpretacoes.map((planeta, index) => {
-            const visualBase = PLANETAS_VISUAIS[planeta.planeta] || { icon: 'blur_on', color: '#ffb1c3' }
-            const visual = { ...visualBase, color: planeta.cor || visualBase.color }
+            const visualBase = PLANETAS_VISUAIS[planeta.planeta] || comCorTema({ icon: 'blur_on', color: '#a9b8ff' })
+            const visual = { ...visualBase, color: corTema(planeta.cor) || visualBase.color }
             return (
               <GlassCard
                 key={planeta.id || planeta.planeta}
@@ -95,7 +96,7 @@ export default function Interpretacoes() {
                   <p className="text-sm text-on-surface-variant leading-relaxed">{planeta.interpretacao}</p>
                 </div>
 
-                <div className="mt-auto pt-5 md:pt-6 border-t border-white/5 grid grid-cols-3 gap-3 md:gap-4">
+                <div className="mt-auto pt-5 md:pt-6 border-t border-veu/5 grid grid-cols-3 gap-3 md:gap-4">
                   <div className="flex flex-col">
                     <span className="font-label text-xs text-outline">Elemento</span>
                     <span className="font-label text-sm" style={{ color: visual.color }}>{planeta.elemento || '—'}</span>

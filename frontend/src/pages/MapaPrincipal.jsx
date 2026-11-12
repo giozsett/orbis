@@ -8,6 +8,7 @@ import TituloMoldurado from '../components/ui/TituloMoldurado'
 import { CelestialError, CelestialLoading } from '../components/map/CelestialPageState'
 import ArcanoCard from '../components/arcano/ArcanoCard'
 import { selecionarMapa } from '../hooks/useMapaSelecionado'
+import { corTema } from '../utils/tema'
 
 // Mesmas cores e traços usados na mandala: [aspecto, cor, tracejado]
 const LEGENDA_ASPECTOS = [
@@ -93,7 +94,7 @@ const MOCK_DATA = {
       casa: 'Casa V • 15° 24',
       descricao: 'Sua essência brilha com criatividade e autoconfiança. A busca por expressão pessoal é o motor de sua jornada.',
       icon: 'sunny',
-      color: '#ffb1c3',
+      color: '#a9b8ff',
     },
     {
       titulo: 'Lua em Touro',
@@ -101,7 +102,7 @@ const MOCK_DATA = {
       casa: 'Casa II • 02° 11',
       descricao: 'Suas necessidades emocionais estão ancoradas na estabilidade e no prazer sensorial. Conforto é fundamental.',
       icon: 'nightlight',
-      color: '#eab9ce',
+      color: '#e0b96e',
     },
     {
       titulo: 'Asc. Escorpião',
@@ -109,7 +110,7 @@ const MOCK_DATA = {
       casa: 'Horizonte Leste • 28° 45',
       descricao: 'Uma presença magnética e intensa. O mundo o vê como alguém profundo, reservado e altamente perceptivo.',
       icon: 'expand_less',
-      color: '#ffb1c3',
+      color: '#a9b8ff',
     },
   ],
 }
@@ -145,9 +146,9 @@ export default function MapaPrincipal() {
     const lua = chartData.planetas.find(planeta => planeta.nome === 'Lua')
     const ascendente = chartData.ascendente
     return [
-      { ponto: sol, subtitulo: 'IDENTIDADE', icon: 'sunny', color: '#ffb1c3' },
-      { ponto: lua, subtitulo: 'EMOÇÕES', icon: 'nightlight', color: '#eab9ce' },
-      { ponto: ascendente, subtitulo: 'PERSONA', icon: 'expand_less', color: '#deb7ff' },
+      { ponto: sol, subtitulo: 'IDENTIDADE', icon: 'sunny', color: '#ffd16a' },
+      { ponto: lua, subtitulo: 'EMOÇÕES', icon: 'nightlight', color: '#d9c5ff' },
+      { ponto: ascendente, subtitulo: 'PERSONA', icon: 'expand_less', color: '#c3a6ff' },
     ].filter(item => item.ponto).map(item => ({
       ...item,
       titulo: `${item.ponto.nome} em ${item.ponto.signo}`,
@@ -185,14 +186,14 @@ export default function MapaPrincipal() {
                 <div
                   className="absolute -top-4 -right-4 opacity-5 group-hover:scale-110 transition-transform duration-500"
                 >
-                  <span className="material-symbols-outlined" style={{ fontSize: '80px', color: card.color }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '80px', color: corTema(card.color) }}>
                     {card.icon}
                   </span>
                 </div>
 
-                <p className="font-label text-[11px] uppercase tracking-[0.22em] mb-2" style={{ color: card.color }}>{card.subtitulo}</p>
+                <p className="font-label text-[11px] uppercase tracking-[0.22em] mb-2" style={{ color: corTema(card.color) }}>{card.subtitulo}</p>
                 <h2 className="font-headline text-2xl mb-1">{card.titulo}</h2>
-                <p className="font-label text-xs text-outline">{card.casa}</p>
+                <p className="font-dados text-xs text-outline">{card.casa}</p>
 
                 <div className="mt-4 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
@@ -211,7 +212,7 @@ export default function MapaPrincipal() {
           )}
 
           {/* Área principal: Mandala & Lista */}
-          <section className="grid grid-cols-1 xl:grid-cols-12 gap-6 md:gap-8 items-start">
+          <section className="grid grid-cols-1 xl:grid-cols-12 gap-6 md:gap-8 items-start orbis-cascata">
             {/* Mandala sobre um halo suave (sem ilustração atrás, para não disputar com as posições) */}
             <div className="xl:col-span-7 relative flex flex-col justify-center items-center gap-4 py-2 md:gap-5 md:py-6">
               <div className="pointer-events-none absolute left-1/2 top-1/2 h-[80%] w-[80%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-tertiary-container/10 blur-[90px] motion-safe:animate-orbis-twinkle" />
@@ -227,7 +228,7 @@ export default function MapaPrincipal() {
               </div>
               <p
                 key={hoveredPlanet?.nome || 'dica'}
-                className="relative rounded-full border border-white/[0.08] bg-surface-container-low/50 px-3.5 py-1.5 text-center font-label text-[10px] uppercase tracking-[0.18em] text-outline backdrop-blur-sm motion-safe:animate-orbis-swap"
+                className="relative rounded-full border border-veu/[0.08] bg-surface-container-low/50 px-3.5 py-1.5 text-center font-dados text-[10px] uppercase tracking-[0.18em] text-outline backdrop-blur-sm motion-safe:animate-orbis-swap"
               >
                 {hoveredPlanet
                   ? `${hoveredPlanet.nome} · ${hoveredPlanet.signo} ${hoveredPlanet.posicao}${hoveredPlanet.casa ? ` · Casa ${hoveredPlanet.casa}` : ''}${hoveredPlanet.retrogrado ? ' · retrógrado' : ''}`
@@ -236,7 +237,7 @@ export default function MapaPrincipal() {
               <ul className="relative flex flex-wrap justify-center gap-x-4 gap-y-2 font-label text-[10px] uppercase tracking-[0.14em] text-outline" aria-label="Legenda dos aspectos">
                 {LEGENDA_ASPECTOS.map(([tipo, cor, tracejado]) => (
                   <li key={tipo} className="flex items-center gap-1.5">
-                    <svg width="18" height="4" aria-hidden="true"><line x1="0" y1="2" x2="18" y2="2" stroke={cor} strokeWidth="2" strokeDasharray={tracejado ? '4 3' : undefined} /></svg>
+                    <svg width="18" height="4" aria-hidden="true"><line x1="0" y1="2" x2="18" y2="2" stroke={corTema(cor)} strokeWidth="2" strokeDasharray={tracejado ? '4 3' : undefined} /></svg>
                     {tipo}
                   </li>
                 ))}
@@ -246,7 +247,7 @@ export default function MapaPrincipal() {
             {/* Lista de planetas */}
             <div className="xl:col-span-5 space-y-4">
               <div className="glass-card rounded-2xl overflow-hidden mb-6 motion-safe:animate-orbis-rise" style={{ animationDelay: '700ms' }}>
-                <div className="p-4 border-b border-white/5 flex justify-between items-center">
+                <div className="p-4 border-b border-veu/5 flex justify-between items-center">
                   <h3 className="font-headline text-xl">Posições Planetárias</h3>
                   <span className="material-symbols-outlined text-primary motion-safe:animate-orbis-twinkle">auto_awesome</span>
                 </div>

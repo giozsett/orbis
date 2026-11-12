@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { corTema } from '../../utils/tema'
 
 const PLANET_ICONS = {
   'Sol': 'sunny',
@@ -14,16 +15,16 @@ const PLANET_ICONS = {
 }
 
 const PLANET_COLORS = {
-  'Sol': '#ffb1c3',
-  'Lua': '#eab9ce',
-  'Mercúrio': '#deb7ff',
+  'Sol': '#ffd16a',
+  'Lua': '#d9c5ff',
+  'Mercúrio': '#c3a6ff',
   'Vênus': '#ff4b89',
   'Marte': '#ffb4ab',
-  'Júpiter': '#b86dfd',
-  'Saturno': '#ac878f',
-  'Urano': '#5c3f45',
-  'Netuno': '#633e4f',
-  'Plutão': '#93000a',
+  'Júpiter': '#9a6dfd',
+  'Saturno': '#8a93ba',
+  'Urano': '#87dfd8',
+  'Netuno': '#76b9ff',
+  'Plutão': '#e3a8c6',
 }
 
 export default function PlanetCard({ planeta, index = 0, atraso = 0 }) {
@@ -31,7 +32,7 @@ export default function PlanetCard({ planeta, index = 0, atraso = 0 }) {
   const [isHovered, setIsHovered] = useState(false)
 
   const icon = PLANET_ICONS[planeta.nome] || 'blur_on'
-  const color = PLANET_COLORS[planeta.nome] || '#ffb1c3'
+  const color = corTema(PLANET_COLORS[planeta.nome] || '#a9b8ff')
   const interpretacaoBase = planeta.interpretacao_base || {}
   const secoesInterpretacao = [
     {
@@ -63,7 +64,7 @@ export default function PlanetCard({ planeta, index = 0, atraso = 0 }) {
     >
       {/* Header - sempre visível */}
       <div
-        className="p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 transition-all duration-300"
+        className="p-4 flex items-center gap-4 cursor-pointer hover:bg-veu/5 transition-all duration-300"
         onClick={toggleExpanded}
         onKeyDown={(event) => {
           if (event.key === 'Enter' || event.key === ' ') {
@@ -107,7 +108,7 @@ export default function PlanetCard({ planeta, index = 0, atraso = 0 }) {
         </div>
 
         <div className="text-right">
-          <span className="font-label text-xs text-outline">{planeta.posicao}</span>
+          <span className="font-dados text-xs text-outline">{planeta.posicao}</span>
         </div>
 
         <span
@@ -127,7 +128,7 @@ export default function PlanetCard({ planeta, index = 0, atraso = 0 }) {
           opacity: isExpanded ? 1 : 0,
         }}
       >
-        <div className="px-4 pb-4 pt-2 border-t border-white/5">
+        <div className="px-4 pb-4 pt-2 border-t border-veu/5">
           <div className="flex items-center gap-2 mb-3">
             <span className="material-symbols-outlined text-sm" style={{ color }}>
               auto_awesome
@@ -141,7 +142,7 @@ export default function PlanetCard({ planeta, index = 0, atraso = 0 }) {
             {secoesInterpretacao.map(secao => (
               <div
                 key={secao.titulo}
-                className="rounded-lg border border-white/5 bg-surface-container-low/55 p-3 transition-colors hover:border-white/10"
+                className="rounded-lg border border-veu/5 bg-surface-container-low/55 p-3 transition-colors hover:border-veu/10"
               >
                 <div className="mb-1.5 flex items-center gap-2">
                   <span className="material-symbols-outlined text-sm" style={{ color }}>{secao.icone}</span>
@@ -154,25 +155,25 @@ export default function PlanetCard({ planeta, index = 0, atraso = 0 }) {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {planeta.dignidade && (
-              <div className="p-3 rounded bg-surface-container-highest/40 border border-white/5">
+              <div className="p-3 rounded bg-surface-container-highest/40 border border-veu/5">
                 <span className="font-label text-xs text-outline block mb-1">DIGNIDADE</span>
                 <span className="text-sm" style={{ color }}>{planeta.dignidade}</span>
               </div>
             )}
             {planeta.elemento && (
-              <div className="p-3 rounded bg-surface-container-highest/40 border border-white/5">
+              <div className="p-3 rounded bg-surface-container-highest/40 border border-veu/5">
                 <span className="font-label text-xs text-outline block mb-1">ELEMENTO</span>
                 <span className="text-sm" style={{ color }}>{planeta.elemento}</span>
               </div>
             )}
             {planeta.estado && (
-              <div className="p-3 rounded bg-surface-container-highest/40 border border-white/5">
+              <div className="p-3 rounded bg-surface-container-highest/40 border border-veu/5">
                 <span className="font-label text-xs text-outline block mb-1">ESTADO</span>
                 <span className="text-sm" style={{ color }}>{planeta.estado}</span>
               </div>
             )}
             {planeta.qualidade && (
-              <div className="p-3 rounded bg-surface-container-highest/40 border border-white/5">
+              <div className="p-3 rounded bg-surface-container-highest/40 border border-veu/5">
                 <span className="font-label text-xs text-outline block mb-1">QUALIDADE</span>
                 <span className="text-sm" style={{ color }}>{planeta.qualidade}</span>
               </div>
@@ -180,7 +181,7 @@ export default function PlanetCard({ planeta, index = 0, atraso = 0 }) {
           </div>
 
           {planeta.aspectos && planeta.aspectos.length > 0 && (
-            <div className="mt-4 pt-3 border-t border-white/5">
+            <div className="mt-4 pt-3 border-t border-veu/5">
               <span className="font-label text-xs text-outline uppercase block mb-2">Aspectos</span>
               <div className="flex flex-wrap gap-2">
                 {planeta.aspectos.map((aspecto, i) => (

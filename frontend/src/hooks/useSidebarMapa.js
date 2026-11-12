@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { corTema } from '../utils/tema'
 import { corDoMapa, lerCorMapaSelecionado, lerMapaSelecionado, observarMapaSelecionado, salvarCorMapaSelecionado, selecionarMapa } from './useMapaSelecionado'
 
 function nomeArquivo(nome) {
@@ -81,5 +82,5 @@ export default function useSidebarMapa() {
     } catch (error) { setErroExportacao(error.message) } finally { setExportando(false) }
   }
 
-  return { mapas, selecionado, cor, escolherMapa, exportarPdf, exportando, erroExportacao }
+  return { mapas, selecionado, cor: corTema(cor), escolherMapa, exportarPdf, exportando, erroExportacao }
 }

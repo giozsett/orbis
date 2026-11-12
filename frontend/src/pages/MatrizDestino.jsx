@@ -8,6 +8,7 @@ import LinhaIdades from '../components/matriz/LinhaIdades'
 import TabelaChakras from '../components/matriz/TabelaChakras'
 import GlassCard from '../components/ui/GlassCard'
 import useTarotMapa from '../hooks/useTarotMapa'
+import { corTema } from '../utils/tema'
 
 // [chave, rótulo, descrição] dos propósitos, agrupados como no método do octagrama
 const PROPOSITOS = [
@@ -23,9 +24,9 @@ function Leitura({ rotulo, numero, catalogo, onArcano, destaque = false, cor }) 
     <button
       type="button"
       onClick={() => onArcano(numero)}
-      className="group flex min-h-[48px] w-full items-center gap-3 border-t border-white/[0.06] py-2 text-left first:border-t-0"
+      className="group flex min-h-[48px] w-full items-center gap-3 border-t border-veu/[0.06] py-2 text-left first:border-t-0"
     >
-      <span className="min-w-0 flex-1 truncate text-sm text-on-surface-variant" style={cor ? { color: cor } : undefined}>{rotulo}</span>
+      <span className="min-w-0 flex-1 truncate text-sm text-on-surface-variant" style={cor ? { color: corTema(cor) } : undefined}>{rotulo}</span>
       <span className={`min-w-0 truncate text-right text-sm transition-colors group-hover:text-on-surface ${destaque ? 'text-on-surface' : 'text-outline'}`}>{catalogo[numero]?.nome}</span>
       <span className={`w-9 shrink-0 text-right font-headline text-2xl leading-none ${destaque ? 'text-primary' : 'text-on-surface'}`}>{numero}</span>
     </button>
@@ -58,7 +59,7 @@ export default function MatrizDestino() {
           descricao="O octagrama dos Arcanos Maiores calculado a partir da data de nascimento: o quadrado pessoal (dia, mês, ano e carma), o quadrado ancestral, os canais de amor e dinheiro e a linha do tempo de 0 a 80 anos."
         />
 
-        <section className="grid grid-cols-1 items-start gap-6 md:gap-8 xl:grid-cols-12">
+        <section className="grid grid-cols-1 items-start gap-6 md:gap-8 xl:grid-cols-12 orbis-cascata">
           <div className="relative flex flex-col items-center gap-4 xl:col-span-7">
             <div className="pointer-events-none absolute left-1/2 top-1/2 h-[80%] w-[80%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-tertiary-container/10 blur-[90px] motion-safe:animate-orbis-twinkle" />
             <div className="relative aspect-square w-full max-w-[640px]">
@@ -71,7 +72,7 @@ export default function MatrizDestino() {
                 onPontoClick={setSelecionado}
               />
             </div>
-            <p className="relative rounded-full border border-white/[0.08] bg-surface-container-low/50 px-3.5 py-1.5 text-center font-label text-[10px] uppercase tracking-[0.18em] text-outline backdrop-blur-sm">
+            <p className="relative rounded-full border border-veu/[0.08] bg-surface-container-low/50 px-3.5 py-1.5 text-center font-label text-[10px] uppercase tracking-[0.18em] text-outline backdrop-blur-sm">
               <span className="[@media(hover:none)]:hidden">passe o cursor ou clique em um ponto</span>
               <span className="hidden [@media(hover:none)]:inline">toque em um ponto</span>
             </p>
@@ -79,13 +80,13 @@ export default function MatrizDestino() {
 
           <div className="space-y-4 xl:col-span-5">
             {arcanoPainel && (
-              <GlassCard key={pontoPainel} className="flex gap-4 p-5 motion-safe:animate-orbis-swap md:p-6" style={{ '--arcano-cor': arcanoPainel.cores?.[0] }}>
+              <GlassCard key={pontoPainel} className="flex gap-4 p-5 motion-safe:animate-orbis-swap md:p-6" style={{ '--arcano-cor': corTema(arcanoPainel.cores?.[0]) }}>
                 <div className="h-32 w-20 shrink-0"><ArcanoIlustracao arcano={arcanoPainel} compacta /></div>
                 <div className="min-w-0">
-                  <p className="font-label text-[11px] uppercase tracking-[0.22em]" style={{ color: arcanoPainel.cores?.[0] }}>{rotuloPonto(pontoPainel)}</p>
+                  <p className="font-label text-[11px] uppercase tracking-[0.22em]" style={{ color: corTema(arcanoPainel.cores?.[0]) }}>{rotuloPonto(pontoPainel)}</p>
                   <h2 className="mt-1 font-headline text-2xl leading-tight">{arcanoPainel.numero} · {arcanoPainel.nome}</h2>
                   <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">{arcanoPainel.resumo}</p>
-                  <button type="button" onClick={() => setAberto(arcanoPainel)} className="mt-3 min-h-[44px] rounded-full border px-4 text-sm transition-colors hover:bg-white/5" style={{ borderColor: `${arcanoPainel.cores?.[0]}80`, color: arcanoPainel.cores?.[0] }}>
+                  <button type="button" onClick={() => setAberto(arcanoPainel)} className="mt-3 min-h-[44px] rounded-full border px-4 text-sm transition-colors hover:bg-veu/5" style={{ borderColor: `${corTema(arcanoPainel.cores?.[0])}80`, color: corTema(arcanoPainel.cores?.[0]) }}>
                     Ler o arcano
                   </button>
                 </div>
@@ -108,8 +109,8 @@ export default function MatrizDestino() {
               <h3 className="mb-1 font-headline text-xl">Amor, dinheiro e carma</h3>
               <Leitura rotulo="Canal do dinheiro" cor="#f2c7a5" numero={canais.dinheiro.canal} catalogo={catalogo} onArcano={abrir} destaque />
               <Leitura rotulo="Canal do amor" cor="#ff897d" numero={canais.amor.canal} catalogo={catalogo} onArcano={abrir} destaque />
-              <div className="flex min-h-[48px] items-center gap-3 border-t border-white/[0.06] py-2">
-                <span className="min-w-0 flex-1 truncate text-sm text-[#ff6a7d]">Cauda cármica</span>
+              <div className="flex min-h-[48px] items-center gap-3 border-t border-veu/[0.06] py-2">
+                <span className="min-w-0 flex-1 truncate text-sm" style={{ color: corTema('#ff6a7d') }}>Cauda cármica</span>
                 <span className="flex shrink-0 items-center font-headline text-2xl leading-none text-on-surface">
                   {canais.cauda_carmica.map((numero, i) => (
                     <span key={i} className="flex items-center">
@@ -123,7 +124,7 @@ export default function MatrizDestino() {
           </div>
         </section>
 
-        <section className="mt-6 grid gap-6 md:mt-8 md:gap-8 xl:grid-cols-2">
+        <section className="mt-6 grid gap-6 md:mt-8 md:gap-8 xl:grid-cols-2 orbis-cascata">
           <LinhaIdades idades={matriz.idades} catalogo={catalogo} onArcano={abrir} />
           <TabelaChakras chakras={matriz.chakras} total={matriz.chakras_total} catalogo={catalogo} onArcano={abrir} />
         </section>

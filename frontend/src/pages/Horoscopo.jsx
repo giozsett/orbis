@@ -5,6 +5,7 @@ import Layout from '../components/layout/Layout'
 import Button from '../components/ui/Button'
 import GlassCard from '../components/ui/GlassCard'
 import GlassPanel from '../components/ui/GlassPanel'
+import { mapaDeVisuais } from '../utils/tema'
 
 const PERIODOS = [
   { id: 'diario', rotulo: 'Hoje', icone: 'today' },
@@ -13,11 +14,11 @@ const PERIODOS = [
   { id: 'mensal', rotulo: 'Mês', icone: 'calendar_month' },
 ]
 
-const AREAS = {
-  Amor: { icone: 'favorite', cor: '#ffb1c3' },
-  Trabalho: { icone: 'work', cor: '#deb7ff' },
-  'Bem-estar': { icone: 'self_improvement', cor: '#eab9ce' },
-}
+const AREAS = mapaDeVisuais({
+  Amor: { icone: 'favorite', cor: '#ff9ec1' },
+  Trabalho: { icone: 'work', cor: '#c3a6ff' },
+  'Bem-estar': { icone: 'self_improvement', cor: '#87dfd8' },
+})
 
 const ICONES_TENDENCIA = {
   alta: 'trending_up',
@@ -160,7 +161,7 @@ export default function Horoscopo() {
   return (
     <Layout>
       <div className="p-4 xs:p-5 md:p-16">
-        <header className="mb-6 flex animate-fade-in-up flex-col gap-4 border-b border-white/5 pb-6 md:mb-8 md:gap-6 md:pb-7 md:flex-row md:items-end md:justify-between">
+        <header className="mb-6 flex animate-fade-in-up flex-col gap-4 border-b border-veu/5 pb-6 md:mb-8 md:gap-6 md:pb-7 md:flex-row md:items-end md:justify-between">
           <div className="space-y-2">
             <span className="font-label text-xs uppercase tracking-[0.2em] text-tertiary">Mapa principal · {dados?.mapa?.nome}</span>
             <h1 className="font-headline text-3xl text-on-surface md:text-5xl">Horóscopo do Seu Mapa</h1>
@@ -169,7 +170,7 @@ export default function Horoscopo() {
             </p>
           </div>
           {periodo && (
-            <div className="flex items-center gap-4 self-start rounded-xl border border-white/10 bg-surface-container-high px-4 py-2.5 md:self-auto md:px-5 md:py-3">
+            <div className="flex items-center gap-4 self-start rounded-xl border border-veu/10 bg-surface-container-high px-4 py-2.5 md:self-auto md:px-5 md:py-3">
               <span className="material-symbols-outlined text-secondary">calendar_today</span>
               <div className="text-right">
                 <p className="font-label text-[10px] uppercase text-outline">Período atual</p>
@@ -188,8 +189,8 @@ export default function Horoscopo() {
               aria-pressed={periodoAtivo === item.id}
               className={`flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-full border px-4 py-2.5 font-label text-sm transition-all md:px-5 md:py-3 ${
                 periodoAtivo === item.id
-                  ? 'border-primary/50 bg-primary/15 text-primary shadow-[0_0_18px_rgba(255,0,122,.12)]'
-                  : 'border-white/10 bg-white/[.03] text-on-surface-variant hover:border-secondary/30 hover:text-secondary'
+                  ? 'border-primary/50 bg-primary/15 text-primary shadow-[0_0_18px_rgb(var(--c-primary-container)/.12)]'
+                  : 'border-veu/10 bg-veu/[.03] text-on-surface-variant hover:border-secondary/30 hover:text-secondary'
               }`}
             >
               <span className="material-symbols-outlined text-lg">{item.icone}</span>
@@ -214,9 +215,9 @@ export default function Horoscopo() {
             <p className="mt-2 max-w-md text-on-surface-variant">Cruzando os trânsitos do período com as posições do seu mapa principal.</p>
           </GlassPanel>
         ) : horoscopo ? (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-6 orbis-cascata">
             <GlassCard magnetic className="flex animate-fade-in-up flex-col gap-5 rounded-2xl p-5 md:col-span-8 md:flex-row md:gap-6 md:p-7">
-              <div className="relative flex h-28 w-full items-center justify-center overflow-hidden rounded-xl md:aspect-square md:h-auto bg-[radial-gradient(circle_at_center,rgba(255,177,195,.18),rgba(24,20,35,.7)_65%)] md:w-1/3">
+              <div className="relative flex h-28 w-full items-center justify-center overflow-hidden rounded-xl md:aspect-square md:h-auto bg-[radial-gradient(circle_at_center,rgb(var(--c-primary)/.18),rgb(var(--c-surface-container)/.7)_65%)] md:w-1/3">
                 <div className="absolute h-32 w-32 animate-pulse rounded-full border border-secondary/30" />
                 <div className="absolute h-48 w-48 rounded-full border border-primary/10" />
                 <span className="material-symbols-outlined text-[76px] text-primary/60">auto_awesome</span>
@@ -252,7 +253,7 @@ export default function Horoscopo() {
                       </span>
                       <span className="font-label text-xs text-primary">{area.energia}%</span>
                     </div>
-                    <div className="h-2 overflow-hidden rounded-full bg-white/5">
+                    <div className="h-2 overflow-hidden rounded-full bg-veu/5">
                       <div
                         className="h-full rounded-full transition-all duration-1000"
                         style={{
@@ -285,7 +286,7 @@ export default function Horoscopo() {
                   </div>
                   <h3 className="mb-3 font-headline text-xl">{area.nome}</h3>
                   <p className="text-sm leading-relaxed md:min-h-20 text-on-surface-variant">{area.texto}</p>
-                  <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-4">
+                  <div className="mt-5 flex items-center justify-between border-t border-veu/5 pt-4">
                     <span className="font-label text-xs text-tertiary">Energia simbólica: {area.energia}%</span>
                     <span className={`material-symbols-outlined ${tendencia === 'baixa' ? 'text-error' : tendencia === 'alta' ? 'text-primary' : 'text-outline'}`}>
                       {ICONES_TENDENCIA[tendencia] || ICONES_TENDENCIA.estavel}

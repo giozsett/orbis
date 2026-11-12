@@ -55,7 +55,7 @@ export default function HoroscoposMalucos() {
         <div className="max-w-7xl mx-auto space-y-6 md:space-y-12 relative z-10">
 
           {/* Hero temático */}
-          <header className="relative overflow-hidden rounded-2xl border border-white/10 bg-surface-container-low/60 p-5 md:p-10 animate-fade-in-up" style={{ borderColor: `${cor}25` }}>
+          <header className="relative overflow-hidden rounded-2xl border border-veu/10 bg-surface-container-low/60 p-5 md:p-10 animate-fade-in-up" style={{ borderColor: `${cor}25` }}>
             <div className="absolute -right-12 -top-12 h-48 w-48 animate-pulse-soft rounded-full blur-3xl" style={{ background: `${cor}15` }} />
             <div className="absolute right-7 top-7 animate-float-slow opacity-10">
               <LinuxTuxIcon size={80} />
@@ -126,7 +126,7 @@ export default function HoroscoposMalucos() {
           </GlassCard>
 
           {/* Troca de mapa */}
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-surface-container-low/40 border border-white/5 animate-fade-in-up delay-300">
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-surface-container-low/40 border border-veu/5 animate-fade-in-up delay-300">
             <span className="material-symbols-outlined text-outline">swap_horiz</span>
             <p className="text-sm text-on-surface-variant">
               Para ver outro resultado, abra <strong>Meus mapas</strong> na barra lateral e selecione um mapa diferente. A página atualiza automaticamente.

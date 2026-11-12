@@ -32,21 +32,37 @@ TAMANHO_MAXIMO_PDF = 15 * 1024 * 1024
 CAMINHOS_FONTE = [Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"), Path("C:/Windows/Fonts/arial.ttf")]
 CAMINHOS_FONTE_NEGRITO = [Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"), Path("C:/Windows/Fonts/arialbd.ttf")]
 CAMINHOS_FONTE_SIGNOS = [Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"), Path("C:/Windows/Fonts/seguisym.ttf")]
+# Títulos na Marcellus do app quando o TTF está em backend/assets/fonts; senão, uma serifa do sistema
+CAMINHOS_FONTE_TITULO = [
+    Path(__file__).resolve().parents[1] / "assets" / "fonts" / "Marcellus-Regular.ttf",
+    Path("/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf"),
+    Path("C:/Windows/Fonts/georgia.ttf"),
+]
 FONTE = "Helvetica"
 FONTE_NEGRITO = "Helvetica-Bold"
+FONTE_TITULO = "Times-Roman"
 FONTE_SIGNOS = "Helvetica"
 
 # Paleta do ORBIS: fundo noturno para a mandala, tinta escura para o papel
-NOITE = "#0b1323"
-NOITE_PROFUNDA = "#060e1d"
-ROSA = "#ffb1c3"
-ROSA_INTENSO = "#ff4b89"
-LILAS = "#b86dfd"
-TINTA = "#1d2433"
-TINTA_SUAVE = "#5b6273"
-ACENTO = "#c2185b"
-LINHA = "#ecdde4"
-FUNDO_SUAVE = "#fbf6f9"
+# Mesma paleta do app (frontend/src/styles/tema.css): capa e mandalas no céu noturno,
+# páginas de papel nas cores do nascer do sol.
+NOITE = "#070b1d"
+NOITE_PROFUNDA = "#040716"
+NEBULOSA = ("#4a3fb0", "#1a1c55")  # brilho violeta no canto da capa
+HALO = ("#2a2470", "#141a45")  # brilho atrás das mandalas
+PERVINCA = "#a9b8ff"
+LATAO = "#e0b96e"
+LUZ_ESTRELA = "#e6e9fb"
+LUZ_SUAVE = "#b4bcdf"
+CONTORNO = "#8a93ba"
+AURORA = "#d6336c"
+TANGERINA = "#f2762e"
+TINTA = "#2a1a3e"
+TINTA_SUAVE = "#6f5c7e"
+ACENTO = "#ad1f55"
+LINHA = "#ecd9d6"
+FUNDO_SUAVE = "#fdf3ee"
+TRILHO = "#f3e4de"
 
 ELEMENTOS = {"fogo": "#ff8fa8", "terra": "#d9b06b", "ar": "#deb7ff", "agua": "#9cc4ff"}
 NOMES_ELEMENTOS = {"fogo": "Fogo", "terra": "Terra", "ar": "Ar", "agua": "Água"}
@@ -93,7 +109,7 @@ class RelatorioMuitoGrandeError(RelatorioPdfError):
 
 
 def _registrar_fontes():
-    global FONTE, FONTE_NEGRITO, FONTE_SIGNOS
+    global FONTE, FONTE_NEGRITO, FONTE_SIGNOS, FONTE_TITULO
     caminho = next((item for item in CAMINHOS_FONTE if item.exists()), None)
     caminho_negrito = next((item for item in CAMINHOS_FONTE_NEGRITO if item.exists()), None)
     caminho_signos = next((item for item in CAMINHOS_FONTE_SIGNOS if item.exists()), None)
@@ -103,6 +119,11 @@ def _registrar_fontes():
         pdfmetrics.registerFont(TTFont("OrbisSansBold", str(caminho_negrito)))
     if caminho_signos and "OrbisSymbols" not in pdfmetrics.getRegisteredFontNames():
         pdfmetrics.registerFont(TTFont("OrbisSymbols", str(caminho_signos)))
+    caminho_titulo = next((item for item in CAMINHOS_FONTE_TITULO if item.exists()), None)
+    if caminho_titulo and "OrbisTitulo" not in pdfmetrics.getRegisteredFontNames():
+        pdfmetrics.registerFont(TTFont("OrbisTitulo", str(caminho_titulo)))
+    if caminho_titulo:
+        FONTE_TITULO = "OrbisTitulo"
     if caminho:
         FONTE = "OrbisSans"
     if caminho_negrito:
@@ -195,7 +216,112 @@ def _marca(canvas, x, y, tamanho, cor, espaco):
     canvas.setFillColor(colors.HexColor(cor))
     canvas.setFont(FONTE_SIGNOS, tamanho)
     canvas.drawString(x, y, "✦")
-    _texto_espacado(canvas, x + tamanho * 1.35, y, "ORBIS", FONTE_NEGRITO, tamanho, cor, espaco)
+    _texto_espacado(canvas, x + tamanho * 1.35, y, "ORBIS", FONTE_TITULO, tamanho, cor, espaco)
+
+
+# Esfera armilar da tela de login (frontend/src/components/ui/EsferaArmilar.jsx),
+# nas mesmas coordenadas do viewBox de 600 unidades do SVG.
+ESFERA_CONTINENTES = [
+    "M 260 232 C 250 224 236 226 230 236 C 222 244 224 254 232 258 C 226 266 230 276 240 278 C 238 288 246 296 256 292 C 262 300 274 300 278 290 C 288 292 296 284 292 274 C 300 270 300 258 292 252 C 296 242 288 232 278 234 C 274 226 264 224 260 232 Z",
+    "M 322 268 C 316 278 318 292 326 300 C 322 312 328 326 338 330 C 336 342 344 352 354 348 C 360 356 372 354 374 344 C 382 340 384 328 378 320 C 384 310 380 296 370 292 C 372 280 364 270 354 272 C 350 264 338 260 332 266 C 328 262 322 262 322 268 Z",
+    "M 246 330 C 240 338 242 348 250 352 C 248 360 254 368 262 366 C 266 372 276 370 278 362 C 284 360 286 350 280 344 C 282 336 276 328 268 330 C 264 324 252 324 246 330 Z",
+]
+ESFERA_ESTRELAS = [(90, 120, 2), (130, 80, 1.4), (520, 410, 2), (70, 440, 1.6), (540, 90, 1.4)]
+
+
+def _rgba(r: int, g: int, b: int, alfa: float) -> colors.Color:
+    return colors.Color(r / 255, g / 255, b / 255, alpha=alfa)
+
+
+def _desenhar_esfera_armilar(canvas, x: float, y: float, tamanho: float, opacidade: float = 1.0):
+    """Globo, anéis, aro dentado, tripé e luneta, iguais aos da tela de login.
+
+    (x, y) é o canto inferior esquerdo; o desenho usa o sistema do SVG (y para baixo).
+    """
+    canvas.saveState()
+    canvas.translate(x, y + tamanho)
+    canvas.scale(tamanho / 600, -tamanho / 600)
+    canvas.setLineCap(1)
+    canvas.setLineJoin(1)
+
+    def traco(cor, espessura, tracejado=None):
+        r, g, b, alfa = cor
+        canvas.setStrokeColor(_rgba(r, g, b, alfa * opacidade))
+        canvas.setLineWidth(espessura)
+        canvas.setDash(*tracejado) if tracejado else canvas.setDash()
+
+    def elipse(rx, ry, cx=300, cy=300, giro=0):
+        canvas.saveState()
+        canvas.translate(cx, cy)
+        canvas.rotate(giro)
+        canvas.ellipse(-rx, -ry, rx, ry, stroke=1, fill=0)
+        canvas.restoreState()
+
+    # globo: paralelos e meridianos
+    traco((169, 184, 255, 0.55), 1.1)
+    elipse(118, 118)
+    elipse(118, 26)
+    elipse(42, 118)
+    traco((169, 184, 255, 0.44), 1.1)
+    elipse(82, 16, cy=255)
+    elipse(82, 16, cy=345)
+
+    # continentes em lineart
+    traco((230, 233, 251, 0.75), 1.3)
+    for desenho in ESFERA_CONTINENTES:
+        numeros = [float(valor) for valor in desenho.replace("M", " ").replace("C", " ").replace("Z", " ").split()]
+        caminho = canvas.beginPath()
+        caminho.moveTo(numeros[0], numeros[1])
+        for indice in range(2, len(numeros), 6):
+            caminho.curveTo(*numeros[indice:indice + 6])
+        caminho.close()
+        canvas.drawPath(caminho, stroke=1, fill=0)
+
+    # eixo de rotação
+    traco((224, 185, 110, 0.55), 1.6, (1, 5))
+    canvas.line(300, 176, 300, 424)
+
+    # anéis da esfera armilar
+    traco((195, 166, 255, 0.5), 1.4)
+    elipse(230, 230)
+    traco((154, 109, 253, 0.55), 1.6)
+    elipse(230, 90, giro=-18)
+    traco((125, 139, 245, 0.5), 1.6)
+    elipse(230, 90, giro=35)
+    traco((180, 188, 223, 0.35), 1, (2, 6))
+    elipse(180, 180)
+
+    # aro externo dentado e marcações de grau
+    traco((224, 185, 110, 0.55), 1.4)
+    elipse(255, 255)
+    traco((224, 185, 110, 0.6), 2)
+    for indice in range(0, 36, 3):
+        angulo = indice / 36 * 2 * pi
+        canvas.line(300 + 244 * cos(angulo), 300 + 244 * sin(angulo), 300 + 265 * cos(angulo), 300 + 265 * sin(angulo))
+    traco((195, 166, 255, 0.45), 1)
+    for indice in range(72):
+        angulo = indice / 72 * 2 * pi
+        canvas.line(300 + 220 * cos(angulo), 300 + 220 * sin(angulo), 300 + 230 * cos(angulo), 300 + 230 * sin(angulo))
+
+    # tripé
+    traco((138, 147, 186, 0.5), 1.4)
+    for destino in (215, 385, 300):
+        canvas.line(300, 555, destino, 600)
+    elipse(26, 9, cy=556)
+
+    # luneta
+    traco((169, 184, 255, 0.6), 2)
+    canvas.line(300, 300, 470, 150)
+    traco((169, 184, 255, 0.7), 1.6)
+    canvas.circle(470, 150, 8, stroke=1, fill=0)
+    canvas.setFillColor(_rgba(169, 184, 255, 0.9 * opacidade))
+    canvas.circle(470, 150, 3, stroke=0, fill=1)
+
+    # estrelas soltas
+    canvas.setFillColor(_rgba(230, 233, 251, 0.7 * opacidade))
+    for cx, cy, raio in ESFERA_ESTRELAS:
+        canvas.circle(cx, cy, raio, stroke=0, fill=1)
+    canvas.restoreState()
 
 
 class MandalaVetorial(Flowable):
@@ -240,7 +366,7 @@ class MandalaVetorial(Flowable):
         canvas.rect(0, 0, lado, lado, fill=1, stroke=0)
         canvas.radialGradient(
             lado * 0.06, lado * 0.96, lado * 0.75,
-            [colors.HexColor("#5b1f4c"), colors.HexColor("#2a1a3d"), colors.HexColor(NOITE)],
+            [colors.HexColor(HALO[0]), colors.HexColor(HALO[1]), colors.HexColor(NOITE)],
             positions=[0, 0.35, 1], extend=False,
         )
         canvas.restoreState()
@@ -258,13 +384,13 @@ class MandalaVetorial(Flowable):
         for indice, (_, simbolo, elemento) in enumerate(SIGNOS):
             _texto_central(canvas, *ponto(indice * 30 + 15, raio["glifo_signo"]), simbolo, FONTE_SIGNOS, 17 * escala, ELEMENTOS[elemento])
 
-        canvas.setStrokeColor(_misturar("#dbe2f8", NOITE_PROFUNDA, 0.32))
+        canvas.setStrokeColor(_misturar(LUZ_ESTRELA, NOITE_PROFUNDA, 0.32))
         canvas.setLineWidth(0.6)
         for indice in range(12):
             canvas.line(*ponto(indice * 30, raio["zodiaco_interno"]), *ponto(indice * 30, R))
         for indice in range(72):
             longo = indice % 2 == 0
-            canvas.setStrokeColor(_misturar("#dbe2f8", NOITE_PROFUNDA, 0.42 if longo else 0.24))
+            canvas.setStrokeColor(_misturar(LUZ_ESTRELA, NOITE_PROFUNDA, 0.42 if longo else 0.24))
             canvas.setLineWidth(0.45)
             canvas.line(
                 *ponto(indice * 5, raio["zodiaco_interno"]),
@@ -275,7 +401,7 @@ class MandalaVetorial(Flowable):
             (R, 0.6, 1.1), (raio["zodiaco_interno"], 0.5, 0.7),
             (raio["casas_externo"], 0.32, 0.6), (raio["casas_interno"], 0.32, 0.6),
         ):
-            canvas.setStrokeColor(_misturar(ROSA, NOITE_PROFUNDA, intensidade))
+            canvas.setStrokeColor(_misturar(PERVINCA, NOITE_PROFUNDA, intensidade))
             canvas.setLineWidth(largura)
             canvas.circle(c, c, r, fill=0, stroke=1)
 
@@ -284,15 +410,15 @@ class MandalaVetorial(Flowable):
         cuspides = [float(casa.get("grau", 0)) for casa in casas[:12]]
         if len(cuspides) == 12:
             for grau in cuspides:
-                canvas.setStrokeColor(_misturar(ROSA, NOITE_PROFUNDA, 0.45))
+                canvas.setStrokeColor(_misturar(PERVINCA, NOITE_PROFUNDA, 0.45))
                 canvas.setLineWidth(0.6)
                 canvas.line(*ponto(grau, raio["casas_interno"]), *ponto(grau, raio["casas_externo"]))
-                canvas.setStrokeColor(_misturar(ROSA, NOITE_PROFUNDA, 0.16))
+                canvas.setStrokeColor(_misturar(PERVINCA, NOITE_PROFUNDA, 0.16))
                 canvas.setDash(1.5, 3)
                 canvas.line(*ponto(grau, raio["casas_externo"]), *ponto(grau, raio["zodiaco_interno"] - 8 * escala))
                 canvas.setDash()
             for numero, grau in _meios_das_casas(casas):
-                _texto_central(canvas, *ponto(grau, raio["casas_numero"]), str(numero), FONTE_NEGRITO, 9.5 * escala, _misturar("#e5bcc4", NOITE_PROFUNDA, 0.85))
+                _texto_central(canvas, *ponto(grau, raio["casas_numero"]), str(numero), FONTE_NEGRITO, 9.5 * escala, _misturar(LUZ_SUAVE, NOITE_PROFUNDA, 0.85))
 
         # Eixos ASC–DSC e MC–IC
         meio_do_ceu = self.dados.get("meio_do_ceu") or {}
@@ -301,12 +427,12 @@ class MandalaVetorial(Flowable):
             mc = float(meio_do_ceu["grau"])
             eixos += [("MC", mc, True), ("IC", mc + 180, False)]
         for rotulo, grau, principal in eixos:
-            canvas.setStrokeColor(_misturar(ROSA, NOITE_PROFUNDA, 0.85 if principal else 0.45))
+            canvas.setStrokeColor(_misturar(PERVINCA, NOITE_PROFUNDA, 0.85 if principal else 0.45))
             canvas.setLineWidth(1.4 if principal else 0.8)
             canvas.line(*ponto(grau, raio["casas_interno"]), *ponto(grau, R + 4))
             _texto_central(
                 canvas, *ponto(grau, R + 15 * escala), rotulo, FONTE_NEGRITO, 9 * escala,
-                ROSA if principal else "#ac878f",
+                PERVINCA if principal else CONTORNO,
             )
 
         # Aspectos no miolo, ligando as posições exatas
@@ -315,7 +441,7 @@ class MandalaVetorial(Flowable):
             segundo = aspecto.get("planeta2") or {}
             if "grau" not in primeiro or "grau" not in segundo:
                 continue
-            cor, _, _, _, tracejado = ASPECTOS.get(aspecto.get("tipo"), ("#ac878f", "", "", "", False))
+            cor, _, _, _, tracejado = ASPECTOS.get(aspecto.get("tipo"), (CONTORNO, "", "", "", False))
             canvas.setStrokeColor(_misturar(cor, NOITE_PROFUNDA, 0.7))
             canvas.setLineWidth(0.8)
             if tracejado:
@@ -331,7 +457,7 @@ class MandalaVetorial(Flowable):
         exibidos = _espalhar_posicoes([float(p.get("grau", 0)) for p in planetas])
         for planeta, exibido in zip(planetas, exibidos):
             nome = planeta.get("nome")
-            cor = colors.HexColor(CORES_PLANETAS.get(nome, ROSA))
+            cor = colors.HexColor(CORES_PLANETAS.get(nome, PERVINCA))
             grau = float(planeta.get("grau", 0))
             canvas.setStrokeColor(_misturar(_hex(cor), NOITE_PROFUNDA, 0.7))
             canvas.setLineWidth(0.7)
@@ -354,11 +480,11 @@ class MandalaVetorial(Flowable):
             if planeta.get("retrogrado"):
                 minutos += " ℞"
             x, y = ponto(exibido, raio["planeta_grau"])
-            _texto_central(canvas, x, y + 4 * escala, graus, FONTE_NEGRITO, 9 * escala, "#dbe2f8")
-            _texto_central(canvas, x, y - 5 * escala, minutos, FONTE_SIGNOS, 6.8 * escala, "#b8bfd4")
+            _texto_central(canvas, x, y + 4 * escala, graus, FONTE_NEGRITO, 9 * escala, LUZ_ESTRELA)
+            _texto_central(canvas, x, y - 5 * escala, minutos, FONTE_SIGNOS, 6.8 * escala, LUZ_SUAVE)
 
         # Terra no centro
-        canvas.setStrokeColor(colors.HexColor(ROSA))
+        canvas.setStrokeColor(colors.HexColor(PERVINCA))
         canvas.setFillColor(colors.HexColor(NOITE_PROFUNDA))
         canvas.setLineWidth(1)
         canvas.circle(c, c, 6 * escala, fill=1, stroke=1)
@@ -418,7 +544,7 @@ class EquilibrioMapa(Flowable):
                 canvas.setFont(FONTE, 9)
                 canvas.drawString(x0, y, rotulo)
                 trilho_x, trilho_l = x0 + 24 * mm, coluna - 34 * mm
-                canvas.setFillColor(colors.HexColor("#f1e7ec"))
+                canvas.setFillColor(colors.HexColor(TRILHO))
                 canvas.roundRect(trilho_x, y - 1, trilho_l, 4.2, 2.1, fill=1, stroke=0)
                 if quantidade:
                     canvas.setFillColor(cor)
@@ -471,9 +597,9 @@ MATRIZ_CORES = {
     "A": "#c9a7ff", "B": "#c9a7ff", "A1": "#9c8cff", "B1": "#9c8cff", "A2": "#87b8ff", "B2": "#87b8ff",
     "A3": "#87dfb0", "B3": "#87dfb0", "E": "#ffd16a", "C2": "#ffad6a", "D2": "#ffad6a",
     "C1": "#ff8a74", "D1": "#ff8a74", "C": "#ff6a7d", "D": "#ff6a7d",
-    "X": ROSA, "dinheiro": "#f2c7a5", "amor": "#ff897d",
+    "X": PERVINCA, "dinheiro": "#f2c7a5", "amor": "#ff897d",
 }
-MATRIZ_COR_DIAGONAL = "#e5bcc4"
+MATRIZ_COR_DIAGONAL = LUZ_SUAVE
 
 
 class MatrizDestinoVetorial(Flowable):
@@ -504,19 +630,19 @@ class MatrizDestinoVetorial(Flowable):
         canvas.rect(0, 0, lado, lado, fill=1, stroke=0)
         canvas.radialGradient(
             lado * 0.06, lado * 0.96, lado * 0.75,
-            [colors.HexColor("#5b1f4c"), colors.HexColor("#2a1a3d"), colors.HexColor(NOITE)],
+            [colors.HexColor(HALO[0]), colors.HexColor(HALO[1]), colors.HexColor(NOITE)],
             positions=[0, 0.35, 1], extend=False,
         )
         canvas.restoreState()
 
         canvas.setFillColor(colors.HexColor(NOITE_PROFUNDA))
         canvas.circle(c, c, (R + 46) * u, fill=1, stroke=0)
-        canvas.setStrokeColor(_misturar("#d9b06b", NOITE_PROFUNDA, 0.4))
+        canvas.setStrokeColor(_misturar(LATAO, NOITE_PROFUNDA, 0.4))
         canvas.setLineWidth(0.6)
         canvas.setDash(1, 4)
         canvas.circle(c, c, (R + 46) * u, fill=0, stroke=1)
         canvas.setDash()
-        canvas.setStrokeColor(_misturar(ROSA, NOITE_PROFUNDA, 0.25))
+        canvas.setStrokeColor(_misturar(PERVINCA, NOITE_PROFUNDA, 0.25))
         canvas.circle(c, c, (R + 32) * u, fill=0, stroke=1)
 
         def poligono(ids, cor, opacidade, espessura):
@@ -530,9 +656,9 @@ class MatrizDestinoVetorial(Flowable):
             canvas.setLineWidth(espessura)
             canvas.drawPath(caminho, stroke=1, fill=0)
 
-        poligono(MATRIZ_RETOS, ROSA, 0.6, 1.1)
+        poligono(MATRIZ_RETOS, PERVINCA, 0.6, 1.1)
         poligono(MATRIZ_DIAGONAIS, MATRIZ_COR_DIAGONAL, 0.45, 0.9)
-        canvas.setStrokeColor(_misturar("#dbe2f8", NOITE_PROFUNDA, 0.22))
+        canvas.setStrokeColor(_misturar(LUZ_ESTRELA, NOITE_PROFUNDA, 0.22))
         canvas.setLineWidth(0.6)
         for v in (*MATRIZ_RETOS, *MATRIZ_DIAGONAIS):
             canvas.line(*pos(MATRIZ_ANGULOS[v], R), c, c)
@@ -548,17 +674,17 @@ class MatrizDestinoVetorial(Flowable):
         for item in self.matriz["idades"]:
             angulo = MATRIZ_ANGULOS["A"] - item["idade"] * 4.5
             if item["vertice"]:
-                canvas.setStrokeColor(_misturar(ROSA, NOITE_PROFUNDA, 0.55))
+                canvas.setStrokeColor(_misturar(PERVINCA, NOITE_PROFUNDA, 0.55))
                 canvas.setLineWidth(0.7)
                 canvas.line(*pos(angulo, R + 22), *pos(angulo, R + 44))
-                _texto_central(canvas, *pos(angulo, R + 58), f"{item['idade']} anos", FONTE_NEGRITO, 10 * u * 1.05, ROSA)
+                _texto_central(canvas, *pos(angulo, R + 58), f"{item['idade']} anos", FONTE_NEGRITO, 10 * u * 1.05, PERVINCA)
                 continue
             x, y = pos(angulo, R + 32)
             canvas.setFillColor(colors.HexColor(NOITE_PROFUNDA))
-            canvas.setStrokeColor(_misturar("#dbe2f8", NOITE_PROFUNDA, 0.3))
+            canvas.setStrokeColor(_misturar(LUZ_ESTRELA, NOITE_PROFUNDA, 0.3))
             canvas.setLineWidth(0.5)
             canvas.circle(x, y, 8 * u, fill=1, stroke=1)
-            _texto_central(canvas, x, y, str(item["arcano"]), FONTE_NEGRITO, 8 * u, _misturar("#dbe2f8", NOITE_PROFUNDA, 0.85))
+            _texto_central(canvas, x, y, str(item["arcano"]), FONTE_NEGRITO, 8 * u, _misturar(LUZ_ESTRELA, NOITE_PROFUNDA, 0.85))
 
         pontos = []
         for v in (*MATRIZ_RETOS, *MATRIZ_DIAGONAIS):
@@ -577,7 +703,7 @@ class MatrizDestinoVetorial(Flowable):
         ]
         valores = self.matriz["pontos"]
         for id_, (px, py), raio in pontos:
-            cor = MATRIZ_CORES.get(id_) or (MATRIZ_COR_DIAGONAL if id_[0] in MATRIZ_DIAGONAIS else ROSA)
+            cor = MATRIZ_CORES.get(id_) or (MATRIZ_COR_DIAGONAL if id_[0] in MATRIZ_DIAGONAIS else PERVINCA)
             canvas.setFillColor(colors.HexColor(NOITE_PROFUNDA))
             canvas.setStrokeColor(colors.HexColor(cor))
             canvas.setLineWidth(1)
@@ -596,8 +722,8 @@ def _estilos() -> dict[str, ParagraphStyle]:
         "corpo": base,
         "suave": ParagraphStyle("OrbisSuave", parent=base, textColor=colors.HexColor(TINTA_SUAVE), fontSize=8.6, leading=12.5),
         "eyebrow": ParagraphStyle("OrbisEyebrow", parent=base, fontName=FONTE_NEGRITO, fontSize=7.6, leading=10, textColor=colors.HexColor(ACENTO)),
-        "titulo": ParagraphStyle("OrbisTitulo", parent=base, fontName=FONTE_NEGRITO, fontSize=17, leading=21, textColor=colors.HexColor(NOITE), spaceAfter=3 * mm),
-        "card_titulo": ParagraphStyle("OrbisCardTitulo", parent=base, fontName=FONTE_NEGRITO, fontSize=14, leading=17, textColor=colors.HexColor(NOITE)),
+        "titulo": ParagraphStyle("OrbisTitulo", parent=base, fontName=FONTE_TITULO, fontSize=18, leading=22, textColor=colors.HexColor(TINTA), spaceAfter=3 * mm),
+        "card_titulo": ParagraphStyle("OrbisCardTitulo", parent=base, fontName=FONTE_TITULO, fontSize=14.5, leading=18, textColor=colors.HexColor(TINTA)),
     }
 
 
@@ -628,7 +754,7 @@ def _cards_pilares(dados: dict, estilos: dict, largura: float) -> Table:
     pilares = [
         ("SOL · ESSÊNCIA", "☉", CORES_PLANETAS["Sol"], planetas.get("Sol")),
         ("LUA · EMOÇÕES", "☽", CORES_PLANETAS["Lua"], planetas.get("Lua")),
-        ("ASCENDENTE · PRESENÇA", "ASC", ROSA, dados.get("ascendente")),
+        ("ASCENDENTE · PRESENÇA", "ASC", PERVINCA, dados.get("ascendente")),
     ]
     celulas = []
     for rotulo, simbolo, cor, ponto in pilares:
@@ -653,7 +779,7 @@ def _cards_pilares(dados: dict, estilos: dict, largura: float) -> Table:
         comandos += [
             ("BACKGROUND", (coluna_card, 0), (coluna_card, 0), colors.HexColor(FUNDO_SUAVE)),
             ("BOX", (coluna_card, 0), (coluna_card, 0), 0.6, colors.HexColor(LINHA)),
-            ("LINEABOVE", (coluna_card, 0), (coluna_card, 0), 2.2, colors.HexColor(ROSA_INTENSO if coluna_card != 2 else LILAS)),
+            ("LINEABOVE", (coluna_card, 0), (coluna_card, 0), 2.2, colors.HexColor(AURORA if coluna_card != 2 else TANGERINA)),
         ]
     tabela.setStyle(TableStyle(comandos))
     return tabela
@@ -845,16 +971,12 @@ def gerar_relatorio_pdf(mapa: MapaNatal, ano: int | None = None) -> bytes:
         canvas.clipPath(caminho, stroke=0, fill=0)
         canvas.radialGradient(
             0, topo + 10 * mm, 120 * mm,
-            [colors.HexColor("#c2306f"), colors.HexColor("#4a1d55"), colors.HexColor(NOITE)],
+            [colors.HexColor(NEBULOSA[0]), colors.HexColor(NEBULOSA[1]), colors.HexColor(NOITE)],
             positions=[0, 0.4, 1], extend=False,
         )
-        # anéis decorativos da esfera armilar à direita
-        for raio, cor in ((58 * mm, "#3b2a4d"), (46 * mm, "#33405f"), (34 * mm, "#4a2b48")):
-            canvas.setStrokeColor(colors.HexColor(cor))
-            canvas.setLineWidth(0.8)
-            canvas.circle(A4[0] - 28 * mm, base + altura_capa / 2, raio, fill=0, stroke=1)
-        canvas.setStrokeColor(colors.HexColor("#6b3a5c"))
-        canvas.ellipse(A4[0] - 86 * mm, base + 22 * mm, A4[0] + 30 * mm, base + 52 * mm, fill=0, stroke=1)
+        # esfera armilar da tela de login, inteira dentro da faixa
+        lado_esfera = altura_capa - 8 * mm
+        _desenhar_esfera_armilar(canvas, A4[0] - margem - lado_esfera, base + 4 * mm, lado_esfera)
         canvas.restoreState()
 
         # faixa de destaque na borda, a mesma da tela de login
@@ -862,16 +984,16 @@ def gerar_relatorio_pdf(mapa: MapaNatal, ano: int | None = None) -> bytes:
         faixa = canvas.beginPath()
         faixa.rect(0, base, 2.2 * mm, altura_capa)
         canvas.clipPath(faixa, stroke=0, fill=0)
-        canvas.linearGradient(0, base, 0, topo, [colors.HexColor(LILAS), colors.HexColor(ROSA_INTENSO)], extend=False)
+        canvas.linearGradient(0, base, 0, topo, [colors.HexColor(AURORA), colors.HexColor(TANGERINA)], extend=False)
         canvas.restoreState()
         canvas.saveState()
-        _marca(canvas, margem, topo - 17 * mm, 12, ROSA, 2.2)
-        _texto_espacado(canvas, margem, topo - 31 * mm, "MAPA NATAL · OBSERVATÓRIO CELESTE", FONTE_NEGRITO, 7.8, "#ff8fb1", 2.4)
+        _marca(canvas, margem, topo - 17 * mm, 12, LATAO, 2.6)
+        _texto_espacado(canvas, margem, topo - 31 * mm, "MAPA NATAL · OBSERVATÓRIO CELESTE", FONTE_NEGRITO, 7.8, PERVINCA, 2.4)
         canvas.setFillColor(colors.white)
-        tamanho_nome = 30 if pdfmetrics.stringWidth(nome_mapa, FONTE_NEGRITO, 30) < largura * 0.68 else 22
-        canvas.setFont(FONTE_NEGRITO, tamanho_nome)
+        tamanho_nome = 32 if pdfmetrics.stringWidth(nome_mapa, FONTE_TITULO, 32) < largura * 0.58 else 23
+        canvas.setFont(FONTE_TITULO, tamanho_nome)
         canvas.drawString(margem, topo - 46 * mm, nome_mapa)
-        canvas.setFillColor(colors.HexColor("#e5bcc4"))
+        canvas.setFillColor(colors.HexColor(LUZ_SUAVE))
         canvas.setFont(FONTE, 10.5)
         canvas.drawString(margem, topo - 56 * mm, nascimento)
         canvas.restoreState()
@@ -925,7 +1047,7 @@ def gerar_relatorio_pdf(mapa: MapaNatal, ano: int | None = None) -> bytes:
         _tabela(
             [["", "Planeta", "Signo", "Casa", "Posição", "Movimento"]] + [
                 [
-                    _simbolo(SIMBOLOS_PLANETAS.get(p.get("nome"), "✦"), _no_papel(CORES_PLANETAS.get(p.get("nome"), ROSA)), 12),
+                    _simbolo(SIMBOLOS_PLANETAS.get(p.get("nome"), "✦"), _no_papel(CORES_PLANETAS.get(p.get("nome"), PERVINCA)), 12),
                     escape(str(p.get("nome"))),
                     f"{_simbolo(SIMBOLO_SIGNO.get(p.get('signo'), ''), ACENTO)} {escape(str(p.get('signo')))}",
                     p.get("casa"),
@@ -972,9 +1094,9 @@ def gerar_relatorio_pdf(mapa: MapaNatal, ano: int | None = None) -> bytes:
         historia.append(_tabela(
             [["Planeta", "Aspecto", "Planeta", "Orbe", "Natureza"]] + [
                 [
-                    f"{_simbolo(SIMBOLOS_PLANETAS.get((a.get('planeta1') or {}).get('nome'), ''), _no_papel(CORES_PLANETAS.get((a.get('planeta1') or {}).get('nome'), ROSA)))} {escape(str((a.get('planeta1') or {}).get('nome')))}",
+                    f"{_simbolo(SIMBOLOS_PLANETAS.get((a.get('planeta1') or {}).get('nome'), ''), _no_papel(CORES_PLANETAS.get((a.get('planeta1') or {}).get('nome'), PERVINCA)))} {escape(str((a.get('planeta1') or {}).get('nome')))}",
                     f"{_simbolo(ASPECTOS.get(a.get('tipo'), ('', TINTA, '·'))[2], ASPECTOS.get(a.get('tipo'), ('', TINTA))[1], 12)} {escape(str(a.get('tipo')))}",
-                    f"{_simbolo(SIMBOLOS_PLANETAS.get((a.get('planeta2') or {}).get('nome'), ''), _no_papel(CORES_PLANETAS.get((a.get('planeta2') or {}).get('nome'), ROSA)))} {escape(str((a.get('planeta2') or {}).get('nome')))}",
+                    f"{_simbolo(SIMBOLOS_PLANETAS.get((a.get('planeta2') or {}).get('nome'), ''), _no_papel(CORES_PLANETAS.get((a.get('planeta2') or {}).get('nome'), PERVINCA)))} {escape(str((a.get('planeta2') or {}).get('nome')))}",
                     f"{float(a.get('orbe', 0)):.2f}°",
                     ASPECTOS.get(a.get("tipo"), ("", "", "", "—"))[3],
                 ]
@@ -1009,7 +1131,7 @@ def _tabela(linhas, *, larguras=None):
     )
     estilo_cabecalho = ParagraphStyle(
         "OrbisCabecalho", parent=estilo_celula, fontName=FONTE_NEGRITO, fontSize=7.4,
-        textColor=colors.HexColor("#f4d3dd"),
+        textColor=colors.HexColor(LUZ_ESTRELA),
     )
     seguras = [
         [
@@ -1027,7 +1149,7 @@ def _tabela(linhas, *, larguras=None):
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor(NOITE)),
         ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor(FUNDO_SUAVE)]),
         ("LINEBELOW", (0, 1), (-1, -1), 0.4, colors.HexColor(LINHA)),
-        ("LINEBELOW", (0, 0), (-1, 0), 1.6, colors.HexColor(ROSA_INTENSO)),
+        ("LINEBELOW", (0, 0), (-1, 0), 1.6, colors.HexColor(AURORA)),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
         ("LEFTPADDING", (0, 0), (-1, -1), 7),
         ("RIGHTPADDING", (0, 0), (-1, -1), 7),

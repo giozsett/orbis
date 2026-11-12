@@ -7,7 +7,7 @@ export default function ZodiacSign({ signo, isActive = false, onClick }) {
       className={`relative flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-300 group ${
         isActive
           ? 'bg-primary/10 border border-primary/30'
-          : 'hover:bg-white/5 border border-transparent'
+          : 'hover:bg-veu/5 border border-transparent'
       }`}
     >
       <div
@@ -15,7 +15,7 @@ export default function ZodiacSign({ signo, isActive = false, onClick }) {
           isActive ? 'animate-zodiac-glow' : 'group-hover:scale-125'
         }`}
         style={{
-          '--zodiac-color': isActive ? 'rgba(255, 177, 195, 0.6)' : 'rgba(255, 177, 195, 0.3)',
+          '--zodiac-color': isActive ? 'rgb(var(--c-primary)/0.6)' : 'rgb(var(--c-primary)/0.3)',
         }}
       >
         <Glifo simbolo={signo.simbolo} />

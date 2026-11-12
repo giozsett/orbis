@@ -18,8 +18,12 @@ import Asteroides from './pages/Asteroides'
 import HoroscoposMalucos from './pages/HoroscoposMalucos'
 import Arcanos from './pages/Arcanos'
 import MatrizDestino from './pages/MatrizDestino'
+import { useTema } from './utils/tema'
 
 export default function App() {
+  // corTema() lê o tema na hora do render; assinar aqui faz todas as telas acompanharem a troca
+  useTema()
+
   return (
     <BrowserRouter>
       <Routes>

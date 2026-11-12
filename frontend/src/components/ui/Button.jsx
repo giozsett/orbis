@@ -7,13 +7,13 @@ export default function Button({
   className = '',
   ...props 
 }) {
-  const baseStyles = 'group relative overflow-hidden font-label uppercase tracking-[0.08em] rounded-full flex items-center justify-center gap-2 transition-all duration-300 active:scale-95'
+  const baseStyles = 'group relative overflow-hidden font-label font-semibold rounded-full flex items-center justify-center gap-2 transition-all duration-300 active:scale-95'
 
   const variants = {
-    primary: 'bg-orbis-cta text-white shadow-[0_12px_30px_rgba(255,75,137,0.28)] hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(255,75,137,0.38)]',
+    primary: 'bg-orbis-cta text-on-cta shadow-[var(--sombra-cta)] hover:-translate-y-0.5 hover:brightness-105',
     secondary: 'border border-secondary/30 text-secondary hover:bg-secondary/10',
-    ghost: 'text-on-surface-variant hover:text-on-surface hover:bg-white/5',
-    outline: 'border border-white/10 text-on-surface hover:border-primary/60 hover:bg-primary/5',
+    ghost: 'text-on-surface-variant hover:text-on-surface hover:bg-veu/5',
+    outline: 'border border-veu/10 text-on-surface hover:border-primary/60 hover:bg-primary/5',
   }
 
   const sizes = {

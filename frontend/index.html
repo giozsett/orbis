@@ -4,11 +4,21 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
-    <meta name="theme-color" content="#0b1323" />
+    <meta name="theme-color" content="#070b1d" />
+    <!-- tema escolhido (ou o do sistema) aplicado antes da primeira pintura, para não piscar -->
+    <script>
+      (function () {
+        var tema = null
+        try { tema = localStorage.getItem('orbis:tema') } catch (e) {}
+        if (tema !== 'light' && tema !== 'dark') tema = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        document.documentElement.dataset.theme = tema
+        if (tema === 'light') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fdf3ee')
+      })()
+    </script>
     <title>ORBIS | Observatório Astronômico</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400..700&family=Marcellus&family=Marcellus+SC&display=swap" rel="stylesheet" />
     <!-- glifos astrológicos em texto (mandala, biblioteca celeste e aspectos) iguais em qualquer aparelho -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />

@@ -1,0 +1,200 @@
+/* Paletas do ORBIS. Cada cor é um trio "R G B" para o Tailwind aplicar opacidade
+   (bg-primary/10 etc.). O tema fica em <html data-theme>, definido em utils/tema.js. */
+
+/* ========== CÉU NOTURNO (escuro, padrão) ========== */
+:root {
+  color-scheme: dark;
+  --c-primary: 169 184 255;            /* pervinca */
+  --c-primary-container: 125 139 245;
+  --c-on-primary: 18 26 74;
+  --c-on-primary-container: 13 18 56;
+  --c-secondary: 224 185 110;          /* latão */
+  --c-secondary-container: 74 58 28;
+  --c-tertiary: 195 166 255;           /* violeta de nebulosa */
+  --c-tertiary-container: 154 109 253;
+  --c-surface: 7 11 29;
+  --c-surface-container-lowest: 4 7 22;
+  --c-surface-container-low: 12 18 48;
+  --c-surface-container: 18 25 56;
+  --c-surface-container-high: 26 34 70;
+  --c-surface-container-highest: 36 45 86;
+  --c-on-surface: 230 233 251;         /* luz de estrela */
+  --c-on-surface-variant: 180 188 223;
+  --c-outline: 138 147 186;
+  --c-outline-variant: 58 66 112;
+  --c-background: 7 11 29;
+  --c-on-background: 230 233 251;
+  --c-error: 255 180 171;
+  --c-error-container: 147 0 10;
+  --c-brass: 224 185 110;
+  --c-cream: 255 250 226;
+  --c-on-cream: 7 11 29;
+  --c-veu: 255 255 255;
+  --c-on-cta: 26 20 48;
+
+  --bg-aurora:
+    radial-gradient(1100px 750px at 8% -8%, rgb(124 92 255 / 0.42) 0%, rgb(90 80 220 / 0.26) 22%, rgb(60 90 200 / 0.12) 40%, rgb(7 11 29 / 0) 62%),
+    radial-gradient(700px 500px at 88% 10%, rgb(195 166 255 / 0.14) 0%, rgb(7 11 29 / 0) 55%);
+  --bg-fade: linear-gradient(160deg, rgb(4 7 22 / 0) 30%, rgb(4 7 22) 92%);
+  --bg-cta: linear-gradient(120deg, #e0b96e, #f3dba6);
+  --bg-wordmark: linear-gradient(110deg, #e6e9fb 0%, #e6e9fb 36%, #ffffff 44%, #e0b96e 50%, #e6e9fb 58%, #a9b8ff 100%);
+  --bg-meteoro: linear-gradient(90deg, #ffffff, rgb(169 184 255 / 0.9) 30%, rgb(255 255 255 / 0));
+  --estrelas: 1;
+  --meteoros: 1;
+  --sombra-vidro: 0 30px 80px rgb(0 0 0 / 0.45);
+  --sombra-cartao: 0 18px 46px rgb(0 0 0 / 0.32);
+  --sombra-cta: 0 12px 30px rgb(224 185 110 / 0.22);
+  --vidro-painel: rgb(4 7 22 / 0.75);
+  --vidro-cartao: rgb(4 7 22 / 0.68);
+  --borda-vidro: rgb(255 255 255 / 0.09);
+}
+
+/* ========== NASCER DO SOL (claro) ========== */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --c-primary: 173 31 85;              /* rosa-magenta do horizonte */
+  --c-primary-container: 214 51 108;
+  --c-on-primary: 255 247 242;
+  --c-on-primary-container: 255 247 242;
+  --c-secondary: 133 85 16;            /* latão envelhecido */
+  --c-secondary-container: 246 223 174;
+  --c-tertiary: 168 61 8;              /* laranja queimado */
+  --c-tertiary-container: 242 118 46;
+  --c-surface: 253 243 238;
+  --c-surface-container-lowest: 255 250 247;
+  --c-surface-container-low: 250 234 228;
+  --c-surface-container: 246 225 220;
+  --c-surface-container-high: 240 214 211;
+  --c-surface-container-highest: 233 203 203;
+  --c-on-surface: 42 26 62;            /* berinjela */
+  --c-on-surface-variant: 81 61 99;
+  --c-outline: 111 92 126;
+  --c-outline-variant: 205 181 196;
+  --c-background: 253 243 238;
+  --c-on-background: 42 26 62;
+  --c-error: 179 38 30;
+  --c-error-container: 249 222 220;
+  --c-brass: 133 85 16;
+  --c-cream: 42 26 62;
+  --c-on-cream: 255 247 242;
+  --c-veu: 42 26 62;
+  --c-on-cta: 42 26 62;
+
+  --bg-aurora:
+    radial-gradient(1100px 700px at 84% 106%, rgb(245 184 61 / 0.62) 0%, rgb(242 118 46 / 0.3) 30%, rgb(253 243 238 / 0) 62%),
+    linear-gradient(180deg, #cdd8f6 0%, #e9d3ea 34%, #f9d2cf 62%, #fde2bf 100%);
+  --bg-fade: linear-gradient(180deg, rgb(253 243 238 / 0), rgb(253 243 238 / 0));
+  --bg-cta: linear-gradient(120deg, #f2762e, #f5b83d);
+  --bg-wordmark: linear-gradient(110deg, #2a1a3e 0%, #2a1a3e 36%, #ad1f55 44%, #f2762e 50%, #2a1a3e 58%, #855510 100%);
+  --bg-meteoro: linear-gradient(90deg, rgb(255 255 255 / 0), rgb(255 255 255 / 0));
+  --estrelas: 0;
+  --meteoros: 0;
+  --sombra-vidro: 0 24px 60px rgb(120 50 70 / 0.16);
+  --sombra-cartao: 0 14px 36px rgb(120 50 70 / 0.12);
+  --sombra-cta: 0 12px 30px rgb(242 118 46 / 0.3);
+  --vidro-painel: rgb(255 250 247 / 0.8);
+  --vidro-cartao: rgb(255 250 247 / 0.72);
+  --borda-vidro: rgb(42 26 62 / 0.14);
+}
+
+/* Nomes antigos, ainda usados em animations.css e estilos inline */
+:root {
+  --color-primary: rgb(var(--c-primary));
+  --color-primary-container: rgb(var(--c-primary-container));
+  --color-on-primary: rgb(var(--c-on-primary));
+  --color-on-primary-container: rgb(var(--c-on-primary-container));
+  --color-secondary: rgb(var(--c-secondary));
+  --color-secondary-container: rgb(var(--c-secondary-container));
+  --color-tertiary: rgb(var(--c-tertiary));
+  --color-tertiary-container: rgb(var(--c-tertiary-container));
+  --color-surface: rgb(var(--c-surface));
+  --color-surface-container: rgb(var(--c-surface-container));
+  --color-surface-container-low: rgb(var(--c-surface-container-low));
+  --color-surface-container-high: rgb(var(--c-surface-container-high));
+  --color-surface-container-highest: rgb(var(--c-surface-container-highest));
+  --color-surface-container-lowest: rgb(var(--c-surface-container-lowest));
+  --color-on-surface: rgb(var(--c-on-surface));
+  --color-on-surface-variant: rgb(var(--c-on-surface-variant));
+  --color-outline: rgb(var(--c-outline));
+  --color-outline-variant: rgb(var(--c-outline-variant));
+  --color-background: rgb(var(--c-background));
+  --color-on-background: rgb(var(--c-on-background));
+  --color-error: rgb(var(--c-error));
+}
+
+/* ========== CÉU DE FUNDO ========== */
+/* Estrelas só no céu noturno; duas camadas cintilam em tempos diferentes */
+.orbis-estrelas {
+  position: absolute;
+  inset: 0;
+  opacity: var(--estrelas);
+  transition: opacity 0.8s ease;
+}
+.orbis-estrelas::before,
+.orbis-estrelas::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.2px 1.2px at 12% 18%, #fff, transparent 60%),
+    radial-gradient(1px 1px at 31% 62%, #cfd8ff, transparent 60%),
+    radial-gradient(1.4px 1.4px at 47% 12%, #fff, transparent 60%),
+    radial-gradient(1px 1px at 58% 44%, #fff, transparent 60%),
+    radial-gradient(1.2px 1.2px at 72% 78%, #e0b96e, transparent 60%);
+  background-size: 620px 520px, 480px 610px, 710px 430px, 530px 570px, 660px 640px;
+}
+.orbis-estrelas::after {
+  background-position: 240px 130px, 90px 310px, 380px 60px, 150px 420px, 300px 250px;
+  background-size: 590px 470px, 740px 560px, 450px 500px, 560px 680px, 690px 590px;
+}
+.orbis-meteoros {
+  opacity: var(--meteoros);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .orbis-estrelas::before { animation: twinkle 7s ease-in-out infinite; }
+  .orbis-estrelas::after { animation: twinkle 11s ease-in-out 2s infinite; }
+}
+
+/* ========== TROCA DE TEMA ========== */
+/* Só durante a troca (classe posta por utils/tema.js), para as cores cruzarem suavemente */
+html.tema-trocando,
+html.tema-trocando *,
+html.tema-trocando *::before,
+html.tema-trocando *::after {
+  transition: background-color 0.45s ease, border-color 0.45s ease, color 0.45s ease, fill 0.45s ease, stroke 0.45s ease, box-shadow 0.45s ease !important;
+}
+
+/* ========== CASCATA ========== */
+/* Filhos diretos sobem um após o outro; usada nas grades e listas de cada tela */
+@keyframes orbis-cascata {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .orbis-cascata > * { animation: orbis-cascata 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .orbis-cascata > :nth-child(1) { animation-delay: 60ms; }
+  .orbis-cascata > :nth-child(2) { animation-delay: 120ms; }
+  .orbis-cascata > :nth-child(3) { animation-delay: 180ms; }
+  .orbis-cascata > :nth-child(4) { animation-delay: 240ms; }
+  .orbis-cascata > :nth-child(5) { animation-delay: 300ms; }
+  .orbis-cascata > :nth-child(6) { animation-delay: 360ms; }
+  .orbis-cascata > :nth-child(7) { animation-delay: 420ms; }
+  .orbis-cascata > :nth-child(8) { animation-delay: 480ms; }
+  .orbis-cascata > :nth-child(9) { animation-delay: 540ms; }
+  .orbis-cascata > :nth-child(n + 10) { animation-delay: 600ms; }
+}
+
+/* Sublinhado que cresce sob links de texto no hover */
+.orbis-link {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.3s ease, color 0.3s ease;
+}
+.orbis-link:hover,
+.orbis-link:focus-visible {
+  background-size: 100% 1px;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--c-primary));
+  outline-offset: 2px;
+}

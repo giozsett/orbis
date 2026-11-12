@@ -26,7 +26,7 @@ export default function MapSummaryCard({
           ? 'pointer-events-none -translate-y-3 scale-95 border-error/20 opacity-0 blur-sm'
           : 'lg:hover:-translate-y-1 hover:border-primary/30'
       } ${
-        destaque ? 'border-primary/30 shadow-[0_0_30px_rgba(255,177,195,0.08)]' : 'border-white/5'
+        destaque ? 'border-primary/30 shadow-[0_0_30px_rgb(var(--c-primary)/0.08)]' : 'border-veu/5'
       }`}
     >
       <div className="flex items-start justify-between gap-3 md:gap-4">
@@ -47,19 +47,19 @@ export default function MapSummaryCard({
         <span className={`shrink-0 rounded-full border px-3 py-1 font-label text-[10px] uppercase tracking-wider ${
           mapa.principal
             ? 'border-primary/30 bg-primary/10 text-primary'
-            : 'border-white/10 bg-white/5 text-outline'
+            : 'border-veu/10 bg-veu/5 text-outline'
         }`}>
           {mapa.principal ? 'Principal' : 'Adicional'}
         </span>
       </div>
 
-      <dl className="mt-5 grid grid-cols-2 gap-2 md:mt-6 md:gap-3">
-        <div className="rounded-lg border border-white/5 bg-surface-container-low/70 p-3">
+      <dl className="mt-5 grid grid-cols-2 gap-2 md:mt-6 md:gap-3 orbis-cascata">
+        <div className="rounded-lg border border-veu/5 bg-surface-container-low/70 p-3">
           <dt className="font-label text-[10px] uppercase tracking-widest text-outline">Nascimento</dt>
           <dd className="mt-2 text-sm text-on-surface">{formatarData(mapa.data_nascimento)}</dd>
-          <dd className="mt-1 font-label text-xs text-secondary">{mapa.horario_nascimento}</dd>
+          <dd className="mt-1 font-dados text-xs text-secondary">{mapa.horario_nascimento}</dd>
         </div>
-        <div className="rounded-lg border border-white/5 bg-surface-container-low/70 p-3">
+        <div className="rounded-lg border border-veu/5 bg-surface-container-low/70 p-3">
           <dt className="font-label text-[10px] uppercase tracking-widest text-outline">Assinatura</dt>
           <dd className="mt-2 text-sm text-on-surface">Sol em {resumo.sol_signo || '—'}</dd>
           <dd className="mt-1 font-label text-xs text-tertiary">Asc. {resumo.ascendente_signo || '—'}</dd>
@@ -76,7 +76,7 @@ export default function MapSummaryCard({
       )}
 
       <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-6">
-        <span className="font-label text-[10px] uppercase tracking-widest text-outline">Mapa #{mapa.id}</span>
+        <span className="font-dados text-[11px] text-outline">Mapa #{mapa.id}</span>
         <div className="flex flex-wrap items-center justify-end gap-2">
           {!mapa.principal && onDelete && (
             confirmandoExclusao ? (
@@ -85,7 +85,7 @@ export default function MapSummaryCard({
                   type="button"
                   onClick={() => setConfirmandoExclusao(false)}
                   disabled={excluindo}
-                  className="min-h-[40px] rounded-full px-3 py-2 font-label text-[10px] uppercase tracking-wider text-outline transition-colors hover:bg-white/5 hover:text-on-surface disabled:opacity-40"
+                  className="min-h-[40px] rounded-full px-3 py-2 font-label text-[10px] uppercase tracking-wider text-outline transition-colors hover:bg-veu/5 hover:text-on-surface disabled:opacity-40"
                 >
                   Cancelar
                 </button>

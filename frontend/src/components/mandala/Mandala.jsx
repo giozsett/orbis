@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { ELEMENTOS, FONTE_GLIFOS, PLANETAS, SIGNOS, TXT } from '../../utils/glifos'
+import { mapaDeCores } from '../../utils/tema'
 
-const ASPECT_COLORS = {
+const ASPECT_COLORS = mapaDeCores({
   'conjunção': '#ffd16a',
   'sextil': '#9cc4ff',
   'quadratura': '#ff4b89',
   'trígono': '#87dfd8',
   'oposição': '#ff897d',
-}
+})
 
 const FONTE_TEXTO = "'Instrument Sans', system-ui, sans-serif"
 
@@ -116,27 +117,27 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
   return (
     <div className="mandala-container relative">
       <svg
-        className={`h-full w-full drop-shadow-[0_0_24px_rgba(255,75,137,0.12)] ${animated ? 'motion-safe:animate-orbis-sphere-in' : ''}`}
+        className={`h-full w-full drop-shadow-[0_0_24px_rgb(var(--c-secondary)/0.12)] ${animated ? 'motion-safe:animate-orbis-sphere-in' : ''}`}
         viewBox="-24 -24 548 548"
         role="img"
         aria-label="Mandala do mapa natal"
       >
         <defs>
           <radialGradient id="mandalaMiolo" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ff4b89" stopOpacity="0.16" />
-            <stop offset="70%" stopColor="#b86dfd" stopOpacity="0.05" />
-            <stop offset="100%" stopColor="#060e1d" stopOpacity="0" />
+            <stop offset="0%" stopColor="rgb(var(--c-primary-container))" stopOpacity="0.16" />
+            <stop offset="70%" stopColor="rgb(var(--c-tertiary-container))" stopOpacity="0.05" />
+            <stop offset="100%" stopColor="rgb(var(--c-surface-container-lowest))" stopOpacity="0" />
           </radialGradient>
         </defs>
 
         {/* Fundo da roda */}
-        <circle cx={C} cy={C} r={R} fill="#060e1d" fillOpacity="0.72" />
+        <circle cx={C} cy={C} r={R} fill="rgb(var(--c-surface-container-lowest))" fillOpacity="0.72" />
         <circle cx={C} cy={C} r={RAIO.casasInterno} fill="url(#mandalaMiolo)" className={animated ? 'motion-safe:animate-orbis-twinkle' : undefined} />
 
         {/* Aro decorativo externo, o único elemento que gira */}
         <g {...anima(REVELAR, 900)}>
           <circle
-            cx={C} cy={C} r={R + 9} fill="none" stroke="#d9b06b" strokeOpacity="0.28" strokeWidth="0.8" strokeDasharray="1 7"
+            cx={C} cy={C} r={R + 9} fill="none" stroke="rgb(var(--c-brass))" strokeOpacity="0.28" strokeWidth="0.8" strokeDasharray="1 7"
             className={animated ? 'origin-[250px_250px] motion-safe:animate-orbis-spin-slow' : undefined}
           />
         </g>
@@ -164,14 +165,14 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
         })}
 
         {/* Divisões entre signos e régua de graus na borda interna da faixa */}
-        <g stroke="#dbe2f8" strokeOpacity="0.28">
+        <g stroke="rgb(var(--c-on-surface))" strokeOpacity="0.28">
           {Array.from({ length: 12 }, (_, i) => {
             const a = ponto(i * 30, RAIO.zodiacoInterno)
             const b = ponto(i * 30, RAIO.zodiacoExterno)
             return <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} strokeWidth="0.8" pathLength="1" strokeDasharray="1" {...anima(DESENHAR, 500 + i * 30)} />
           })}
         </g>
-        <g stroke="#dbe2f8" {...anima(REVELAR, 600)}>
+        <g stroke="rgb(var(--c-on-surface))" {...anima(REVELAR, 600)}>
           {Array.from({ length: 72 }, (_, i) => {
             const grau = i * 5
             const comprimento = i % 2 === 0 ? 7 : 4
@@ -183,7 +184,7 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
 
         {/* Aros */}
         {[RAIO.zodiacoExterno, RAIO.zodiacoInterno, RAIO.casasExterno, RAIO.casasInterno].map((raio, i) => (
-          <circle key={raio} cx={C} cy={C} r={raio} fill="none" stroke="#ffb1c3" strokeOpacity={i < 2 ? 0.5 : 0.3} strokeWidth={i === 0 ? 1.2 : 0.8} pathLength="1" strokeDasharray="1" transform={`rotate(-90 ${C} ${C})`} {...anima(DESENHAR, 150 + i * 150)} />
+          <circle key={raio} cx={C} cy={C} r={raio} fill="none" stroke="rgb(var(--c-primary))" strokeOpacity={i < 2 ? 0.5 : 0.3} strokeWidth={i === 0 ? 1.2 : 0.8} pathLength="1" strokeDasharray="1" transform={`rotate(-90 ${C} ${C})`} {...anima(DESENHAR, 150 + i * 150)} />
         ))}
 
         {/* Cúspides das casas: discretas no anel dos planetas para não competir com eles */}
@@ -194,11 +195,11 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
           const numero = ponto(casa.meio, RAIO.casasNumero)
           return (
             <g key={casa.numero}>
-              <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#ffb1c3" strokeOpacity="0.45" strokeWidth="0.8" pathLength="1" strokeDasharray="1" {...anima(DESENHAR, INICIO_CASAS + i * 35)} />
-              <line x1={b.x} y1={b.y} x2={c.x} y2={c.y} stroke="#ffb1c3" strokeOpacity="0.14" strokeWidth="0.6" strokeDasharray="2 4" {...anima(REVELAR, INICIO_CASAS + i * 35)} />
+              <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="rgb(var(--c-primary))" strokeOpacity="0.45" strokeWidth="0.8" pathLength="1" strokeDasharray="1" {...anima(DESENHAR, INICIO_CASAS + i * 35)} />
+              <line x1={b.x} y1={b.y} x2={c.x} y2={c.y} stroke="rgb(var(--c-primary))" strokeOpacity="0.14" strokeWidth="0.6" strokeDasharray="2 4" {...anima(REVELAR, INICIO_CASAS + i * 35)} />
               <g {...anima(SURGIR, INICIO_CASAS + 150 + i * 35)}>
                 <title>{`Casa ${casa.numero}`}</title>
-                <text x={numero.x} y={numero.y} textAnchor="middle" dominantBaseline="central" fill="#e5bcc4" fillOpacity="0.85" fontFamily={FONTE_TEXTO} fontSize="10.5" fontWeight="600">
+                <text x={numero.x} y={numero.y} textAnchor="middle" dominantBaseline="central" fill="rgb(var(--c-on-surface-variant))" fillOpacity="0.85" fontFamily={FONTE_TEXTO} fontSize="10.5" fontWeight="600">
                   {casa.numero}
                 </text>
               </g>
@@ -214,8 +215,8 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
           const principal = eixo.rotulo === 'ASC' || eixo.rotulo === 'MC'
           return (
             <g key={eixo.rotulo} {...anima(REVELAR, INICIO_CASAS + i * 80)}>
-              <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#ffb1c3" strokeOpacity={principal ? 0.85 : 0.45} strokeWidth={principal ? 1.6 : 1} />
-              <text x={rotulo.x} y={rotulo.y} textAnchor="middle" dominantBaseline="central" fill={principal ? '#ffb1c3' : '#ac878f'} fontFamily={FONTE_TEXTO} fontSize="10" fontWeight="700" letterSpacing="1">
+              <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="rgb(var(--c-primary))" strokeOpacity={principal ? 0.85 : 0.45} strokeWidth={principal ? 1.6 : 1} />
+              <text x={rotulo.x} y={rotulo.y} textAnchor="middle" dominantBaseline="central" fill={principal ? 'rgb(var(--c-primary))' : 'rgb(var(--c-outline))'} fontFamily={FONTE_TEXTO} fontSize="10" fontWeight="700" letterSpacing="1">
                 {eixo.rotulo}
               </text>
             </g>
@@ -234,7 +235,7 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
                 <g key={index} {...anima(REVELAR, inicioAspectos + index * 50)}>
                   <line
                     x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y}
-                    stroke={ASPECT_COLORS[aspecto.tipo] || '#ac878f'}
+                    stroke={ASPECT_COLORS[aspecto.tipo] || 'rgb(var(--c-outline))'}
                     strokeWidth={envolveAtivo ? 1.8 : 0.9}
                     strokeDasharray={tracejado ? '4 3' : undefined}
                     opacity={planetaAtivo ? (envolveAtivo ? 0.95 : 0.12) : 0.55}
@@ -250,7 +251,7 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
 
         {/* Planetas: traço na posição exata, glifo e grau dentro do signo */}
         {planetas.map((planeta, index) => {
-          const info = PLANETAS[planeta.nome] || { simbolo: '✦', cor: '#ffb1c3' }
+          const info = PLANETAS[planeta.nome] || { simbolo: '✦', cor: 'rgb(var(--c-primary))' }
           const exibido = posicoesExibidas[index]
           const exato = ponto(Number(planeta.grau), RAIO.zodiacoInterno)
           const exatoInterno = ponto(Number(planeta.grau), RAIO.planetaTraco)
@@ -285,7 +286,7 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
                   fill="none" stroke={info.cor} strokeOpacity="0.7" strokeWidth="0.9"
                 />
                 <circle cx={exato.x} cy={exato.y} r="2" fill={info.cor} />
-                <circle cx={glifo.x} cy={glifo.y} r="12.5" fill="#060e1d" stroke={info.cor} strokeOpacity={ativo ? 0.95 : 0.35} strokeWidth={ativo ? 1.6 : 0.8} className="transition-all duration-300" />
+                <circle cx={glifo.x} cy={glifo.y} r="12.5" fill="rgb(var(--c-surface-container-lowest))" stroke={info.cor} strokeOpacity={ativo ? 0.95 : 0.35} strokeWidth={ativo ? 1.6 : 0.8} className="transition-all duration-300" />
                 <text
                   x={glifo.x} y={glifo.y + 0.5}
                   textAnchor="middle" dominantBaseline="central"
@@ -298,7 +299,7 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
                 <text
                   x={grau.x} y={grau.y}
                   textAnchor="middle"
-                  fill={ativo ? '#ffffff' : '#dbe2f8'} fillOpacity={ativo ? 1 : 0.85}
+                  fill="rgb(var(--c-on-surface))" fillOpacity={ativo ? 1 : 0.85}
                   fontFamily={FONTE_TEXTO} fontWeight="600"
                   aria-hidden="true"
                 >
@@ -315,9 +316,9 @@ export default function Mandala({ data, onPlanetHover, onPlanetClick, animated =
         {/* Centro */}
         <g aria-label="Terra" role="img" {...anima(SURGIR, 300)}>
           <title>Terra</title>
-          <circle cx={C} cy={C} r="7" fill="#060e1d" stroke="#ffb1c3" strokeWidth="1.2" />
-          <line x1={C - 7} y1={C} x2={C + 7} y2={C} stroke="#ffb1c3" strokeWidth="0.8" />
-          <line x1={C} y1={C - 7} x2={C} y2={C + 7} stroke="#ffb1c3" strokeWidth="0.8" />
+          <circle cx={C} cy={C} r="7" fill="rgb(var(--c-surface-container-lowest))" stroke="rgb(var(--c-primary))" strokeWidth="1.2" />
+          <line x1={C - 7} y1={C} x2={C + 7} y2={C} stroke="rgb(var(--c-primary))" strokeWidth="0.8" />
+          <line x1={C} y1={C - 7} x2={C} y2={C + 7} stroke="rgb(var(--c-primary))" strokeWidth="0.8" />
         </g>
       </svg>
     </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import EsferaArmilar from '../components/ui/EsferaArmilar'
 import FundoOrbis from '../components/ui/FundoOrbis'
+import BotaoTema from '../components/ui/BotaoTema'
 
 function CampoTexto({ rotulo, icone, acaoRotulo, alternarVisibilidade, ...inputProps }) {
   return (
@@ -10,7 +11,7 @@ function CampoTexto({ rotulo, icone, acaoRotulo, alternarVisibilidade, ...inputP
         <label className="font-label text-[11px] uppercase tracking-[0.14em] text-outline">{rotulo}</label>
         {acaoRotulo}
       </div>
-      <div className="group flex h-14 items-center rounded-2xl border border-white/10 bg-surface-container-lowest/60 px-4 transition-all duration-300 focus-within:border-primary/60 focus-within:bg-surface-container-lowest/80 focus-within:shadow-[0_0_18px_rgba(255,75,137,0.15)]">
+      <div className="group flex h-14 items-center rounded-2xl border border-veu/10 bg-surface-container-lowest/60 px-4 transition-all duration-300 focus-within:border-primary/60 focus-within:bg-surface-container-lowest/80 focus-within:shadow-[0_0_18px_rgb(var(--c-secondary)/0.15)]">
         <span className="material-symbols-outlined mr-3 text-outline transition-all duration-300 group-focus-within:scale-110 group-focus-within:text-primary">{icone}</span>
         <input
           {...inputProps}
@@ -36,7 +37,7 @@ function BotaoPrincipal({ children, icone = 'arrow_forward' }) {
   return (
     <button
       type="submit"
-      className="group relative flex h-14 w-full items-center justify-center gap-2.5 overflow-hidden rounded-full bg-orbis-cta font-label text-[13px] uppercase tracking-[0.08em] text-white shadow-[0_12px_30px_rgba(255,75,137,0.28)] transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(255,75,137,0.38)] active:scale-[0.98]"
+      className="group relative flex h-14 w-full items-center justify-center gap-2.5 overflow-hidden rounded-full bg-orbis-cta font-label text-[13px] uppercase tracking-[0.08em] text-on-cta shadow-[var(--sombra-cta)] transition-all hover:-translate-y-0.5 hover:brightness-105 active:scale-[0.98]"
     >
       {/* brilho que atravessa o botão no hover */}
       <span className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -translate-x-full -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[350%]" />
@@ -233,10 +234,11 @@ export default function Login() {
       <FundoOrbis />
 
       {/* Header */}
-      <header className="fixed inset-x-0 top-0 z-50 flex h-16 items-center border-b border-white/[0.08] bg-surface/45 px-3.5 backdrop-blur-[18px] motion-safe:animate-orbis-header sm:px-[clamp(16px,4vw,64px)]">
+      <header className="fixed inset-x-0 top-0 z-50 flex h-16 items-center border-b border-veu/[0.08] bg-surface/45 px-3.5 backdrop-blur-[18px] motion-safe:animate-orbis-header sm:px-[clamp(16px,4vw,64px)]">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[22px] text-primary motion-safe:animate-orbis-twinkle">auto_awesome</span>
-          <span className="font-headline text-lg font-bold tracking-[-0.03em] text-secondary sm:text-[22px]">ORBIS</span>
+          <span className="material-symbols-outlined text-[22px] text-secondary">public</span>
+          <span className="font-marca text-lg tracking-[0.16em] text-secondary sm:text-[22px]">ORBIS</span>
+          <BotaoTema className="ml-3" />
         </div>
       </header>
 
@@ -257,7 +259,7 @@ export default function Login() {
         <div className="max-w-[560px] text-center lg:text-left">
           <p className="mb-5 font-label text-[11px] uppercase tracking-[0.32em] text-primary motion-safe:animate-orbis-rise sm:text-xs" style={{ animationDelay: '150ms' }}>Mapa natal · observatório celeste</p>
           <div style={{ animationDelay: '280ms' }} className="relative inline-block px-[22px] py-3.5 motion-safe:animate-orbis-rise motion-safe:before:animate-orbis-bracket motion-safe:after:animate-orbis-bracket before:absolute before:left-0 before:top-0 before:h-[26px] before:w-[26px] before:border-l-2 before:border-t-2 before:border-primary before:content-[''] after:absolute after:bottom-0 after:right-0 after:h-[26px] after:w-[26px] after:border-b-2 after:border-r-2 after:border-primary after:content-[''] sm:px-[34px] sm:py-[18px]">
-            <h1 className="bg-orbis-wordmark bg-[length:250%_100%] bg-clip-text font-headline motion-safe:animate-orbis-shimmer text-[clamp(48px,9vw,88px)] font-medium leading-[0.92] tracking-[0.01em] text-transparent">
+            <h1 className="bg-orbis-wordmark bg-[length:250%_100%] bg-clip-text font-marca motion-safe:animate-orbis-shimmer text-[clamp(48px,9vw,88px)] leading-[0.92] tracking-[0.1em] text-transparent">
               ORBIS
             </h1>
           </div>
@@ -275,7 +277,7 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="relative w-full max-w-[460px] rounded-[24px] border border-white/10 bg-surface-container-lowest/75 p-5 shadow-[0_30px_80px_rgba(0,0,0,0.45),inset_0_1px_rgba(255,255,255,0.05)] backdrop-blur-xl motion-safe:animate-orbis-card-in xs:p-6 sm:p-8">
+          <div className="relative w-full max-w-[460px] rounded-[24px] border border-veu/10 bg-surface-container-lowest/75 p-5 shadow-[var(--sombra-vidro)] backdrop-blur-xl motion-safe:animate-orbis-card-in xs:p-6 sm:p-8">
             {erro && (
               <div key={erro} className="mb-6 flex items-center gap-3 rounded-2xl border border-error/30 bg-error-container/20 p-4 motion-safe:animate-orbis-shake">
                 <span className="material-symbols-outlined text-error">error</span>
@@ -307,7 +309,7 @@ export default function Login() {
                   </form>
                 )}
 
-                <div className="mt-6 flex justify-center border-t border-white/5 pt-5">
+                <div className="mt-6 flex justify-center border-t border-veu/5 pt-5">
                   <button onClick={irParaLogin} className="font-label text-sm text-secondary transition-colors hover:text-primary">
                     Voltar para o login
                   </button>
@@ -345,7 +347,7 @@ export default function Login() {
                       id="remember"
                       checked={manterConectado}
                       onChange={(event) => setManterConectado(event.target.checked)}
-                      className="h-4 w-4 rounded border-white/10 bg-surface-container-highest accent-primary-container"
+                      className="h-4 w-4 rounded border-veu/10 bg-surface-container-highest accent-primary-container"
                     />
                     <label htmlFor="remember" className="cursor-pointer font-label text-xs text-on-surface-variant">
                       Manter-me conectado
@@ -355,7 +357,7 @@ export default function Login() {
                   <BotaoPrincipal>Entrar</BotaoPrincipal>
                 </form>
 
-                <div className="mt-6 flex flex-col items-center border-t border-white/5 pt-5">
+                <div className="mt-6 flex flex-col items-center border-t border-veu/5 pt-5">
                   <p className="mb-3 text-on-surface-variant">Novo no observatório?</p>
                   <BotaoSecundario onClick={irParaCadastro}>Criar uma conta</BotaoSecundario>
                 </div>
@@ -394,7 +396,7 @@ export default function Login() {
                   <BotaoPrincipal icone="rocket_launch">Criar conta</BotaoPrincipal>
                 </form>
 
-                <div className="mt-6 flex flex-col items-center border-t border-white/5 pt-5">
+                <div className="mt-6 flex flex-col items-center border-t border-veu/5 pt-5">
                   <p className="mb-3 text-on-surface-variant">Já possui acesso?</p>
                   <BotaoSecundario onClick={irParaLogin}>Fazer login</BotaoSecundario>
                 </div>
@@ -404,7 +406,7 @@ export default function Login() {
         </div>
       </main>
 
-      <div className="fixed bottom-5 left-6 z-30 hidden rounded-full border border-white/[0.08] bg-surface-container-low/50 px-3.5 py-1.5 font-label text-[10px] uppercase tracking-[0.18em] text-outline backdrop-blur-sm motion-safe:animate-orbis-rise sm:block" style={{ animationDelay: '900ms' }}>
+      <div className="fixed bottom-5 left-6 z-30 hidden rounded-full border border-veu/[0.08] bg-surface-container-low/50 px-3.5 py-1.5 font-label text-[10px] uppercase tracking-[0.18em] text-outline backdrop-blur-sm motion-safe:animate-orbis-rise sm:block" style={{ animationDelay: '900ms' }}>
         ORBIS · mapa natal
       </div>
     </div>

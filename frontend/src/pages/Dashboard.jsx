@@ -55,16 +55,16 @@ export default function Dashboard() {
                 <div className="relative flex flex-col items-center gap-7 text-center md:flex-row md:text-left">
                   <div className="flex h-28 w-28 shrink-0 animate-float items-center justify-center rounded-full border border-primary/20 bg-primary/5"><span className="material-symbols-outlined text-6xl text-primary/70">telescope</span></div>
                   <div className="flex-1"><span className="font-label text-xs uppercase tracking-[0.2em] text-primary">Primeira observação</span><h1 className="mt-2 font-headline text-2xl text-on-surface xs:text-3xl md:text-4xl">Seu céu espera para ser traçado</h1><p className="mt-3 max-w-2xl text-on-surface-variant/80">Informe seus dados de nascimento para revelar sua configuração natal e receber análises personalizadas.</p></div>
-                  <Link to="/criar-mapa" className="group flex shrink-0 items-center gap-3 rounded-full bg-orbis-cta px-6 py-3.5 font-label text-xs uppercase tracking-[0.08em] text-white shadow-[0_12px_30px_rgba(255,75,137,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(255,75,137,0.38)]">Criar primeiro mapa<span className="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span></Link>
+                  <Link to="/criar-mapa" className="group flex shrink-0 items-center gap-3 rounded-full bg-orbis-cta px-6 py-3.5 font-label text-xs uppercase tracking-[0.08em] text-on-cta shadow-[var(--sombra-cta)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-105">Criar primeiro mapa<span className="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span></Link>
                 </div>
               </GlassPanel>
             )}
 
             {principal && <>
               <header className="mb-6 md:mb-10"><p className="mb-4 font-label text-[11px] uppercase tracking-[0.32em] text-primary motion-safe:animate-orbis-rise sm:text-xs" style={{ animationDelay: '150ms' }}>Observatório pessoal</p><TituloMoldurado style={{ animationDelay: '280ms' }}>Seu céu está traçado</TituloMoldurado><p className="mt-5 max-w-2xl leading-[1.7] text-on-surface-variant motion-safe:animate-orbis-rise" style={{ animationDelay: '430ms' }}>Acompanhe seu mapa principal ou explore os outros mapas já calculados na sua conta.</p></header>
-              <div className="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-[1.4fr_0.8fr]">
+              <div className="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-[1.4fr_0.8fr] orbis-cascata">
                 <MapSummaryCard mapa={principal} destaque />
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
+                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1 orbis-cascata">
                   <GlassPanel className="p-6"><div className="flex items-center justify-between"><div><p className="font-label text-xs uppercase tracking-widest text-outline">Mapas criados</p><p className="mt-2 font-headline text-4xl text-secondary">{mapas.length}</p></div><span className="material-symbols-outlined text-5xl text-secondary/40">orbit</span></div><Link to="/meus-mapas" className="mt-5 flex items-center gap-2 font-label text-sm text-primary hover:text-secondary">Ver todos os mapas<span className="material-symbols-outlined text-base">arrow_forward</span></Link></GlassPanel>
                   <GlassPanel className="p-6"><div className="flex items-center gap-3"><span className="material-symbols-outlined text-3xl text-tertiary">add_circle</span><div><h2 className="font-headline text-xl">Novo mapa</h2><p className="mt-1 text-sm text-on-surface-variant">Calcule outra configuração natal.</p></div></div><Link to="/criar-mapa" className="mt-5 inline-flex rounded-full border border-tertiary/30 px-4 py-2 font-label text-xs text-tertiary hover:bg-tertiary/10">Criar outro mapa</Link></GlassPanel>
                 </div>

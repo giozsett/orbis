@@ -1,16 +1,17 @@
 // Glifos astrológicos compartilhados pela mandala e pelas demais páginas.
+import { mapaDeCores, mapaDeVisuais } from './tema'
 
 // Força a apresentação em texto (sem emoji) dos glifos astrológicos
 export const TXT = '︎'
 
 export const FONTE_GLIFOS = "'Noto Sans Symbols 2', 'Segoe UI Symbol', 'DejaVu Sans', sans-serif"
 
-export const ELEMENTOS = {
+export const ELEMENTOS = mapaDeCores({
   fogo: '#ff8fa8',
   terra: '#d9b06b',
-  ar: '#deb7ff',
+  ar: '#c3a6ff',
   agua: '#9cc4ff',
-}
+})
 
 export const SIGNOS = [
   { nome: 'Áries', simbolo: '♈', elemento: 'fogo' },
@@ -27,8 +28,8 @@ export const SIGNOS = [
   { nome: 'Peixes', simbolo: '♓', elemento: 'agua' },
 ]
 
-// Mesma paleta do PDF: tons claros o bastante para ler sobre o fundo escuro
-export const PLANETAS = {
+// Mesma paleta do PDF: tons claros para o fundo escuro; no tema claro saem escurecidos (ver corTema)
+export const PLANETAS = mapaDeVisuais({
   Sol: { simbolo: '☉', cor: '#ffd16a' },
   Lua: { simbolo: '☽', cor: '#d9c5ff' },
   Mercúrio: { simbolo: '☿', cor: '#9cd7ee' },
@@ -40,7 +41,7 @@ export const PLANETAS = {
   Netuno: { simbolo: '♆', cor: '#76b9ff' },
   Plutão: { simbolo: '♇', cor: '#e3a8c6' },
   'Nodo Norte': { simbolo: '☊', cor: '#f1d6aa' },
-}
+})
 
 export function signoPorNome(nome) {
   return SIGNOS.find((signo) => signo.nome === nome)
